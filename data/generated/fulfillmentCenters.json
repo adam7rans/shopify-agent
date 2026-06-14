@@ -1,0 +1,44 @@
+[
+  {
+    "id": "fc-eu-waw",
+    "label": "EU-WAW",
+    "provider": "Baltic Sweet Freight",
+    "country": "Poland",
+    "region": "Europe"
+  },
+  {
+    "id": "fc-eu-ams",
+    "label": "EU-AMS",
+    "provider": "Lowlands Parcel Works",
+    "country": "Netherlands",
+    "region": "Europe"
+  },
+  {
+    "id": "fc-me-dxb",
+    "label": "ME-DXB",
+    "provider": "Desert Parcel Hub",
+    "country": "United Arab Emirates",
+    "region": "Middle East"
+  },
+  {
+    "id": "fc-us-nj",
+    "label": "US-NJ",
+    "provider": "Garden State Fulfillment",
+    "country": "United States",
+    "region": "United States"
+  },
+  {
+    "id": "fc-us-la",
+    "label": "US-LA",
+    "provider": "Pacific Treat Logistics",
+    "country": "United States",
+    "region": "United States"
+  },
+  {
+    "id": "fc-cn-sz",
+    "label": "CN-SZ",
+    "provider": "Pearl River Crossborder",
+    "country": "China",
+    "region": "China / Asia"
+  }
+]

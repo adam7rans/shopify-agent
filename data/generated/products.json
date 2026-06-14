@@ -1,0 +1,1202 @@
+[
+  {
+    "id": "product-001",
+    "title": "Tokyo Sour Peach Gummies",
+    "handle": "tokyo-sour-peach-gummies",
+    "description": "Tokyo Sour Peach Gummies is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Japanese gummies",
+    "countryOfOrigin": "Japan",
+    "vendor": "Fuji Sweet Works",
+    "distributor": "Janax Euromart",
+    "flavorProfile": [
+      "peach",
+      "sour",
+      "juicy"
+    ],
+    "tags": [
+      "sour",
+      "best-seller",
+      "japan"
+    ],
+    "price": 4.49,
+    "cost": 1.62,
+    "margin": 2.87,
+    "inventoryQuantity": 140,
+    "fulfillmentRegion": "Europe",
+    "variants": [
+      {
+        "id": "variant-001",
+        "productId": "product-001",
+        "title": "Standard pack",
+        "sku": "JP-SOUR-PEACH-001",
+        "price": 4.49,
+        "cost": 1.62,
+        "margin": 2.87,
+        "inventoryQuantity": 140,
+        "fulfillmentRegion": "Europe"
+      }
+    ],
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-002",
+    "title": "Kyoto Yuzu Pop Gummies",
+    "handle": "kyoto-yuzu-pop-gummies",
+    "description": "Kyoto Yuzu Pop Gummies is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Japanese gummies",
+    "countryOfOrigin": "Japan",
+    "vendor": "Fuji Sweet Works",
+    "distributor": "Janax Euromart",
+    "flavorProfile": [
+      "yuzu",
+      "citrus",
+      "bright"
+    ],
+    "tags": [
+      "gummy",
+      "citrus",
+      "japan"
+    ],
+    "price": 5.46,
+    "cost": 2.18,
+    "margin": 3.28,
+    "inventoryQuantity": 185,
+    "fulfillmentRegion": "Middle East",
+    "variants": [
+      {
+        "id": "variant-002",
+        "productId": "product-002",
+        "title": "Standard pack",
+        "sku": "JP-YUZU-GUMMY-002",
+        "price": 5.46,
+        "cost": 2.18,
+        "margin": 3.28,
+        "inventoryQuantity": 185,
+        "fulfillmentRegion": "Middle East"
+      }
+    ],
+    "createdAt": "2026-01-02T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-003",
+    "title": "Osaka Soda Splash Jellies",
+    "handle": "osaka-soda-splash-jellies",
+    "description": "Osaka Soda Splash Jellies is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Japanese gummies",
+    "countryOfOrigin": "Japan",
+    "vendor": "Nippon Snack Lab",
+    "distributor": "Musubi Trading",
+    "flavorProfile": [
+      "ramune",
+      "fizzy",
+      "light"
+    ],
+    "tags": [
+      "ramune",
+      "gummy",
+      "japan"
+    ],
+    "price": 6.43,
+    "cost": 2.83,
+    "margin": 3.6,
+    "inventoryQuantity": 230,
+    "fulfillmentRegion": "United States",
+    "variants": [
+      {
+        "id": "variant-003",
+        "productId": "product-003",
+        "title": "Standard pack",
+        "sku": "JP-SODA-JELLY-003",
+        "price": 6.43,
+        "cost": 2.83,
+        "margin": 3.6,
+        "inventoryQuantity": 230,
+        "fulfillmentRegion": "United States"
+      }
+    ],
+    "createdAt": "2026-01-03T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-004",
+    "title": "Hokkaido Milk Burst Bears",
+    "handle": "hokkaido-milk-burst-bears",
+    "description": "Hokkaido Milk Burst Bears is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Japanese gummies",
+    "countryOfOrigin": "Japan",
+    "vendor": "Nippon Snack Lab",
+    "distributor": "Musubi Trading",
+    "flavorProfile": [
+      "milk",
+      "creamy",
+      "soft"
+    ],
+    "tags": [
+      "gummy",
+      "milk",
+      "cute"
+    ],
+    "price": 7.4,
+    "cost": 3.55,
+    "margin": 3.85,
+    "inventoryQuantity": 275,
+    "fulfillmentRegion": "China / Asia",
+    "variants": [
+      {
+        "id": "variant-004",
+        "productId": "product-004",
+        "title": "Standard pack",
+        "sku": "JP-MILK-BEAR-004",
+        "price": 7.4,
+        "cost": 3.55,
+        "margin": 3.85,
+        "inventoryQuantity": 275,
+        "fulfillmentRegion": "China / Asia"
+      }
+    ],
+    "createdAt": "2026-01-04T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-005",
+    "title": "Seoul Cola Chew Cubes",
+    "handle": "seoul-cola-chew-cubes",
+    "description": "Seoul Cola Chew Cubes is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Korean gummies",
+    "countryOfOrigin": "Korea",
+    "vendor": "Han River Treats",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "cola",
+      "sparkling",
+      "chewy"
+    ],
+    "tags": [
+      "cola",
+      "korea",
+      "chew"
+    ],
+    "price": 8.37,
+    "cost": 3.01,
+    "margin": 5.36,
+    "inventoryQuantity": 320,
+    "fulfillmentRegion": "Europe",
+    "variants": [
+      {
+        "id": "variant-005",
+        "productId": "product-005",
+        "title": "Standard pack",
+        "sku": "KR-COLA-CHEW-005",
+        "price": 8.37,
+        "cost": 3.01,
+        "margin": 5.36,
+        "inventoryQuantity": 320,
+        "fulfillmentRegion": "Europe"
+      }
+    ],
+    "createdAt": "2026-01-05T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-006",
+    "title": "Busan Grape Bounce Bites",
+    "handle": "busan-grape-bounce-bites",
+    "description": "Busan Grape Bounce Bites is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Korean gummies",
+    "countryOfOrigin": "Korea",
+    "vendor": "Han River Treats",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "grape",
+      "jammy",
+      "bright"
+    ],
+    "tags": [
+      "grape",
+      "gummy",
+      "korea"
+    ],
+    "price": 9.34,
+    "cost": 3.74,
+    "margin": 5.6,
+    "inventoryQuantity": 175,
+    "fulfillmentRegion": "Middle East",
+    "variants": [
+      {
+        "id": "variant-006",
+        "productId": "product-006",
+        "title": "Standard pack",
+        "sku": "KR-GRAPE-GUMMY-006",
+        "price": 9.34,
+        "cost": 3.74,
+        "margin": 5.6,
+        "inventoryQuantity": 175,
+        "fulfillmentRegion": "Middle East"
+      }
+    ],
+    "createdAt": "2026-01-06T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-007",
+    "title": "Jeju Tangerine Soft Drops",
+    "handle": "jeju-tangerine-soft-drops",
+    "description": "Jeju Tangerine Soft Drops is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Korean gummies",
+    "countryOfOrigin": "Korea",
+    "vendor": "Seoul Snack House",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "tangerine",
+      "fresh",
+      "soft"
+    ],
+    "tags": [
+      "citrus",
+      "korea",
+      "seasonal"
+    ],
+    "price": 4.91,
+    "cost": 2.16,
+    "margin": 2.75,
+    "inventoryQuantity": 220,
+    "fulfillmentRegion": "United States",
+    "variants": [
+      {
+        "id": "variant-007",
+        "productId": "product-007",
+        "title": "Standard pack",
+        "sku": "KR-TANGERINE-007",
+        "price": 4.91,
+        "cost": 2.16,
+        "margin": 2.75,
+        "inventoryQuantity": 220,
+        "fulfillmentRegion": "United States"
+      }
+    ],
+    "createdAt": "2026-01-07T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-008",
+    "title": "Incheon Lychee Cloud Chews",
+    "handle": "incheon-lychee-cloud-chews",
+    "description": "Incheon Lychee Cloud Chews is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Korean gummies",
+    "countryOfOrigin": "Korea",
+    "vendor": "Seoul Snack House",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "lychee",
+      "light",
+      "chewy"
+    ],
+    "tags": [
+      "lychee",
+      "chew",
+      "korea"
+    ],
+    "price": 5.88,
+    "cost": 2.82,
+    "margin": 3.06,
+    "inventoryQuantity": 265,
+    "fulfillmentRegion": "China / Asia",
+    "variants": [
+      {
+        "id": "variant-008",
+        "productId": "product-008",
+        "title": "Standard pack",
+        "sku": "KR-LYCHEE-CHEW-008",
+        "price": 5.88,
+        "cost": 2.82,
+        "margin": 3.06,
+        "inventoryQuantity": 265,
+        "fulfillmentRegion": "China / Asia"
+      }
+    ],
+    "createdAt": "2026-01-08T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-009",
+    "title": "Tokyo Shock Lemon Strips",
+    "handle": "tokyo-shock-lemon-strips",
+    "description": "Tokyo Shock Lemon Strips is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Sour candy",
+    "countryOfOrigin": "Japan",
+    "vendor": "Fuji Sweet Works",
+    "distributor": "Janax Euromart",
+    "flavorProfile": [
+      "lemon",
+      "acidic",
+      "bold"
+    ],
+    "tags": [
+      "sour",
+      "lemon",
+      "japan"
+    ],
+    "price": 6.85,
+    "cost": 2.47,
+    "margin": 4.38,
+    "inventoryQuantity": 310,
+    "fulfillmentRegion": "Europe",
+    "variants": [
+      {
+        "id": "variant-009",
+        "productId": "product-009",
+        "title": "Standard pack",
+        "sku": "JP-SOUR-LEMON-009",
+        "price": 6.85,
+        "cost": 2.47,
+        "margin": 4.38,
+        "inventoryQuantity": 310,
+        "fulfillmentRegion": "Europe"
+      }
+    ],
+    "createdAt": "2026-01-09T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-010",
+    "title": "Seoul Plum Punch Belts",
+    "handle": "seoul-plum-punch-belts",
+    "description": "Seoul Plum Punch Belts is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Sour candy",
+    "countryOfOrigin": "Korea",
+    "vendor": "Han River Treats",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "plum",
+      "tart",
+      "fruity"
+    ],
+    "tags": [
+      "sour",
+      "plum",
+      "korea"
+    ],
+    "price": 7.82,
+    "cost": 3.13,
+    "margin": 4.69,
+    "inventoryQuantity": 355,
+    "fulfillmentRegion": "Middle East",
+    "variants": [
+      {
+        "id": "variant-010",
+        "productId": "product-010",
+        "title": "Standard pack",
+        "sku": "KR-SOUR-PLUM-010",
+        "price": 7.82,
+        "cost": 3.13,
+        "margin": 4.69,
+        "inventoryQuantity": 355,
+        "fulfillmentRegion": "Middle East"
+      }
+    ],
+    "createdAt": "2026-01-10T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-011",
+    "title": "Yuzu Crackle Hard Candy",
+    "handle": "yuzu-crackle-hard-candy",
+    "description": "Yuzu Crackle Hard Candy is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Sour candy",
+    "countryOfOrigin": "Japan",
+    "vendor": "Nippon Snack Lab",
+    "distributor": "Musubi Trading",
+    "flavorProfile": [
+      "yuzu",
+      "sharp",
+      "sparkly"
+    ],
+    "tags": [
+      "sour",
+      "hard-candy",
+      "japan"
+    ],
+    "price": 8.79,
+    "cost": 3.87,
+    "margin": 4.92,
+    "inventoryQuantity": 210,
+    "fulfillmentRegion": "United States",
+    "variants": [
+      {
+        "id": "variant-011",
+        "productId": "product-011",
+        "title": "Standard pack",
+        "sku": "JP-YUZU-HARD-011",
+        "price": 8.79,
+        "cost": 3.87,
+        "margin": 4.92,
+        "inventoryQuantity": 210,
+        "fulfillmentRegion": "United States"
+      }
+    ],
+    "createdAt": "2026-01-11T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-012",
+    "title": "Cherry Bomb Spark Ropes",
+    "handle": "cherry-bomb-spark-ropes",
+    "description": "Cherry Bomb Spark Ropes is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Sour candy",
+    "countryOfOrigin": "Korea",
+    "vendor": "Seoul Snack House",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "cherry",
+      "tangy",
+      "electric"
+    ],
+    "tags": [
+      "sour",
+      "cherry",
+      "rope"
+    ],
+    "price": 9.76,
+    "cost": 4.68,
+    "margin": 5.08,
+    "inventoryQuantity": 255,
+    "fulfillmentRegion": "China / Asia",
+    "variants": [
+      {
+        "id": "variant-012",
+        "productId": "product-012",
+        "title": "Standard pack",
+        "sku": "KR-SOUR-CHERRY-012",
+        "price": 9.76,
+        "cost": 4.68,
+        "margin": 5.08,
+        "inventoryQuantity": 255,
+        "fulfillmentRegion": "China / Asia"
+      }
+    ],
+    "createdAt": "2026-01-12T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-013",
+    "title": "Uji Matcha Wafer Clouds",
+    "handle": "uji-matcha-wafer-clouds",
+    "description": "Uji Matcha Wafer Clouds is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Matcha snacks",
+    "countryOfOrigin": "Japan",
+    "vendor": "Green Tea Atelier",
+    "distributor": "Musubi Trading",
+    "flavorProfile": [
+      "matcha",
+      "toasty",
+      "airy"
+    ],
+    "tags": [
+      "matcha",
+      "wafer",
+      "japan"
+    ],
+    "price": 5.33,
+    "cost": 1.92,
+    "margin": 3.41,
+    "inventoryQuantity": 300,
+    "fulfillmentRegion": "Europe",
+    "variants": [
+      {
+        "id": "variant-013",
+        "productId": "product-013",
+        "title": "Standard pack",
+        "sku": "JP-MATCHA-WAFER-013",
+        "price": 5.33,
+        "cost": 1.92,
+        "margin": 3.41,
+        "inventoryQuantity": 300,
+        "fulfillmentRegion": "Europe"
+      }
+    ],
+    "createdAt": "2026-01-13T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-014",
+    "title": "Kyoto Matcha Caramel Puffs",
+    "handle": "kyoto-matcha-caramel-puffs",
+    "description": "Kyoto Matcha Caramel Puffs is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Matcha snacks",
+    "countryOfOrigin": "Japan",
+    "vendor": "Green Tea Atelier",
+    "distributor": "Musubi Trading",
+    "flavorProfile": [
+      "matcha",
+      "caramel",
+      "soft"
+    ],
+    "tags": [
+      "matcha",
+      "limited",
+      "japan"
+    ],
+    "price": 6.3,
+    "cost": 2.52,
+    "margin": 3.78,
+    "inventoryQuantity": 345,
+    "fulfillmentRegion": "Middle East",
+    "variants": [
+      {
+        "id": "variant-014",
+        "productId": "product-014",
+        "title": "Standard pack",
+        "sku": "JP-MATCHA-PUFF-014",
+        "price": 6.3,
+        "cost": 2.52,
+        "margin": 3.78,
+        "inventoryQuantity": 345,
+        "fulfillmentRegion": "Middle East"
+      }
+    ],
+    "createdAt": "2026-01-14T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-015",
+    "title": "Jeju Matcha Crunch Sticks",
+    "handle": "jeju-matcha-crunch-sticks",
+    "description": "Jeju Matcha Crunch Sticks is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Matcha snacks",
+    "countryOfOrigin": "Korea",
+    "vendor": "Moon Bear Sweets",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "matcha",
+      "crisp",
+      "nutty"
+    ],
+    "tags": [
+      "matcha",
+      "sticks",
+      "korea"
+    ],
+    "price": 7.27,
+    "cost": 3.2,
+    "margin": 4.07,
+    "inventoryQuantity": 390,
+    "fulfillmentRegion": "United States",
+    "variants": [
+      {
+        "id": "variant-015",
+        "productId": "product-015",
+        "title": "Standard pack",
+        "sku": "KR-MATCHA-STICK-015",
+        "price": 7.27,
+        "cost": 3.2,
+        "margin": 4.07,
+        "inventoryQuantity": 390,
+        "fulfillmentRegion": "United States"
+      }
+    ],
+    "createdAt": "2026-01-15T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-016",
+    "title": "Matcha Cloud Pocky Sticks",
+    "handle": "matcha-cloud-pocky-sticks",
+    "description": "Matcha Cloud Pocky Sticks is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Chocolate biscuit sticks",
+    "countryOfOrigin": "Japan",
+    "vendor": "Green Tea Atelier",
+    "distributor": "Janax Euromart",
+    "flavorProfile": [
+      "matcha",
+      "biscuit",
+      "sweet"
+    ],
+    "tags": [
+      "pocky-style",
+      "matcha",
+      "japan"
+    ],
+    "price": 8.24,
+    "cost": 3.96,
+    "margin": 4.28,
+    "inventoryQuantity": 245,
+    "fulfillmentRegion": "China / Asia",
+    "variants": [
+      {
+        "id": "variant-016",
+        "productId": "product-016",
+        "title": "Standard pack",
+        "sku": "JP-MATCHA-STICK-016",
+        "price": 8.24,
+        "cost": 3.96,
+        "margin": 4.28,
+        "inventoryQuantity": 245,
+        "fulfillmentRegion": "China / Asia"
+      }
+    ],
+    "createdAt": "2026-01-16T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-017",
+    "title": "Black Sesame Cocoa Dippers",
+    "handle": "black-sesame-cocoa-dippers",
+    "description": "Black Sesame Cocoa Dippers is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Chocolate biscuit sticks",
+    "countryOfOrigin": "Japan",
+    "vendor": "Fuji Sweet Works",
+    "distributor": "Janax Euromart",
+    "flavorProfile": [
+      "black sesame",
+      "cocoa",
+      "roasted"
+    ],
+    "tags": [
+      "biscuit",
+      "sesame",
+      "japan"
+    ],
+    "price": 9.21,
+    "cost": 3.32,
+    "margin": 5.89,
+    "inventoryQuantity": 290,
+    "fulfillmentRegion": "Europe",
+    "variants": [
+      {
+        "id": "variant-017",
+        "productId": "product-017",
+        "title": "Standard pack",
+        "sku": "JP-SESAME-DIP-017",
+        "price": 9.21,
+        "cost": 3.32,
+        "margin": 5.89,
+        "inventoryQuantity": 290,
+        "fulfillmentRegion": "Europe"
+      }
+    ],
+    "createdAt": "2026-01-17T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-018",
+    "title": "Strawberry Choco Pepero Twists",
+    "handle": "strawberry-choco-pepero-twists",
+    "description": "Strawberry Choco Pepero Twists is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Chocolate biscuit sticks",
+    "countryOfOrigin": "Korea",
+    "vendor": "Moon Bear Sweets",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "strawberry",
+      "chocolate",
+      "crunchy"
+    ],
+    "tags": [
+      "pepero-style",
+      "strawberry",
+      "korea"
+    ],
+    "price": 10.18,
+    "cost": 4.07,
+    "margin": 6.11,
+    "inventoryQuantity": 335,
+    "fulfillmentRegion": "Middle East",
+    "variants": [
+      {
+        "id": "variant-018",
+        "productId": "product-018",
+        "title": "Standard pack",
+        "sku": "KR-STRAW-PEPERO-018",
+        "price": 10.18,
+        "cost": 4.07,
+        "margin": 6.11,
+        "inventoryQuantity": 335,
+        "fulfillmentRegion": "Middle East"
+      }
+    ],
+    "createdAt": "2026-01-18T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-019",
+    "title": "Banana Custard Biscuit Wands",
+    "handle": "banana-custard-biscuit-wands",
+    "description": "Banana Custard Biscuit Wands is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Chocolate biscuit sticks",
+    "countryOfOrigin": "Korea",
+    "vendor": "Moon Bear Sweets",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "banana",
+      "custard",
+      "smooth"
+    ],
+    "tags": [
+      "biscuit",
+      "banana",
+      "korea"
+    ],
+    "price": 5.75,
+    "cost": 2.53,
+    "margin": 3.22,
+    "inventoryQuantity": 380,
+    "fulfillmentRegion": "United States",
+    "variants": [
+      {
+        "id": "variant-019",
+        "productId": "product-019",
+        "title": "Standard pack",
+        "sku": "KR-BANANA-WAND-019",
+        "price": 5.75,
+        "cost": 2.53,
+        "margin": 3.22,
+        "inventoryQuantity": 380,
+        "fulfillmentRegion": "United States"
+      }
+    ],
+    "createdAt": "2026-01-19T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-020",
+    "title": "Sakura Mochi Drops",
+    "handle": "sakura-mochi-drops",
+    "description": "Sakura Mochi Drops is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Mochi candy",
+    "countryOfOrigin": "Japan",
+    "vendor": "Kumo Confections",
+    "distributor": "Musubi Trading",
+    "flavorProfile": [
+      "sakura",
+      "rice",
+      "floral"
+    ],
+    "tags": [
+      "mochi",
+      "seasonal",
+      "japan"
+    ],
+    "price": 6.72,
+    "cost": 3.23,
+    "margin": 3.49,
+    "inventoryQuantity": 425,
+    "fulfillmentRegion": "China / Asia",
+    "variants": [
+      {
+        "id": "variant-020",
+        "productId": "product-020",
+        "title": "Standard pack",
+        "sku": "JP-MOCHI-SAKURA-020",
+        "price": 6.72,
+        "cost": 3.23,
+        "margin": 3.49,
+        "inventoryQuantity": 425,
+        "fulfillmentRegion": "China / Asia"
+      }
+    ],
+    "createdAt": "2026-01-20T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-021",
+    "title": "Brown Sugar Boba Mochi Pearls",
+    "handle": "brown-sugar-boba-mochi-pearls",
+    "description": "Brown Sugar Boba Mochi Pearls is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Mochi candy",
+    "countryOfOrigin": "Korea",
+    "vendor": "Moon Bear Sweets",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "brown sugar",
+      "boba",
+      "soft"
+    ],
+    "tags": [
+      "mochi",
+      "boba",
+      "korea"
+    ],
+    "price": 7.69,
+    "cost": 2.77,
+    "margin": 4.92,
+    "inventoryQuantity": 280,
+    "fulfillmentRegion": "Europe",
+    "variants": [
+      {
+        "id": "variant-021",
+        "productId": "product-021",
+        "title": "Standard pack",
+        "sku": "KR-MOCHI-BOBA-021",
+        "price": 7.69,
+        "cost": 2.77,
+        "margin": 4.92,
+        "inventoryQuantity": 280,
+        "fulfillmentRegion": "Europe"
+      }
+    ],
+    "createdAt": "2026-01-21T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-022",
+    "title": "Melon Cream Mochi Cubes",
+    "handle": "melon-cream-mochi-cubes",
+    "description": "Melon Cream Mochi Cubes is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Mochi candy",
+    "countryOfOrigin": "Japan",
+    "vendor": "Kumo Confections",
+    "distributor": "Janax Euromart",
+    "flavorProfile": [
+      "melon",
+      "cream",
+      "soft"
+    ],
+    "tags": [
+      "mochi",
+      "melon",
+      "japan"
+    ],
+    "price": 8.66,
+    "cost": 3.46,
+    "margin": 5.2,
+    "inventoryQuantity": 325,
+    "fulfillmentRegion": "Middle East",
+    "variants": [
+      {
+        "id": "variant-022",
+        "productId": "product-022",
+        "title": "Standard pack",
+        "sku": "JP-MOCHI-MELON-022",
+        "price": 8.66,
+        "cost": 3.46,
+        "margin": 5.2,
+        "inventoryQuantity": 325,
+        "fulfillmentRegion": "Middle East"
+      }
+    ],
+    "createdAt": "2026-01-22T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-023",
+    "title": "Ramune Burst Tablet Tubes",
+    "handle": "ramune-burst-tablet-tubes",
+    "description": "Ramune Burst Tablet Tubes is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Ramune / soda candy",
+    "countryOfOrigin": "Japan",
+    "vendor": "Nippon Snack Lab",
+    "distributor": "Janax Euromart",
+    "flavorProfile": [
+      "ramune",
+      "fizzy",
+      "sweet"
+    ],
+    "tags": [
+      "ramune",
+      "tablet",
+      "japan"
+    ],
+    "price": 9.63,
+    "cost": 4.24,
+    "margin": 5.39,
+    "inventoryQuantity": 370,
+    "fulfillmentRegion": "United States",
+    "variants": [
+      {
+        "id": "variant-023",
+        "productId": "product-023",
+        "title": "Standard pack",
+        "sku": "JP-RAMUNE-TUBE-023",
+        "price": 9.63,
+        "cost": 4.24,
+        "margin": 5.39,
+        "inventoryQuantity": 370,
+        "fulfillmentRegion": "United States"
+      }
+    ],
+    "createdAt": "2026-01-23T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-024",
+    "title": "Seoul Sparkling Yogurt Tabs",
+    "handle": "seoul-sparkling-yogurt-tabs",
+    "description": "Seoul Sparkling Yogurt Tabs is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Ramune / soda candy",
+    "countryOfOrigin": "Korea",
+    "vendor": "Han River Treats",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "yogurt",
+      "sparkling",
+      "cool"
+    ],
+    "tags": [
+      "soda-candy",
+      "yogurt",
+      "korea"
+    ],
+    "price": 10.6,
+    "cost": 5.09,
+    "margin": 5.51,
+    "inventoryQuantity": 415,
+    "fulfillmentRegion": "China / Asia",
+    "variants": [
+      {
+        "id": "variant-024",
+        "productId": "product-024",
+        "title": "Standard pack",
+        "sku": "KR-YOGURT-TAB-024",
+        "price": 10.6,
+        "cost": 5.09,
+        "margin": 5.51,
+        "inventoryQuantity": 415,
+        "fulfillmentRegion": "China / Asia"
+      }
+    ],
+    "createdAt": "2026-01-24T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-025",
+    "title": "Lychee Fizz Pocket Candy",
+    "handle": "lychee-fizz-pocket-candy",
+    "description": "Lychee Fizz Pocket Candy is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Ramune / soda candy",
+    "countryOfOrigin": "Japan",
+    "vendor": "Fuji Sweet Works",
+    "distributor": "Musubi Trading",
+    "flavorProfile": [
+      "lychee",
+      "fizzy",
+      "bright"
+    ],
+    "tags": [
+      "ramune",
+      "lychee",
+      "japan"
+    ],
+    "price": 6.17,
+    "cost": 2.22,
+    "margin": 3.95,
+    "inventoryQuantity": 460,
+    "fulfillmentRegion": "Europe",
+    "variants": [
+      {
+        "id": "variant-025",
+        "productId": "product-025",
+        "title": "Standard pack",
+        "sku": "JP-LYCHEE-FIZZ-025",
+        "price": 6.17,
+        "cost": 2.22,
+        "margin": 3.95,
+        "inventoryQuantity": 460,
+        "fulfillmentRegion": "Europe"
+      }
+    ],
+    "createdAt": "2026-01-25T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-026",
+    "title": "Kawaii Star Pop Surprise",
+    "handle": "kawaii-star-pop-surprise",
+    "description": "Kawaii Star Pop Surprise is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Kawaii toy candy",
+    "countryOfOrigin": "Japan",
+    "vendor": "Kumo Confections",
+    "distributor": "Janax Euromart",
+    "flavorProfile": [
+      "fruit punch",
+      "playful",
+      "sweet"
+    ],
+    "tags": [
+      "toy-candy",
+      "kawaii",
+      "japan"
+    ],
+    "price": 7.14,
+    "cost": 2.86,
+    "margin": 4.28,
+    "inventoryQuantity": 315,
+    "fulfillmentRegion": "Middle East",
+    "variants": [
+      {
+        "id": "variant-026",
+        "productId": "product-026",
+        "title": "Standard pack",
+        "sku": "JP-TOY-STAR-026",
+        "price": 7.14,
+        "cost": 2.86,
+        "margin": 4.28,
+        "inventoryQuantity": 315,
+        "fulfillmentRegion": "Middle East"
+      }
+    ],
+    "createdAt": "2026-01-26T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-027",
+    "title": "Mini Claw Machine Candy Eggs",
+    "handle": "mini-claw-machine-candy-eggs",
+    "description": "Mini Claw Machine Candy Eggs is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Kawaii toy candy",
+    "countryOfOrigin": "Korea",
+    "vendor": "Seoul Snack House",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "vanilla",
+      "surprise",
+      "sweet"
+    ],
+    "tags": [
+      "toy-candy",
+      "collectible",
+      "korea"
+    ],
+    "price": 8.11,
+    "cost": 3.57,
+    "margin": 4.54,
+    "inventoryQuantity": 360,
+    "fulfillmentRegion": "United States",
+    "variants": [
+      {
+        "id": "variant-027",
+        "productId": "product-027",
+        "title": "Standard pack",
+        "sku": "KR-TOY-EGG-027",
+        "price": 8.11,
+        "cost": 3.57,
+        "margin": 4.54,
+        "inventoryQuantity": 360,
+        "fulfillmentRegion": "United States"
+      }
+    ],
+    "createdAt": "2026-01-27T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-028",
+    "title": "Cherry Blossom Festival Box",
+    "handle": "cherry-blossom-festival-box",
+    "description": "Cherry Blossom Festival Box is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Seasonal limited editions",
+    "countryOfOrigin": "Japan",
+    "vendor": "Kumo Confections",
+    "distributor": "Musubi Trading",
+    "flavorProfile": [
+      "sakura",
+      "berry",
+      "giftable"
+    ],
+    "tags": [
+      "seasonal",
+      "limited",
+      "gift-box"
+    ],
+    "price": 9.08,
+    "cost": 4.36,
+    "margin": 4.72,
+    "inventoryQuantity": 405,
+    "fulfillmentRegion": "China / Asia",
+    "variants": [
+      {
+        "id": "variant-028",
+        "productId": "product-028",
+        "title": "Standard pack",
+        "sku": "JP-SEASONAL-028",
+        "price": 9.08,
+        "cost": 4.36,
+        "margin": 4.72,
+        "inventoryQuantity": 405,
+        "fulfillmentRegion": "China / Asia"
+      }
+    ],
+    "createdAt": "2026-01-28T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-029",
+    "title": "Chuseok Honey Treat Box",
+    "handle": "chuseok-honey-treat-box",
+    "description": "Chuseok Honey Treat Box is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Seasonal limited editions",
+    "countryOfOrigin": "Korea",
+    "vendor": "Moon Bear Sweets",
+    "distributor": "Q-Depot Select",
+    "flavorProfile": [
+      "honey",
+      "nutty",
+      "giftable"
+    ],
+    "tags": [
+      "seasonal",
+      "limited",
+      "holiday"
+    ],
+    "price": 10.05,
+    "cost": 3.62,
+    "margin": 6.43,
+    "inventoryQuantity": 450,
+    "fulfillmentRegion": "Europe",
+    "variants": [
+      {
+        "id": "variant-029",
+        "productId": "product-029",
+        "title": "Standard pack",
+        "sku": "KR-SEASONAL-029",
+        "price": 10.05,
+        "cost": 3.62,
+        "margin": 6.43,
+        "inventoryQuantity": 450,
+        "fulfillmentRegion": "Europe"
+      }
+    ],
+    "createdAt": "2026-01-29T00:00:00.000Z",
+    "salesHistoryDays": 180
+  },
+  {
+    "id": "product-030",
+    "title": "Kandwii Mystery Candy Box",
+    "handle": "kandwii-mystery-candy-box",
+    "description": "Kandwii Mystery Candy Box is a Kandwii catalog item built for mock-first Shopify testing.",
+    "category": "Variety boxes",
+    "countryOfOrigin": "Mixed",
+    "vendor": "Kandwii Curations",
+    "distributor": "Kandwii Direct",
+    "flavorProfile": [
+      "assorted",
+      "surprise",
+      "mixed"
+    ],
+    "tags": [
+      "variety-box",
+      "gift",
+      "mixed"
+    ],
+    "price": 11.02,
+    "cost": 4.41,
+    "margin": 6.61,
+    "inventoryQuantity": 495,
+    "fulfillmentRegion": "Middle East",
+    "variants": [
+      {
+        "id": "variant-030",
+        "productId": "product-030",
+        "title": "Standard pack",
+        "sku": "MIX-MYSTERY-030",
+        "price": 11.02,
+        "cost": 4.41,
+        "margin": 6.61,
+        "inventoryQuantity": 495,
+        "fulfillmentRegion": "Middle East"
+      }
+    ],
+    "createdAt": "2026-01-30T00:00:00.000Z",
+    "salesHistoryDays": 180
+  }
+]

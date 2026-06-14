@@ -1,0 +1,77 @@
+[
+  {
+    "id": "issue-001",
+    "centerId": "fc-me-dxb",
+    "label": "ME-DXB",
+    "region": "Middle East",
+    "issueType": "delayed_shipment",
+    "severity": "high",
+    "description": "Carrier backlog is pushing outbound candy parcels 2.3 days beyond SLA.",
+    "impactedOrders": 18,
+    "status": "open",
+    "createdAt": "2026-06-12T08:30:00.000Z"
+  },
+  {
+    "id": "issue-002",
+    "centerId": "fc-us-la",
+    "label": "US-LA",
+    "region": "United States",
+    "issueType": "stuck_fulfillment",
+    "severity": "high",
+    "description": "Pick-pack queue is stalled on weekend volume and 14 orders remain unassigned.",
+    "impactedOrders": 14,
+    "status": "open",
+    "createdAt": "2026-06-13T10:15:00.000Z"
+  },
+  {
+    "id": "issue-003",
+    "centerId": "fc-eu-waw",
+    "label": "EU-WAW",
+    "region": "Europe",
+    "issueType": "damaged_inventory",
+    "severity": "medium",
+    "description": "Inbound pallet damage affected a small run of ramune and sour items.",
+    "impactedOrders": 6,
+    "sku": "JP-SOUR-PEACH-001",
+    "status": "watching",
+    "createdAt": "2026-06-11T06:20:00.000Z"
+  },
+  {
+    "id": "issue-004",
+    "centerId": "fc-us-nj",
+    "label": "US-NJ",
+    "region": "United States",
+    "issueType": "delayed_shipment",
+    "severity": "medium",
+    "description": "Northeast weather disruptions are slowing handoff to final-mile carriers.",
+    "impactedOrders": 11,
+    "status": "watching",
+    "createdAt": "2026-06-12T14:45:00.000Z"
+  },
+  {
+    "id": "issue-005",
+    "centerId": "fc-eu-ams",
+    "label": "EU-AMS",
+    "region": "Europe",
+    "issueType": "stuck_fulfillment",
+    "severity": "medium",
+    "description": "A receiving mismatch paused replenishment for one export lane.",
+    "impactedOrders": 7,
+    "sku": "JP-MILK-BEAR-004",
+    "status": "watching",
+    "createdAt": "2026-06-10T12:00:00.000Z"
+  },
+  {
+    "id": "issue-006",
+    "centerId": "fc-cn-sz",
+    "label": "CN-SZ",
+    "region": "China / Asia",
+    "issueType": "damaged_inventory",
+    "severity": "medium",
+    "description": "Humidity exposure damaged a limited number of seasonal gift boxes.",
+    "impactedOrders": 5,
+    "sku": "KR-GRAPE-GUMMY-006",
+    "status": "watching",
+    "createdAt": "2026-06-09T09:40:00.000Z"
+  }
+]
