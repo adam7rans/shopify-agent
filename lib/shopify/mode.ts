@@ -1,7 +1,24 @@
 export type ShopifyMode = "mock" | "live";
 
+export function getRawShopifyMode() {
+  return process.env.SHOPIFY_MODE ?? null;
+}
+
+function normalizeShopifyMode(rawMode: string | null) {
+  return rawMode?.trim().toLowerCase() ?? "";
+}
+
 export function getShopifyMode(): ShopifyMode {
-  return process.env.SHOPIFY_MODE === "live" ? "live" : "mock";
+  return normalizeShopifyMode(getRawShopifyMode()) === "live" ? "live" : "mock";
+}
+
+export function isLiveShopifyConfigured() {
+  return Boolean(
+    process.env.SHOPIFY_SHOP_DOMAIN &&
+      process.env.SHOPIFY_API_VERSION &&
+      ((process.env.SHOPIFY_CLIENT_ID && process.env.SHOPIFY_CLIENT_SECRET) ||
+        process.env.SHOPIFY_ADMIN_ACCESS_TOKEN),
+  );
 }
 
 export function getShopifyModeBadge() {
