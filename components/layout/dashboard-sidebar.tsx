@@ -1,10 +1,12 @@
-const healthStats = [
-  { label: "Store mode", value: "Mock Shopify" },
-  { label: "Catalog target", value: "~30 candies" },
-  { label: "History window", value: "6 months" },
-];
+import { getShopifyModeBadge } from "@/lib/shopify";
 
 export function DashboardSidebar() {
+  const healthStats = [
+    { label: "Store mode", value: getShopifyModeBadge() },
+    { label: "Catalog target", value: "~50 candies" },
+    { label: "History window", value: "6 months" },
+  ];
+
   return (
     <aside className="w-full max-w-full rounded-[28px] border border-white/70 bg-white/75 p-5 shadow-panel backdrop-blur lg:max-w-[320px]">
       <div className="mb-8">

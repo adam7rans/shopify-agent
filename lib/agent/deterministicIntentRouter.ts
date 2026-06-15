@@ -13,7 +13,8 @@ export function routeIntentDeterministically(prompt: string): AgentIntentDecisio
       traceEntry: {
         toolName: "agent_intent_router",
         input: { mode: "deterministic", prompt: normalizedPrompt },
-        outputSummary: 'Matched the prompt to the "best_sellers" intent using deterministic aliases.',
+        outputSummary:
+          'Matched the prompt to the "best_sellers" intent using deterministic aliases.',
       },
     };
   }

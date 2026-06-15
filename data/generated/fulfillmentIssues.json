@@ -32,7 +32,7 @@
     "severity": "medium",
     "description": "Inbound pallet damage affected a small run of ramune and sour items.",
     "impactedOrders": 6,
-    "sku": "JP-SOUR-PEACH-001",
+    "sku": "JP-HICHEW-APPLE-001",
     "status": "watching",
     "createdAt": "2026-06-11T06:20:00.000Z"
   },
@@ -57,7 +57,7 @@
     "severity": "medium",
     "description": "A receiving mismatch paused replenishment for one export lane.",
     "impactedOrders": 7,
-    "sku": "JP-MILK-BEAR-004",
+    "sku": "JP-KASUGAI-MUSCAT-004",
     "status": "watching",
     "createdAt": "2026-06-10T12:00:00.000Z"
   },
@@ -70,7 +70,7 @@
     "severity": "medium",
     "description": "Humidity exposure damaged a limited number of seasonal gift boxes.",
     "impactedOrders": 5,
-    "sku": "KR-GRAPE-GUMMY-006",
+    "sku": "JP-KORORO-PEACH-006",
     "status": "watching",
     "createdAt": "2026-06-09T09:40:00.000Z"
   }

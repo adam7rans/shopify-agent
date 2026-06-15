@@ -33,7 +33,16 @@ Current modes:
 - `SHOPIFY_MODE=mock`
   - reads generated JSON-backed Shopify-like data
 - `SHOPIFY_MODE=live`
-  - currently validates env vars and marks the seam for future Admin GraphQL implementation
+  - exchanges or reuses a Shopify Admin token server-side
+  - reads products, inventory, and recent orders from the live Admin GraphQL API
+  - preserves mocked warehouse, distributor, and fulfillment-ops data
+
+Live helpers:
+
+- `lib/shopify/token.ts`
+  - client-credentials token exchange and server-side token cache
+- `lib/shopify/graphql.ts`
+  - Admin GraphQL request helper with sanitized errors
 
 ## Generated mock data
 
@@ -41,7 +50,7 @@ The app uses generated Kandwii data so the demo is repeatable and deterministic.
 
 Generators in `lib/mock/` produce:
 
-- ~30 Japanese and Korean candy products
+- ~50 Japanese and Korean candy and snack products in the current catalog
 - orders
 - inventory snapshots
 - daily sales metrics
@@ -55,6 +64,8 @@ The generator script:
 - `scripts/generate-mock-data.ts`
 
 writes runtime JSON into `data/generated/`.
+
+The live product sync script uses the same generated catalog as the source of truth, so mock mode and seeded live mode stay aligned.
 
 ## Agent intent router
 
@@ -89,6 +100,10 @@ The current app implements three business flows:
 - `get_recent_orders`
 - `get_shopify_products`
 - `calculate_top_sellers`
+- live-window resolver that:
+  - uses recent live Shopify Orders for “recent” prompts
+  - tries previous-month reporting for “last month” prompts
+  - falls back to the latest live order window when the requested month is empty
 
 ### Sour reorder / stockout
 
@@ -121,13 +136,46 @@ That response supports:
 
 This keeps the UI predictable and prevents each route from inventing a new custom payload shape.
 
+For the best-sellers table specifically, the shared model now carries:
+
+- date window used
+- number of orders included
+- source label such as `Live Shopify Orders`
+
+That metadata is rendered directly above the ranked table so reviewers can see exactly what the analytics are based on.
+
+## Live Shopify status
+
+The current local live mode uses:
+
+- live Shopify products
+- live Shopify inventory
+- live Shopify Orders for sales analytics
+
+Current behavior by flow:
+
+- best-sellers
+  - uses live Shopify Orders
+  - falls back from an empty requested month to the latest 30-day, then 60-day, live order window
+- sour reorder
+  - uses live Shopify products
+  - uses live Shopify inventory
+  - uses live Shopify Orders for 30-day sales velocity
+- warehouse health
+  - keeps external warehouse and fulfillment ops mocked on purpose
+
 ## Future path
 
 The intended next production-oriented steps are:
 
-- implement the live Shopify Admin GraphQL client
 - add Convex for conversations, cached analytics, tool logs, and operational data
 - replace intent-only routing with a broader tool-calling execution layer
 - support hybrid live Shopify data plus mock external operations sources
+
+Additional live Shopify work that can still be expanded:
+
+- richer order import and reconciliation
+- stronger inventory-location mapping across multiple Shopify locations
+- historical order seeding refinements once the dev-store limits are better understood
 
 The current codebase is already structured so those additions can happen without rewriting the existing UI contract.

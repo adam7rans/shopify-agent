@@ -1,7 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { getShopifyClient } from "@/lib/shopify";
-import { get_recent_orders, resolveAnalysisReferenceDate, type ToolTraceEntry } from "@/lib/tools/bestSellers";
+import {
+  get_recent_orders_with_fallback,
+  resolveAnalysisReferenceDate,
+  type ToolTraceEntry,
+} from "@/lib/tools/bestSellers";
 import type { DistributorAvailability, InventoryLevel, Order, Product } from "@/types/domain";
 
 export interface SourInventoryRisk {
@@ -220,7 +224,7 @@ export async function runSourCandyReorderFlow() {
   const salesWindow = getLastThirtyDayWindow(referenceDate);
   const sourProducts = await get_sour_shopify_products();
   const inventory = await get_shopify_inventory();
-  const recentOrders = await get_recent_orders({
+  const recentOrders = await get_recent_orders_with_fallback({
     startDate: salesWindow.startDate,
     endDate: salesWindow.endDate,
   });
@@ -246,6 +250,14 @@ export async function runSourCandyReorderFlow() {
       toolName: "get_shopify_inventory",
       input: { scope: "all locations" },
       outputSummary: `Loaded ${inventory.inventory.length} inventory rows, then matched them to sour candy SKUs.`,
+    },
+    {
+      toolName: "get_recent_orders",
+      input: { startDate: salesWindow.startDate, endDate: salesWindow.endDate },
+      outputSummary:
+        recentOrders.source === "mock-fallback"
+          ? `Live Shopify order access is unavailable, so 30-day sales velocity is using ${recentOrders.orders.length} generated mock orders instead.`
+          : `Loaded ${recentOrders.orders.length} ${recentOrders.source} orders for the 30-day sales window.`,
     },
     {
       toolName: "calculate_sales_velocity",
@@ -276,6 +288,8 @@ export async function runSourCandyReorderFlow() {
     salesWindow,
     sourProducts: sourProducts.products,
     recentOrders: recentOrders.orders,
+    orderDataSource: recentOrders.source,
+    orderFallbackReason: recentOrders.fallbackReason,
     risks,
     reorderDraft,
     toolTrace,

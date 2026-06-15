@@ -9,6 +9,7 @@ export interface ProductVariant {
   productId: string;
   title: string;
   sku: string;
+  inventoryItemId?: string;
   price: number;
   cost: number;
   margin: number;
@@ -20,6 +21,8 @@ export interface Product {
   id: string;
   title: string;
   handle: string;
+  brand: string;
+  productDescription: string;
   description: string;
   category: string;
   countryOfOrigin: string;
@@ -30,8 +33,12 @@ export interface Product {
   price: number;
   cost: number;
   margin: number;
+  startingInventory: number;
   inventoryQuantity: number;
   fulfillmentRegion: FulfillmentRegion;
+  isRealWorldInspired: boolean;
+  sourceNote: string;
+  referenceNote: string;
   variants: ProductVariant[];
   createdAt: string;
   salesHistoryDays: number;

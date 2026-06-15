@@ -1,47 +1,128 @@
 import { NextResponse } from "next/server";
+import { getHybridOpsBadge, getShopifyModeBadge } from "@/lib/shopify";
 import {
   calculate_top_sellers,
-  get_recent_orders,
   get_shopify_products,
-  resolveBestSellersMonthRange,
+  resolveBestSellersWindow,
 } from "@/lib/tools/bestSellers";
 import { routeAgentIntent } from "@/lib/agent/intentRouter";
 import { runSourCandyReorderFlow } from "@/lib/tools/reorderSourCandy";
 import { runWarehouseHealthFlow } from "@/lib/tools/warehouseHealth";
 import type { AgentToolTraceEntry, AgentUiResponse } from "@/types/agentUi";
 
-async function buildBestSellersResponse(): Promise<AgentUiResponse> {
-  const previousMonth = await resolveBestSellersMonthRange();
-  const recentOrders = await get_recent_orders({
-    startDate: previousMonth.startDate,
-    endDate: previousMonth.endDate,
-  });
+async function buildBestSellersResponse(prompt: string): Promise<AgentUiResponse> {
+  const resolvedWindow = await resolveBestSellersWindow(prompt);
   const products = await get_shopify_products();
-  const topSellers = calculate_top_sellers(recentOrders.orders, products.products);
+  const topSellers = calculate_top_sellers(resolvedWindow.orders, products.products);
   const topProduct = topSellers.rows[0];
+  const usingMockOrderFallback = resolvedWindow.ordersSource === "mock-fallback";
+  const isRecentWindow = resolvedWindow.requestedPromptMode === "recent";
+  const answerTitle = isRecentWindow
+    ? "Recent best-sellers snapshot"
+    : `${resolvedWindow.requestedWindowLabel ?? resolvedWindow.label} best-sellers snapshot`;
+  const orderSourceSummary =
+    resolvedWindow.ordersSource === "live"
+      ? `Fetched ${resolvedWindow.orders.length} live orders for ${resolvedWindow.label}.`
+      : usingMockOrderFallback
+        ? `Fetched ${resolvedWindow.orders.length} generated mock orders because live Shopify Order access is not approved yet.`
+        : `Fetched ${resolvedWindow.orders.length} mock orders for ${resolvedWindow.label}.`;
+
+  if (!topProduct) {
+    return {
+      kind: "best_sellers",
+      answer: {
+        title: answerTitle,
+        body: usingMockOrderFallback
+          ? `I can read the live Shopify catalog, but this app is not approved for live Order access yet. Order-based analytics are temporarily using mock history, and there still isn't enough matching activity in ${resolvedWindow.label} to rank top sellers.`
+          : resolvedWindow.fallbackMessage
+            ? `${resolvedWindow.fallbackMessage} I still did not find enough matching line items to rank best sellers in ${resolvedWindow.label}.`
+            : `I reached the Shopify catalog, but there isn't enough order history in ${resolvedWindow.label} to calculate top sellers yet.`,
+        badge: getShopifyModeBadge(),
+      },
+      primaryCards: [],
+      secondaryCards: [],
+      tables: [
+        {
+          type: "product_table",
+          title: `Best-selling candies`,
+          dateWindowLabel: resolvedWindow.label,
+          ordersIncluded: resolvedWindow.orders.length,
+          sourceLabel: resolvedWindow.sourceLabel,
+          rows: [],
+        },
+      ],
+      toolTrace: [
+        {
+          toolName: "resolve_best_sellers_window",
+          input: {
+            promptMode: resolvedWindow.requestedPromptMode,
+            windowStrategy: resolvedWindow.windowStrategy,
+          },
+          outputSummary:
+            resolvedWindow.fallbackMessage ??
+            `Using ${resolvedWindow.label} as the best-sellers analysis window.`,
+        },
+        {
+          toolName: "get_recent_orders",
+          input: {
+            startDate: resolvedWindow.startDate,
+            endDate: resolvedWindow.endDate,
+            source: resolvedWindow.sourceLabel,
+          },
+          outputSummary: orderSourceSummary,
+        },
+        {
+          toolName: "get_shopify_products",
+          input: {
+            mode: getShopifyModeBadge(),
+          },
+          outputSummary: `Loaded ${products.products.length} products from the Shopify adapter.`,
+        },
+        {
+          toolName: "calculate_top_sellers",
+          input: {
+            orders: resolvedWindow.orders.length,
+            products: products.products.length,
+          },
+          outputSummary: "No ranked top sellers were available because the selected order window returned zero matching line items.",
+        },
+      ],
+    };
+  }
 
   return {
     kind: "best_sellers",
     answer: {
-      title: `${previousMonth.label} best-sellers snapshot`,
-      body: `Last month, ${topProduct.product} was your best-selling candy with ${topProduct.unitsSold} units sold. ${topSellers.topCategory} led the catalog overall with ${topSellers.topCategoryUnitsSold} units sold across the month.`,
-      badge: "Mock Shopify",
+      title: answerTitle,
+      body: usingMockOrderFallback
+        ? `${topProduct.product} is the strongest performer in the fallback order history with ${topProduct.unitsSold} units sold. Live Shopify products are in use, but order-based ranking is temporarily using generated mock orders until the app is approved for the Order object.`
+        : resolvedWindow.fallbackMessage
+          ? `${resolvedWindow.fallbackMessage} In ${resolvedWindow.label}, ${topProduct.product} leads with ${topProduct.unitsSold} units sold across ${resolvedWindow.orders.length} live Shopify orders.`
+          : isRecentWindow
+            ? `In the latest live Shopify order window, ${topProduct.product} is performing best with ${topProduct.unitsSold} units sold across ${resolvedWindow.orders.length} orders. ${topSellers.topCategory} is the strongest category overall.`
+            : `${topProduct.product} was your best-selling candy in ${resolvedWindow.label} with ${topProduct.unitsSold} units sold across ${resolvedWindow.orders.length} live Shopify orders. ${topSellers.topCategory} led the catalog overall.`,
+      badge: getShopifyModeBadge(),
     },
     primaryCards: [
       {
         type: "insight",
-        title: `${previousMonth.label} top seller`,
+        title: `${resolvedWindow.label} top seller`,
         confidence: "High",
         metric: `${topProduct.unitsSold} units sold`,
-        explanation: `${topProduct.product} generated $${topProduct.revenue.toFixed(2)} in revenue and helped ${topSellers.topCategory} finish as the leading category.`,
-        recommendedAction: `Feature ${topProduct.product} in the next merchandising pass and keep an eye on other ${topSellers.topCategory.toLowerCase()} SKUs.`,
+        explanation: `${topProduct.product} generated $${topProduct.revenue.toFixed(2)} in revenue across ${resolvedWindow.orders.length} ${resolvedWindow.sourceLabel.toLowerCase()} and helped ${topSellers.topCategory} finish as the leading category.`,
+        recommendedAction: resolvedWindow.fallbackMessage
+          ? `${resolvedWindow.fallbackMessage} Feature ${topProduct.product} in the next merchandising pass while live order history fills in.`
+          : `Feature ${topProduct.product} in the next merchandising pass and keep an eye on other ${topSellers.topCategory.toLowerCase()} SKUs.`,
       },
     ],
     secondaryCards: [],
     tables: [
       {
         type: "product_table",
-        title: `Best-selling candies for ${previousMonth.label}`,
+        title: `Best-selling candies`,
+        dateWindowLabel: resolvedWindow.label,
+        ordersIncluded: resolvedWindow.orders.length,
+        sourceLabel: resolvedWindow.sourceLabel,
         rows: topSellers.rows.map((row) => ({
           product: row.product,
           sku: row.sku,
@@ -54,24 +135,35 @@ async function buildBestSellersResponse(): Promise<AgentUiResponse> {
     ],
     toolTrace: [
       {
+        toolName: "resolve_best_sellers_window",
+        input: {
+          promptMode: resolvedWindow.requestedPromptMode,
+          windowStrategy: resolvedWindow.windowStrategy,
+        },
+        outputSummary:
+          resolvedWindow.fallbackMessage ??
+          `Using ${resolvedWindow.label} as the best-sellers analysis window.`,
+      },
+      {
         toolName: "get_recent_orders",
         input: {
-          startDate: previousMonth.startDate,
-          endDate: previousMonth.endDate,
+          startDate: resolvedWindow.startDate,
+          endDate: resolvedWindow.endDate,
+          source: resolvedWindow.sourceLabel,
         },
-        outputSummary: `Fetched ${recentOrders.orders.length} mock orders for ${previousMonth.label}.`,
+        outputSummary: orderSourceSummary,
       },
       {
         toolName: "get_shopify_products",
         input: {
-          mode: "mock",
+          mode: getShopifyModeBadge(),
         },
         outputSummary: `Loaded ${products.products.length} products from the Shopify adapter for SKU metadata.`,
       },
       {
         toolName: "calculate_top_sellers",
         input: {
-          orders: recentOrders.orders.length,
+          orders: resolvedWindow.orders.length,
           products: products.products.length,
         },
         outputSummary: `Ranked ${topSellers.rows.length} top-selling products and identified ${topSellers.topCategory} as the strongest category.`,
@@ -82,6 +174,27 @@ async function buildBestSellersResponse(): Promise<AgentUiResponse> {
 
 async function buildSourReorderResponse(): Promise<AgentUiResponse> {
   const result = await runSourCandyReorderFlow();
+  const usingMockOrderFallback = result.orderDataSource === "mock-fallback";
+  if (result.risks.length === 0) {
+    return {
+      kind: "sour_reorder",
+      answer: {
+        title: "Sour candy reorder check",
+        body: "I couldn't find any sour candy SKUs in the active Shopify catalog yet. Sync the Kandwii seed products or switch back to mock mode to test the reorder workflow.",
+        badge: getShopifyModeBadge(),
+      },
+      primaryCards: [],
+      secondaryCards: [],
+      tables: [
+        {
+          type: "risk_table",
+          title: `Sour candy stockout risk for ${result.salesWindow.label}`,
+          rows: [],
+        },
+      ],
+      toolTrace: result.toolTrace,
+    };
+  }
   const primaryRisk = result.risks.find((risk) => risk.reorderNeeded) ?? result.risks[0];
   const reorderCount = result.risks.filter((risk) => risk.reorderNeeded).length;
 
@@ -90,9 +203,13 @@ async function buildSourReorderResponse(): Promise<AgentUiResponse> {
     answer: {
       title: "Sour candy reorder check",
       body: primaryRisk.reorderNeeded
-        ? `Yes. Sour candy is at risk. ${primaryRisk.product} is projected to stock out in ${primaryRisk.daysUntilStockout.toFixed(1)} days, while the distributor lead time is ${primaryRisk.leadTimeDays} days. I recommend drafting a reorder for ${primaryRisk.recommendedCases} cases.`
-        : `Not yet. Sour candy is still covered, but ${primaryRisk.product} is the closest watch item with roughly ${primaryRisk.daysUntilStockout.toFixed(1)} days of inventory left.`,
-      badge: "Mock Shopify",
+        ? usingMockOrderFallback
+          ? `Yes, with a caveat. Live Shopify inventory is in use, and ${primaryRisk.product} is projected to stock out in ${primaryRisk.daysUntilStockout.toFixed(1)} days against a ${primaryRisk.leadTimeDays}-day lead time. Recent sales velocity is temporarily using mock order history because the app is not yet approved for the Shopify Order object, so the reorder draft should be treated as provisional.`
+          : `Yes. Sour candy is at risk. ${primaryRisk.product} is projected to stock out in ${primaryRisk.daysUntilStockout.toFixed(1)} days, while the distributor lead time is ${primaryRisk.leadTimeDays} days. I recommend drafting a reorder for ${primaryRisk.recommendedCases} cases.`
+        : usingMockOrderFallback
+          ? `Not yet. Live Shopify inventory shows coverage for now, and ${primaryRisk.product} is the closest watch item. Sales velocity is temporarily using mock order history because Shopify Order access is not approved for this app yet.`
+          : `Not yet. Sour candy is still covered, but ${primaryRisk.product} is the closest watch item with roughly ${primaryRisk.daysUntilStockout.toFixed(1)} days of inventory left.`,
+      badge: getShopifyModeBadge(),
     },
     primaryCards: result.reorderDraft
       ? [
@@ -160,7 +277,7 @@ async function buildWarehouseHealthResponse(): Promise<AgentUiResponse> {
       body: hottestCenter
         ? `${hottestCenter.label} is the warehouse that needs the most attention right now. Across the network there are ${result.totalDelayedShipments} delayed shipments, ${result.totalStuckFulfillments} stuck fulfillment events, and average fulfillment time is ${result.averageFulfillmentHours} hours.`
         : `Warehouse health is stable overall, with no single fulfillment center standing out as the primary risk.`,
-      badge: "Mock ops data",
+      badge: getHybridOpsBadge(),
     },
     primaryCards: [
       {
@@ -218,7 +335,7 @@ export async function POST(request: Request) {
   let response: AgentUiResponse | null = null;
 
   if (intentDecision.intent === "best_sellers") {
-    response = await buildBestSellersResponse();
+    response = await buildBestSellersResponse(prompt);
   }
 
   if (intentDecision.intent === "sour_reorder") {

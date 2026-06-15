@@ -128,6 +128,23 @@ function renderProductTable(table: ProductPerformanceTableBlock) {
     <div className="overflow-hidden rounded-[26px] border border-slate-200 bg-white/98 shadow-panel">
       <div className="border-b border-slate-200 px-6 py-4">
         <h3 className="text-base font-semibold text-ink">{table.title}</h3>
+        {table.dateWindowLabel || table.ordersIncluded || table.sourceLabel ? (
+          <div className="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.16em] text-slate-500">
+            {table.dateWindowLabel ? (
+              <span className="rounded-full bg-shell px-3 py-1">
+                Window: {table.dateWindowLabel}
+              </span>
+            ) : null}
+            {typeof table.ordersIncluded === "number" ? (
+              <span className="rounded-full bg-shell px-3 py-1">
+                Orders: {table.ordersIncluded}
+              </span>
+            ) : null}
+            {table.sourceLabel ? (
+              <span className="rounded-full bg-shell px-3 py-1">{table.sourceLabel}</span>
+            ) : null}
+          </div>
+        ) : null}
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse text-left text-sm">

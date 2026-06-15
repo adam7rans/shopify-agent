@@ -7,6 +7,7 @@ This project currently includes:
 - a standalone Next.js + TypeScript + Tailwind app
 - a mock-first Shopify adapter layer
 - deterministic Kandwii product and operations data generation
+- a larger real-world-inspired Kandwii seed catalog for Shopify sync
 - best-sellers workflow
 - sour candy reorder and stockout workflow
 - warehouse and fulfillment issues workflow
@@ -15,6 +16,14 @@ This project currently includes:
   - OpenAI-compatible LLM routing
   - deterministic fallback routing
   - sanitized failure diagnostics
+- Shopify live-mode support for:
+  - products
+  - inventory
+  - recent orders
+- Shopify scripts for:
+  - live connection testing
+  - seed product sync
+  - historical order seeding attempts
 - a shared structured UI response model for cards, tables, and tool traces
 
 ## What is mocked
@@ -33,15 +42,27 @@ The app is designed so those mocked systems can later be replaced or supplemente
 
 The next production-facing integration path would be:
 
-- implement `liveShopifyClient.ts` against Shopify Admin GraphQL
 - add Convex for conversations, cached analytics, tool logs, and supporting app data
-- connect the generated product sync path to real Shopify product creation
 - extend the agent from intent routing into fuller tool execution and persistence
+- tighten Shopify write-path ergonomics and catalog reconciliation for production use
+
+## Current live Shopify behavior
+
+In local live mode today:
+
+- products come from live Shopify
+- inventory comes from live Shopify
+- seeded live Shopify Orders are used for sales analytics
+
+That means:
+
+- best-sellers uses live Shopify Orders and automatically falls back to the latest live order window when a requested month is empty
+- sour reorder uses live Shopify Orders for 30-day sales velocity
+- warehouse and fulfillment flows still use mocked external-ops data
 
 ## Stretch goals that could come next
 
-- live Shopify Admin GraphQL reads
-- product sync into the Kandwii dev store
+- richer historical live-order seeding and reconciliation
 - warehouse and distributor dashboards beyond the current flow cards
 - richer chat history and conversation memory
 - embedded Shopify app packaging if required by the take-home format

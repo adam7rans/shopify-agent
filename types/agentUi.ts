@@ -86,6 +86,9 @@ export interface StockRiskRow {
 export interface ProductPerformanceTableBlock {
   type: "product_table";
   title: string;
+  dateWindowLabel?: string;
+  ordersIncluded?: number;
+  sourceLabel?: string;
   rows: ProductPerformanceRow[];
 }
 

@@ -10,7 +10,10 @@
     "typecheck": "tsc --noEmit",
     "generate:mock": "tsx scripts/generate-mock-data.ts",
     "test:mock-shopify": "tsx scripts/test-mock-shopify-adapter.ts",
-    "test:agent-flows": "tsx scripts/test-agent-flows.ts"
+    "test:agent-flows": "tsx scripts/test-agent-flows.ts",
+    "test:shopify-live": "tsx scripts/test-shopify-live.ts",
+    "sync:shopify-products": "tsx scripts/sync-shopify-products.ts",
+    "seed:shopify-orders": "tsx scripts/seed-shopify-orders.ts"
   },
   "dependencies": {
     "next": "^16.2.9",
