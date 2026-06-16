@@ -6,6 +6,10 @@ const flowExpectations = [
     expectedKind: "best_sellers",
   },
   {
+    prompt: "What does our inventory look like?",
+    expectedKind: "inventory_overview",
+  },
+  {
     prompt: "Do we need to reorder sour candy?",
     expectedKind: "sour_reorder",
   },

@@ -287,6 +287,7 @@ export async function runSourCandyReorderFlow() {
     referenceDate,
     salesWindow,
     sourProducts: sourProducts.products,
+    inventory: inventory.inventory,
     recentOrders: recentOrders.orders,
     orderDataSource: recentOrders.source,
     orderFallbackReason: recentOrders.fallbackReason,

@@ -1,4 +1,5 @@
 import { isBestSellersPrompt } from "@/lib/tools/bestSellers";
+import { isInventoryOverviewPrompt } from "@/lib/tools/inventoryOverview";
 import { isSourReorderPrompt } from "@/lib/tools/reorderSourCandy";
 import { isWarehouseHealthPrompt } from "@/lib/tools/warehouseHealth";
 import type { AgentIntentDecision } from "@/lib/agent/types";
@@ -15,6 +16,19 @@ export function routeIntentDeterministically(prompt: string): AgentIntentDecisio
         input: { mode: "deterministic", prompt: normalizedPrompt },
         outputSummary:
           'Matched the prompt to the "best_sellers" intent using deterministic aliases.',
+      },
+    };
+  }
+
+  if (isInventoryOverviewPrompt(normalizedPrompt)) {
+    return {
+      intent: "inventory_overview",
+      source: "deterministic",
+      traceEntry: {
+        toolName: "agent_intent_router",
+        input: { mode: "deterministic", prompt: normalizedPrompt },
+        outputSummary:
+          'Matched the prompt to the "inventory_overview" intent using deterministic aliases.',
       },
     };
   }

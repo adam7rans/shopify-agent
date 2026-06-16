@@ -26,6 +26,7 @@ interface OpenAiErrorPayload {
 
 const intentToolMap = {
   route_best_sellers: "best_sellers",
+  route_inventory_overview: "inventory_overview",
   route_sour_reorder: "sour_reorder",
   route_warehouse_health: "warehouse_health",
   route_unsupported: "unsupported",
@@ -109,7 +110,7 @@ export async function routeIntentWithLlm(prompt: string): Promise<AgentIntentDec
         {
           role: "system",
           content:
-            "You route ecommerce operations prompts to one existing intent. Always choose exactly one tool. Best sellers is for popularity/top sellers questions. Sour reorder is for sour candy reorder or stockout questions. Warehouse health is for global fulfillment, delays, or warehouse problems. Unsupported is for anything else.",
+            "You route ecommerce operations prompts to one existing intent. Always choose exactly one tool. Best sellers is for popularity, top sellers, recent sales, or time-window sales questions. Inventory overview is for inventory visibility, stock tables, or low-stock SKU questions. Sour reorder is for sour candy reorder or stockout questions. Warehouse health is for global fulfillment, delays, or warehouse problems. Unsupported is for anything else.",
         },
         {
           role: "user",
@@ -122,7 +123,16 @@ export async function routeIntentWithLlm(prompt: string): Promise<AgentIntentDec
           function: {
             name: "route_best_sellers",
             description:
-              "Use for best-selling, most popular, or top sellers questions about candy performance.",
+              "Use for best-selling, most popular, recent sales, top 10 sellers, or time-window candy performance questions.",
+            parameters: { type: "object", properties: {}, additionalProperties: false },
+          },
+        },
+        {
+          type: "function",
+          function: {
+            name: "route_inventory_overview",
+            description:
+              "Use for inventory visibility, inventory tables, low-stock SKU questions, or current stock level questions.",
             parameters: { type: "object", properties: {}, additionalProperties: false },
           },
         },

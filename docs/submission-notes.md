@@ -4,73 +4,82 @@
 
 This project currently includes:
 
-- a standalone Next.js + TypeScript + Tailwind app
+- a standalone Next.js + TypeScript + Tailwind application
 - a mock-first Shopify adapter layer
-- deterministic Kandwii product and operations data generation
-- a larger real-world-inspired Kandwii seed catalog for Shopify sync
-- best-sellers workflow
-- sour candy reorder and stockout workflow
-- warehouse and fulfillment issues workflow
-- unsupported prompt handling
-- a lightweight intent-routing agent layer with:
-  - OpenAI-compatible LLM routing
-  - deterministic fallback routing
-  - sanitized failure diagnostics
-- Shopify live-mode support for:
-  - products
-  - inventory
-  - recent orders
-- Shopify scripts for:
-  - live connection testing
-  - seed product sync
-  - historical order seeding attempts
-- a shared structured UI response model for cards, tables, and tool traces
+- deterministic Kandwii data generation
+- a live Shopify path for products, inventory, and orders
+- a merchant-facing threaded UI with:
+  - `User mode`
+  - `Diagnostics mode`
+- supported workflow families for:
+  - best sellers / sales performance
+  - inventory overview
+  - sour candy reorder / stockout
+  - warehouse / fulfillment health
+  - unsupported/help responses
+- an OpenAI-compatible intent router with deterministic fallback
+- sanitized diagnostics for provider failures and tool traces
+- scripts for:
+  - live Shopify connection testing
+  - Shopify product sync
+  - Shopify development-order seeding
+  - agent flow smoke testing
 
-## What is mocked
+## What is live
 
-The following are intentionally mocked in this version:
-
-- Shopify product, order, and inventory reads in default local mode
-- distributor availability
-- warehouse inventory snapshots
-- fulfillment delays and issue events
-- broader external operations systems
-
-The app is designed so those mocked systems can later be replaced or supplemented without changing the current UI contract.
-
-## What would be connected in production
-
-The next production-facing integration path would be:
-
-- add Convex for conversations, cached analytics, tool logs, and supporting app data
-- extend the agent from intent routing into fuller tool execution and persistence
-- tighten Shopify write-path ergonomics and catalog reconciliation for production use
-
-## Current live Shopify behavior
-
-In local live mode today:
+When `SHOPIFY_MODE=live` is enabled and the app has the required access:
 
 - products come from live Shopify
 - inventory comes from live Shopify
-- seeded live Shopify Orders are used for sales analytics
+- seeded Shopify Orders are used for sales analytics
 
 That means:
 
-- best-sellers uses live Shopify Orders and automatically falls back to the latest live order window when a requested month is empty
+- best-sellers uses live Shopify Orders
+- best-sellers falls back to the latest live order window when a requested month is empty
 - sour reorder uses live Shopify Orders for 30-day sales velocity
-- warehouse and fulfillment flows still use mocked external-ops data
 
-## Stretch goals that could come next
+## What is mocked
 
-- richer historical live-order seeding and reconciliation
-- warehouse and distributor dashboards beyond the current flow cards
-- richer chat history and conversation memory
-- embedded Shopify app packaging if required by the take-home format
+The following remain intentionally mocked in this version:
 
-## Reviewer note
+- distributor availability
+- warehouse inventory snapshots
+- delayed / damaged / stuck fulfillment issue events
+- broader supplier and external-ops systems
 
-This version is intentionally scoped for demo clarity:
+This is deliberate. The app treats Shopify as the commerce source of truth and external operations systems as a separate layer.
 
-- the app already behaves like an AI operations agent
-- the flows are transparent and inspectable
-- the architecture is set up for live Shopify and Convex expansion without a rewrite
+## What would be connected next in production
+
+The next production-facing steps would likely be:
+
+- add Convex for conversations, tool logs, cached analytics, and app data
+- expand supported operational questions, especially supplier and warehouse directory flows
+- add broader inventory analytics and flexible time-window reporting
+- eventually broaden the agent from intent routing into multi-step tool execution
+
+## Reviewer framing
+
+This build is intentionally scoped to be:
+
+- understandable to a first-time merchant
+- transparent enough for a reviewer to inspect
+- architecturally ready for live Shopify data
+
+The `User mode` / `Diagnostics mode` split is part of that goal:
+
+- `User mode` makes the product easier to understand
+- `Diagnostics mode` makes the system easier to trust and demo
+
+## Stretch goals after this pass
+
+- supplier / warehouse contact directory questions
+- recurring reorder knowledge
+- broader operational business-memory answers such as:
+  - what this app is for
+  - where inventory is stored
+  - how fulfillment is organized
+- product-description drafting
+- supplier email drafting
+- broader financial reporting

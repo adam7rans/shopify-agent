@@ -2,23 +2,26 @@
 
 ## Setup
 
-- Start from the Kandwii landing screen with the local app running on `localhost:3000`
-- Mention that this is a Shopify-connected AI ops demo for a fictional Japanese and Korean candy shop
-- Note that the current build is running in live Shopify mode for products, inventory, and order analytics, while warehouse and distributor ops remain mocked
+- Open Kandwii on the main landing screen
+- Start in **User mode**
+- Mention that this is a Shopify-connected AI operations assistant for a fictional Japanese and Korean candy shop
+- Explain that:
+  - products, inventory, and sales analytics come from live Shopify in live mode
+  - warehouse and fulfillment operations remain mocked because they represent systems outside Shopify
 
-## 1. Introduce Kandwii
+## 1. Explain what the app is
 
 Say:
 
-"Kandwii is a store-operations AI agent for a Shopify merchant. Instead of being just a chatbot, it answers questions with structured cards, tables, and visible tool traces."
+"Kandwii is an operations copilot for a Shopify merchant. It is designed to answer a focused set of store questions with structured results, not just chat text."
 
-Point out:
+Call out:
 
-- command panel at the top
-- shared workspace below
-- tool trace area for transparency
+- onboarding prompt groups
+- user mode vs diagnostics mode
+- structured answers rendered directly in the conversation
 
-## 2. Show best sellers
+## 2. Show sales performance
 
 Prompt:
 
@@ -26,22 +29,48 @@ Prompt:
 
 Call out:
 
-- assistant answer summarizes recent live performance
-- insight card highlights the top seller and top category
-- product table shows ranked performance
-- table metadata shows:
-  - date window used
+- assistant answer summarizes recent performance
+- insight card highlights the top seller
+- ranked table shows:
+  - product
+  - SKU
+  - units sold
+  - revenue
+  - margin
+- metadata above the table shows:
+  - the exact window used
   - number of orders included
   - source: `Live Shopify Orders`
-- tool trace shows the route decision and underlying tools
 
-Then optionally show:
+Then optionally run:
 
 `What were our best-selling candies last month?`
 
-Call out that the app tries the requested month first, then transparently falls back to the latest live order window if the requested month is empty.
+Call out:
 
-## 3. Show sour reorder / stockout
+- the app tries the requested month first
+- if that month is empty, the answer and diagnostics explain the fallback to a recent live-order window
+
+## 3. Show inventory visibility
+
+Prompt:
+
+`What does our inventory look like?`
+
+Call out:
+
+- assistant answer summarizes total SKU coverage
+- primary insight card explains the current stock posture
+- low-stock highlight cards surface the most constrained items
+- inventory table aggregates active Shopify inventory by SKU across locations
+
+Then optionally run:
+
+`Which SKUs are low on stock?`
+
+Call out that the same inventory flow can pivot to a more focused low-stock view.
+
+## 4. Show sour reorder / stockout
 
 Prompt:
 
@@ -49,26 +78,26 @@ Prompt:
 
 Call out:
 
-- assistant answer gives a direct recommendation
-- reorder draft card shows the proposed buy
-- inventory risk cards show the most exposed sour SKUs
-- risk table shows velocity, stockout timing, and reorder sizing
-- mention that sales velocity is coming from live Shopify Orders in this mode
+- direct recommendation in plain English
+- reorder draft card
+- stock-risk cards
+- supporting risk table
+- 30-day sales velocity is based on live Shopify Orders in live mode
 
-## 4. Show warehouse issues
+## 5. Show warehouse / fulfillment health
 
 Prompt:
 
-`Show me warehouse issues globally.`
+`Where is fulfillment getting stuck?`
 
 Call out:
 
-- assistant answer summarizes the current network problem
-- primary summary card identifies the bottleneck
-- regional cards show fulfillment health across the warehouse network
+- answer summarizes the current network issue
+- regional cards show warehouse health
 - issue table shows delayed or problematic shipment events
+- explain that this part is intentionally `Live Shopify + Mock ops`
 
-## 5. Show unsupported prompt handling
+## 6. Show unsupported handling
 
 Prompt:
 
@@ -76,28 +105,38 @@ Prompt:
 
 Call out:
 
-- the app does not break or error out
-- it returns a clean in-product unsupported state
-- suggested prompts guide the reviewer back into supported workflows
+- the app does not break
+- it returns a clean unsupported state
+- it suggests supported prompts to bring the user back into the current product surface
 
-## 6. Explain the tool trace
+## 7. Switch to diagnostics mode
 
-Open the tool trace and say:
+Turn on **Diagnostics mode** and rerun one prompt, ideally:
 
-"Every supported response shows both the high-level agent routing decision and the concrete tools that produced the UI. That makes the system easier to debug and easier to trust."
+`Which candy is performing best?`
 
-## 7. Explain LLM mode and fallback mode
+Call out:
+
+- intent-routing trace
+- source labels
+- query window
+- counts
+- tool trace
 
 Say:
 
-- "If an OpenAI key is available, the app attempts LLM intent routing first."
-- "If OpenAI is unavailable, rate-limited, or over quota, the app falls back to deterministic routing."
+"Diagnostics mode is there for reviewers, debugging, and trust. User mode keeps the experience clean."
+
+## 8. Explain LLM routing and fallback
+
+Say:
+
+- "If an OpenAI key is available, Kandwii attempts LLM intent routing first."
+- "If OpenAI is unavailable or fails, the app falls back to deterministic routing."
 - "The trace makes that explicit without exposing secrets or raw provider payloads."
 
-Also say:
+## 9. Close with the current product scope
 
-- "Products and inventory are live Shopify data."
-- "Best-sellers and sour reorder both use live Shopify Orders when access is available."
-- "Warehouse and fulfillment operations remain mocked because they represent external systems outside Shopify."
+Say:
 
-If fallback is active, show the sanitized trace summary.
+"Today the product is strongest on sales performance, inventory visibility, reorder risk, and fulfillment health. The next layers would be supplier workflows, broader operational memory, and eventually richer agent execution."

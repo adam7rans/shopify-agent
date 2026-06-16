@@ -1,16 +1,14 @@
 # Kandwii Shopify AI Agent
 
-Kandwii Shopify AI Agent is a desktop-first Shopify-connected demo app for a fictional Japanese and Korean candy shop. It shows how an AI store-operations assistant can interpret questions, call tools, and return structured UI for merchandising, inventory, and fulfillment decisions.
+Kandwii is a Shopify-connected AI operations demo for a fictional Japanese and Korean candy shop. It is designed to answer a focused set of merchant questions with structured results instead of raw chat text: what is selling, what inventory is at risk, and where fulfillment is breaking down.
 
-## What this app demonstrates
+## What the app demonstrates
 
-- A mock-first Shopify adapter that keeps the app usable before live Shopify credentials are available
-- A live Shopify Admin GraphQL path for products, inventory, and recent orders
-- Live Shopify product, inventory, and seeded order analytics in local live mode
-- Deterministic operational flows backed by generated Kandwii data
-- A lightweight LLM intent router that can classify prompts into supported store-ops workflows
-- A deterministic fallback path when OpenAI is unavailable or rate-limited
-- Structured generative UI with answers, cards, tables, and tool traces
+- A mock-first Shopify adapter that can switch between generated demo data and live Shopify Admin GraphQL reads
+- A merchant-facing **User mode** and a reviewer-facing **Diagnostics mode**
+- Live Shopify product, inventory, and seeded order analytics when `SHOPIFY_MODE=live`
+- Structured answers rendered as insight cards, reorder cards, tables, diagnostics summaries, and tool traces
+- OpenAI-compatible intent routing with deterministic fallback when the LLM is unavailable
 
 ## Tech stack
 
@@ -19,105 +17,139 @@ Kandwii Shopify AI Agent is a desktop-first Shopify-connected demo app for a fic
 - React
 - Tailwind CSS
 - Node.js
-- Shopify Admin API adapter layer
-- OpenAI-compatible intent routing
+- Shopify Admin GraphQL API
+- OpenAI-compatible routing layer
 
-## Supported prompts
+## Supported question families
 
-The current demo supports these store questions and nearby aliases:
+### Sales performance
 
-- `What were our best-selling candies last month?`
-- `What are our best-selling candies recently?`
-- `What is the most popular candy?`
 - `Which candy is performing best?`
-- `Show me top sellers`
+- `What are our best-selling candies recently?`
+- `What were our best-selling candies last month?`
+- `Show the top 10 sellers over the past six months.`
+
+### Inventory visibility
+
+- `What does our inventory look like?`
+- `Show me our inventory`
+- `Which SKUs are low on stock?`
+
+### Reorder / stockout
+
 - `Do we need to reorder sour candy?`
 - `Should we reorder sour candy?`
 - `What sour candy is at risk of stockout?`
+
+### Fulfillment health
+
 - `Show me warehouse issues globally.`
 - `Which warehouse has problems?`
 - `Are there any fulfillment delays?`
 
-Unsupported prompts return a normal in-product response that explains the current demo scope and suggests working prompts.
+### Onboarding / help
+
+- `What is this app for?`
+- `What can I ask?`
+- `How do I use this app?`
+
+Unsupported prompts return a normal in-product response with suggested next questions.
+
+## Product modes
+
+### User mode
+
+User mode is the default experience. It keeps the interface conversational and hides backend detail by default. The goal is to make Kandwii feel understandable to a merchant who is opening the app for the first time.
+
+### Diagnostics mode
+
+Diagnostics mode keeps the same answers and structured UI, but adds:
+
+- the high-level intent-routing decision
+- source labels such as `Live Shopify`, `Live Shopify Orders`, and `Mock ops`
+- query windows
+- summarized counts
+- the tool trace
+
+Diagnostics mode never exposes secrets, raw provider payloads, request headers, or tokens.
 
 ## Architecture overview
 
 - `app/`
-  - Next.js App Router entry points and the `/api/agent` route
+  - Next.js pages and `/api/agent`
 - `components/layout/`
-  - Desktop-first shell, command panel, and shared results workspace
+  - app shell, conversation UI, onboarding, result rendering, and diagnostics rendering
 - `lib/shopify/`
-  - Shopify adapter contract plus mock and live client implementations
+  - mock and live Shopify clients behind a shared adapter contract
 - `lib/tools/`
-  - Existing deterministic business flows for best sellers, sour reorder, and warehouse health
+  - deterministic flows for sales, inventory, reorder, and warehouse health
 - `lib/agent/`
-  - Intent routing layer with OpenAI-compatible LLM routing and deterministic fallback
-- `lib/mock/`
-  - Deterministic mock catalog and operations data generators
+  - OpenAI-compatible intent routing plus deterministic fallback
 - `types/agentUi.ts`
-  - Shared `AgentUiResponse` model used by every supported flow
+  - shared `AgentUiResponse` contract for cards, tables, diagnostics, and trace
 - `data/generated/`
-  - Materialized mock data used by the adapter and operational tools
+  - deterministic mock catalog and operations data
 
-More detail is in [docs/architecture.md](/Users/adam/Documents/Kandwii/docs/architecture.md).
+For more detail, see [docs/architecture.md](/Users/adam/Documents/Kandwii/docs/architecture.md).
 
 ## Mock-first Shopify adapter
 
-The app is intentionally mock-first. All Shopify-like product, order, and inventory reads go through:
+All product, inventory, and order reads go through:
 
 - `lib/shopify/types.ts`
 - `lib/shopify/mockShopifyClient.ts`
 - `lib/shopify/liveShopifyClient.ts`
 - `lib/shopify/index.ts`
 
-That means the UI and tools never read generated Shopify-like data directly. In local demo mode, `SHOPIFY_MODE=mock` loads generated JSON from `data/generated/`. The live client remains the future seam for Shopify Admin GraphQL once store credentials are supplied.
+That means the UI and business flows never read raw generated Shopify-like data directly.
 
-### Modes
+### Shopify modes
 
 - `SHOPIFY_MODE=mock`
-  - Uses generated Kandwii JSON data from `data/generated/`
+  - generated Kandwii JSON-backed Shopify data
 - `SHOPIFY_MODE=live`
-  - Uses Shopify Admin GraphQL for products, inventory, and recent orders
-  - Uses seeded live Shopify Orders for sales analytics when order access is available
-  - Keeps distributor, warehouse, and fulfillment-ops data mocked
+  - live Shopify Admin GraphQL for products, inventory, and recent orders
+  - mocked warehouse / distributor / fulfillment-ops systems remain separate on purpose
 
-## LLM intent routing and fallback
+## Current live behavior
 
-The app supports four intents:
+When live Shopify mode is enabled and the app has order access:
+
+- products come from live Shopify
+- inventory comes from live Shopify
+- best-sellers uses live Shopify Orders
+- sour reorder uses live Shopify Orders for 30-day sales velocity
+- warehouse / fulfillment remains `Live Shopify + Mock ops`
+
+### Best-sellers date-window behavior
+
+- `Which candy is performing best?`
+  - prefers the latest 30-day live order window
+- `What are our best-selling candies recently?`
+  - prefers the latest 30-day live order window
+- `What were our best-selling candies last month?`
+  - tries the previous calendar month first
+  - if that month has zero orders, it falls back to the latest 30-day live order window
+  - if needed, it falls back again to the latest 60-day live order window
+
+The answer and diagnostics trace both explain which window was used.
+
+## LLM intent routing and deterministic fallback
+
+The current supported intents are:
 
 - `best_sellers`
+- `inventory_overview`
 - `sour_reorder`
 - `warehouse_health`
 - `unsupported`
 
 Routing behavior:
 
-- If `OPENAI_API_KEY` is present, `/api/agent` attempts OpenAI-compatible intent routing first.
-- If the LLM call succeeds, the agent trace shows `mode: "llm"`.
-- If the LLM call fails or is unavailable, the app falls back to deterministic routing.
-- Fallback traces include sanitized diagnostics only: HTTP status, provider code or type when available, a short safe message, and the fallback mode.
-
-Current OpenAI quota or rate-limit failures are expected to degrade gracefully. The demo continues working through deterministic routing, and the tool trace makes that visible without exposing secrets or raw provider payloads.
-
-## Live analytics behavior
-
-When `SHOPIFY_MODE=live` is enabled and the app has Shopify Order access:
-
-- best-sellers uses live Shopify Orders
-- sour reorder uses live Shopify Orders for 30-day sales velocity
-- products and inventory come from live Shopify
-- warehouse, fulfillment, and distributor ops remain mocked
-
-Best-sellers window behavior:
-
-- `Which candy is performing best?` and `What are our best-selling candies recently?`
-  - prefer the latest 30-day live Shopify order window
-  - fall back to the latest 60-day live Shopify order window if needed
-- `What were our best-selling candies last month?`
-  - tries the previous calendar month first
-  - if that month has zero live orders, it falls back to the latest live Shopify order window
-
-The answer and tool trace both show the exact window used, the number of orders included, and whether a fallback window was needed.
+- if `OPENAI_API_KEY` is present, Kandwii attempts OpenAI-compatible LLM routing first
+- if the LLM succeeds, the trace shows `mode: "llm"`
+- if the LLM fails or is unavailable, the app falls back to deterministic routing
+- fallback traces include only sanitized diagnostics such as status, provider code/type when available, a short safe message, and the fallback mode
 
 ## Environment variables
 
@@ -127,28 +159,27 @@ Start from [.env.example](/Users/adam/Documents/Kandwii/.env.example):
 
 - `SHOPIFY_MODE=mock`
 - `SHOPIFY_SHOP_DOMAIN=kandwii.myshopify.com`
+- `SHOPIFY_API_VERSION=2026-04`
 - `SHOPIFY_CLIENT_ID=`
 - `SHOPIFY_CLIENT_SECRET=`
 - `SHOPIFY_ADMIN_ACCESS_TOKEN=`
-- `SHOPIFY_API_VERSION=2026-04`
-- `DEMO_NOW=2026-06-14`
-- `NEXT_PUBLIC_APP_NAME=Kandwii`
 - `OPENAI_API_KEY=`
 - `OPENAI_BASE_URL=https://api.openai.com/v1`
 - `OPENAI_MODEL=gpt-4.1-mini`
+- `DEMO_NOW=2026-06-14`
+- `NEXT_PUBLIC_APP_NAME=Kandwii`
 
-### Shopify auth options
+## Shopify scopes
 
-The app supports two live Admin API auth paths:
+For the current live implementation, use:
 
-- Preferred for Dev Dashboard apps owned by your organization:
-  - `SHOPIFY_CLIENT_ID`
-  - `SHOPIFY_CLIENT_SECRET`
-  - server-side client-credentials token exchange
-- Optional fallback:
-  - `SHOPIFY_ADMIN_ACCESS_TOKEN`
-
-The app never needs Shopify secrets in frontend code.
+- `read_products`
+- `write_products`
+- `read_inventory`
+- `write_inventory`
+- `read_orders`
+- `write_orders`
+- `read_locations`
 
 ## Local setup
 
@@ -164,31 +195,26 @@ Generate deterministic mock data:
 npm run generate:mock
 ```
 
-Optionally verify the Shopify mock adapter:
+Verify the adapters:
 
 ```bash
 npm run test:mock-shopify
-```
-
-Test the live Shopify connection:
-
-```bash
 npm run test:shopify-live
 ```
 
-Sync the Kandwii seed catalog into Shopify:
+Sync the catalog into Shopify if needed:
 
 ```bash
 npm run sync:shopify-products
 ```
 
-Seed a small, fake historical order set if your app scopes and store permissions allow it:
+Seed development-store demo orders if needed:
 
 ```bash
 npm run seed:shopify-orders
 ```
 
-Start the local dev server:
+Start the local app:
 
 ```bash
 npm run dev
@@ -198,98 +224,45 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Testing the flows
 
-Run the agent route smoke test with the dev server running:
+Run the agent smoke test with the app server running:
 
 ```bash
 npm run test:agent-flows
 ```
 
-That script verifies:
+That verifies:
 
-- best sellers returns `best_sellers`
-- sour reorder returns `sour_reorder`
-- warehouse issues returns `warehouse_health`
-- unsupported prompts return `unsupported`
+- `best_sellers`
+- `inventory_overview`
+- `sour_reorder`
+- `warehouse_health`
+- `unsupported`
 
-It also checks that an answer and tool trace are present.
+It also checks that a normal answer and tool trace are present.
 
-## Live Shopify setup
+## Security note
 
-### Required app scopes
+- `.env.local` is ignored by Git
+- API keys, Shopify secrets, and tokens must never be committed
+- diagnostics and traces are intentionally sanitized
+- the client never receives raw Shopify or OpenAI secret values
 
-Likely required scopes for the current live implementation:
+## Vercel setup later
 
-- `read_products`
-- `write_products`
-- `read_inventory`
-- `write_inventory`
-- `read_orders`
-- `write_orders`
-
-You may also need permission in the store for products, inventory, and orders management.
-
-### Shopify live workflow
-
-1. Create or configure an app for `kandwii.myshopify.com` in the Shopify Dev Dashboard.
-2. Add the scopes above.
-3. Install the app on the Kandwii dev store.
-4. Put the credentials into `.env.local`.
-5. Run:
-
-```bash
-npm run test:shopify-live
-```
-
-6. If the connection test passes, seed products:
-
-```bash
-npm run sync:shopify-products
-```
-
-7. Optionally seed historical demo orders:
-
-```bash
-npm run seed:shopify-orders
-```
-
-8. Switch the app to live mode:
-
-```bash
-SHOPIFY_MODE=live
-```
-
-### Notes on live orders
-
-- The order seeding script uses fake customer emails in the `example.invalid` domain.
-- It avoids sending customer emails by setting the documented `orderCreate` email options to `false`.
-- Shopify development stores limit `orderCreate` to five new orders per minute, so the seeding script intentionally paces requests.
-- If Shopify rejects order creation or inventory behavior, the script should fail with a sanitized message so you can see the exact platform limitation.
-- Once seeded, those live Shopify Orders are used directly by best-sellers and sour reorder analytics.
-
-## Vercel envs later
-
-When you are ready to move Vercel from mock to live mode later, set these project env vars:
+When you want live production mode on Vercel, set:
 
 - `SHOPIFY_MODE=live`
 - `SHOPIFY_SHOP_DOMAIN`
 - `SHOPIFY_API_VERSION`
 - `SHOPIFY_CLIENT_ID`
 - `SHOPIFY_CLIENT_SECRET`
+- `OPENAI_API_KEY`
+- `OPENAI_BASE_URL`
+- `OPENAI_MODEL`
+- `DEMO_NOW`
 
-Or, if you are using the fallback token path:
+Then redeploy and verify:
 
-- `SHOPIFY_ADMIN_ACCESS_TOKEN`
-
-## Security notes
-
-- `.env.local` is ignored by Git.
-- API keys must never be committed.
-- Shopify client secrets and access tokens must never be committed.
-- The app does not expose raw `OPENAI_API_KEY` values in logs, traces, or docs.
-- Fallback diagnostics intentionally avoid request headers and raw provider payloads.
-
-## Submission-oriented docs
-
-- [Architecture notes](/Users/adam/Documents/Kandwii/docs/architecture.md)
-- [Demo script](/Users/adam/Documents/Kandwii/docs/demo-script.md)
-- [Submission notes](/Users/adam/Documents/Kandwii/docs/submission-notes.md)
+- the diagnostics endpoint resolves live mode
+- the sidebar mode badge shows `Live Shopify`
+- best-sellers and sour reorder use live Shopify data

@@ -1,104 +1,116 @@
+import { useEffect, useRef } from "react";
+import type { StarterPromptGroup } from "@/components/layout/shellTypes";
+
 interface ChatPanelProps {
   prompt: string;
   onPromptChange: (value: string) => void;
   onRunPrompt: () => void;
-  onUseBestSellersPrompt: () => void;
-  onUseSourReorderPrompt: () => void;
-  onUseWarehousePrompt: () => void;
-  answer: string | null;
-  error: string | null;
+  onUsePrompt: (prompt: string) => void;
+  starterGroups: StarterPromptGroup[];
   isLoading: boolean;
+  hasTurns: boolean;
+}
+
+function accentClasses(accent: StarterPromptGroup["accent"]) {
+  if (accent === "inventory") {
+    return "border-matcha/20 bg-matcha/10 text-matcha hover:bg-matcha/15";
+  }
+
+  if (accent === "operations") {
+    return "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100";
+  }
+
+  if (accent === "help") {
+    return "border-plum/20 bg-plum/10 text-plum hover:bg-plum/15";
+  }
+
+  return "border-gold/30 bg-gold/10 text-gold hover:bg-gold/15";
 }
 
 export function ChatPanel({
   prompt,
   onPromptChange,
   onRunPrompt,
-  onUseBestSellersPrompt,
-  onUseSourReorderPrompt,
-  onUseWarehousePrompt,
-  answer,
-  error,
+  onUsePrompt,
+  starterGroups,
   isLoading,
+  hasTurns,
 }: ChatPanelProps) {
-  return (
-    <section className="rounded-[28px] border border-white/70 bg-white/80 p-5 shadow-panel backdrop-blur">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-2xl">
-          <p className="text-sm uppercase tracking-[0.22em] text-matcha/80">Command panel</p>
-          <h2 className="mt-2 text-2xl font-semibold text-ink">Ask Kandwii a store question</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-500">
-            The current demo supports best-sellers, sour candy reorder / stockout,
-            and global warehouse / fulfillment issues, all powered by deterministic mock data.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={onUseBestSellersPrompt}
-            className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-400"
-          >
-            Best-sellers prompt
-          </button>
-          <button
-            type="button"
-            onClick={onUseSourReorderPrompt}
-            className="rounded-full border border-matcha/20 bg-matcha/10 px-4 py-2 text-sm font-medium text-matcha transition hover:bg-matcha/15"
-          >
-            Sour reorder prompt
-          </button>
-          <button
-            type="button"
-            onClick={onUseWarehousePrompt}
-            className="rounded-full border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-medium text-sky-700 transition hover:bg-sky-100"
-          >
-            Warehouse issues prompt
-          </button>
-        </div>
-      </div>
+  const quickPrompts = starterGroups.map((group) => group.prompts[0]).slice(0, 3);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-      <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_220px]">
-        <label className="block" htmlFor="agent-prompt">
-          <span className="text-sm font-medium text-slate-700">Prompt</span>
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      return;
+    }
+
+    textarea.style.height = "0px";
+    const nextHeight = Math.min(Math.max(textarea.scrollHeight, 32), 220);
+    textarea.style.height = `${nextHeight}px`;
+  }, [prompt]);
+
+  return (
+    <section className="mx-auto w-full max-w-[640px]">
+      {!hasTurns ? (
+        <div className="mb-4 flex flex-wrap justify-center gap-2 md:mb-5">
+          {quickPrompts.map((suggestedPrompt, index) => (
+            <button
+              key={suggestedPrompt}
+              type="button"
+              onClick={() => onUsePrompt(suggestedPrompt)}
+              className={`rounded-full border px-3 py-2 text-sm font-medium transition ${
+                accentClasses(starterGroups[index]?.accent ?? "sales")
+              }`}
+            >
+              {suggestedPrompt}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      <form
+        className="rounded-[30px] border border-white/80 bg-white/95 px-5 py-4 shadow-panel"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onRunPrompt();
+        }}
+      >
+        <label className="sr-only" htmlFor="agent-prompt">
+          Ask Kandwii
+        </label>
+        <div className="flex items-end gap-3">
           <textarea
+            ref={textareaRef}
             id="agent-prompt"
             value={prompt}
             onChange={(event) => onPromptChange(event.target.value)}
-            rows={3}
-            className="mt-3 w-full rounded-2xl border border-sand bg-shell/60 px-4 py-3 text-sm text-ink outline-none ring-0 placeholder:text-slate-400"
+            rows={1}
+            placeholder="Ask Kandwii about sales, inventory, reorder risk, or fulfillment health."
+            className="min-h-[40px] flex-1 resize-none overflow-y-auto border-0 bg-transparent px-1 py-1 text-base leading-8 text-ink outline-none placeholder:text-slate-400"
           />
-        </label>
-
-        <div className="flex flex-col justify-between rounded-2xl border border-sand/70 bg-shell/80 p-4">
-          <div>
-            <p className="text-sm font-medium text-slate-700">Run current prompt</p>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
-              Results will appear below in the workspace with cards, tables, and trace.
-            </p>
-          </div>
           <button
-            type="button"
-            onClick={onRunPrompt}
+            type="submit"
             disabled={isLoading}
-            className="mt-4 rounded-full bg-matcha px-4 py-2 text-sm font-medium text-white transition hover:bg-matcha/90 disabled:cursor-not-allowed disabled:bg-matcha/60"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-white transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:bg-ink/40"
+            aria-label={isLoading ? "Kandwii is thinking" : "Send prompt"}
           >
-            {isLoading ? "Running..." : "Ask Kandwii"}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 19V5" />
+              <path d="m5 12 7-7 7 7" />
+            </svg>
           </button>
         </div>
-      </div>
-
-      {(error || answer) && (
-        <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white p-5">
-          <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Run status</p>
-          {error ? (
-            <p className="mt-3 text-sm leading-7 text-coral">{error}</p>
-          ) : (
-            <p className="mt-3 text-sm leading-7 text-slate-600">
-              Response generated. Scroll below for the structured result view.
-            </p>
-          )}
-        </div>
-      )}
+      </form>
     </section>
   );
 }
