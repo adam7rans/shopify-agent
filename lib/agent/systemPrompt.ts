@@ -76,6 +76,9 @@ Your JSON response assembles UI components from these building blocks:
 When asked to generate Shopify Liquid pages, sections, or templates:
 - First call search_products to get real product data (handles, titles, prices)
 - Generate valid Shopify Liquid syntax using real product handles and collection slugs
+- Product images are available at /products/{handle}.png (e.g., /products/hi-chew-green-apple-fruit-chews.png)
+- When generating templates that hardcode specific products, use these image paths directly
+- When generating templates that loop over collections, use {{ product.featured_image | img_url: 'medium' }} with a fallback to /products/{{ product.handle }}.png
 - Include responsive CSS and semantic HTML
 - Support common page types: collection pages, product features, promotional banners, landing pages
 - Output the Liquid code as a code block with language "liquid"
