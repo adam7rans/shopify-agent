@@ -71,8 +71,18 @@ export function BestSellersShell({
   const [turns, setTurns] = useState<ConversationTurn[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [visibleTurnId, setVisibleTurnId] = useState<string | null>(null);
+  const scrollTargetRef = useRef<string | null>(null);
   const turnRefs = useRef<Map<string, HTMLElement>>(new Map());
   const responseRefs = useRef<Map<string, HTMLElement>>(new Map());
+
+  const scrollToTarget = useCallback(() => {
+    const id = scrollTargetRef.current;
+    if (!id) return;
+    const element = responseRefs.current.get(id);
+    if (!element) return;
+    scrollTargetRef.current = null;
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   const registerTurnRef = useCallback((id: string, el: HTMLElement | null) => {
     if (el) {
@@ -85,34 +95,11 @@ export function BestSellersShell({
   const registerResponseRef = useCallback((id: string, el: HTMLElement | null) => {
     if (el) {
       responseRefs.current.set(id, el);
+      scrollToTarget();
     } else {
       responseRefs.current.delete(id);
     }
-  }, []);
-
-  const queueScrollToResponse = useCallback((id: string, attempt = 0) => {
-    const element = responseRefs.current.get(id);
-
-    if (!element) {
-      if (attempt < 10) {
-        requestAnimationFrame(() => queueScrollToResponse(id, attempt + 1));
-      }
-      return;
-    }
-
-    const topInset = 12;
-    const absoluteTop = window.scrollY + element.getBoundingClientRect().top;
-    const nextTop = Math.max(absoluteTop - topInset, 0);
-
-    if (Math.abs(window.scrollY - nextTop) < 4) {
-      return;
-    }
-
-    window.scrollTo({
-      top: nextTop,
-      behavior: "smooth",
-    });
-  }, []);
+  }, [scrollToTarget]);
 
   useEffect(() => {
     if (mode !== "diagnostics" || turns.length === 0) return;
@@ -162,7 +149,7 @@ export function BestSellersShell({
     ]);
     setPrompt("");
     setVisibleTurnId(turnId);
-    requestAnimationFrame(() => queueScrollToResponse(turnId));
+    scrollTargetRef.current = turnId;
 
     try {
       const response = await fetch("/api/agent/stream", {
@@ -188,7 +175,7 @@ export function BestSellersShell({
               : turn,
           ),
         );
-        requestAnimationFrame(() => queueScrollToResponse(turnId));
+        scrollTargetRef.current = turnId; requestAnimationFrame(scrollToTarget);
         return;
       }
 
@@ -234,7 +221,7 @@ export function BestSellersShell({
                     : turn,
                 ),
               );
-              requestAnimationFrame(() => queueScrollToResponse(turnId));
+              scrollTargetRef.current = turnId; requestAnimationFrame(scrollToTarget);
             }
 
             if (event.type === "error") {
@@ -249,7 +236,7 @@ export function BestSellersShell({
                     : turn,
                 ),
               );
-              requestAnimationFrame(() => queueScrollToResponse(turnId));
+              scrollTargetRef.current = turnId; requestAnimationFrame(scrollToTarget);
             }
           } catch {
             // skip malformed SSE lines
@@ -267,7 +254,7 @@ export function BestSellersShell({
             : turn,
         ),
       );
-      requestAnimationFrame(() => queueScrollToResponse(turnId));
+      scrollTargetRef.current = turnId; requestAnimationFrame(scrollToTarget);
     } finally {
       setIsSubmitting(false);
     }
