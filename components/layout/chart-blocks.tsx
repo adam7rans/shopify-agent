@@ -143,23 +143,60 @@ function truncateLabel(label: string, max: number): string {
   return label.length > max ? `${label.slice(0, max)}…` : label;
 }
 
-function RangeBarChart({ chart }: { chart: BarChartBlock }) {
-  const [range, setRange] = useState<[number, number]>([0, chart.bars.length - 1]);
+function FilterableBarChart({ chart }: { chart: BarChartBlock }) {
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
 
   const visibleBars = useMemo(
-    () => chart.bars.slice(range[0], range[1] + 1),
-    [chart.bars, range],
+    () => chart.bars.filter((b) => !hidden.has(b.label)),
+    [chart.bars, hidden],
   );
 
-  const showBrush = chart.bars.length > 8;
+  const showFilter = chart.bars.length > 4;
+
+  function toggle(label: string) {
+    setHidden((prev) => {
+      const next = new Set(prev);
+      if (next.has(label)) next.delete(label);
+      else next.add(label);
+      return next;
+    });
+  }
 
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
       <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
+      {showFilter && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {chart.bars.map((bar, i) => {
+            const active = !hidden.has(bar.label);
+            const color = getColor(i, bar.category);
+            return (
+              <button
+                key={bar.label}
+                type="button"
+                onClick={() => toggle(bar.label)}
+                className="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition"
+                style={{
+                  borderColor: active ? color : "#e2e8f0",
+                  backgroundColor: active ? `${color}14` : "transparent",
+                  color: active ? color : "#94a3b8",
+                  opacity: active ? 1 : 0.6,
+                }}
+              >
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: active ? color : "#cbd5e1" }}
+                />
+                {truncateLabel(bar.label, 18)}
+              </button>
+            );
+          })}
+        </div>
+      )}
       <div className="mt-4 h-[400px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={showBrush ? chart.bars : visibleBars}
+            data={visibleBars}
             margin={{ top: 8, right: 8, bottom: 24, left: 24 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#f0ece4" />
@@ -187,24 +224,11 @@ function RangeBarChart({ chart }: { chart: BarChartBlock }) {
             />
             <Tooltip content={<ChartTooltip valueLabel={chart.valueLabel} />} />
             <Bar dataKey="value" radius={[6, 6, 0, 0]} maxBarSize={48}>
-              {(showBrush ? chart.bars : visibleBars).map((bar, i) => (
-                <Cell key={bar.label} fill={getColor(i, bar.category)} />
-              ))}
+              {visibleBars.map((bar) => {
+                const originalIndex = chart.bars.findIndex((b) => b.label === bar.label);
+                return <Cell key={bar.label} fill={getColor(originalIndex, bar.category)} />;
+              })}
             </Bar>
-            {showBrush ? (
-              <Brush
-                dataKey="label"
-                height={28}
-                stroke="#e8a735"
-                fill="#fefbf4"
-                travellerWidth={10}
-                onChange={(newRange) => {
-                  if (newRange && typeof newRange.startIndex === "number" && typeof newRange.endIndex === "number") {
-                    setRange([newRange.startIndex, newRange.endIndex]);
-                  }
-                }}
-              />
-            ) : null}
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -303,6 +327,6 @@ function RangeLineChart({ chart }: { chart: LineChartBlock }) {
 
 export function renderChart(chart: AgentChartBlock) {
   if (chart.type === "pie_chart") return renderPieChart(chart);
-  if (chart.type === "bar_chart") return <RangeBarChart chart={chart} />;
+  if (chart.type === "bar_chart") return <FilterableBarChart chart={chart} />;
   return <RangeLineChart chart={chart} />;
 }

@@ -49,13 +49,27 @@ export function isProtectedOrderAccessError(error: unknown) {
   );
 }
 
+const SPARSE_DATA_THRESHOLD = 30;
+
 export async function get_recent_orders_with_fallback(
   filters: OrderFilters = {},
 ): Promise<ResolvedRecentOrders> {
   try {
     const result = await get_recent_orders(filters);
+    const orders = result.orders;
+
+    if (getShopifyMode() === "live" && orders.length < SPARSE_DATA_THRESHOLD) {
+      const mockResult = await mockShopifyClient.getRecentOrders(filters);
+      return {
+        orders: mockResult.orders,
+        source: "mock-fallback",
+        fallbackReason:
+          "Live store has limited order history, using demo dataset for richer analytics.",
+      };
+    }
+
     return {
-      orders: result.orders,
+      orders,
       source: getShopifyMode() === "live" ? "live" : "mock",
     };
   } catch (error) {
