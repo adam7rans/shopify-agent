@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "generate:mock": "tsx scripts/generate-mock-data.ts",
     "test:mock-shopify": "tsx scripts/test-mock-shopify-adapter.ts",
     "test:agent-flows": "tsx scripts/test-agent-flows.ts",
@@ -36,6 +37,7 @@
     "tailwindcss": "^3.4.19",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.0"
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^4.1.9"
   }
 }
