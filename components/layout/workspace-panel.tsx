@@ -1,4 +1,5 @@
 import type { ConversationTurn, ShellMode } from "@/components/layout/shellTypes";
+import { renderChart } from "@/components/layout/chart-blocks";
 import type {
   AgentCardBlock,
   AgentTableBlock,
@@ -534,6 +535,14 @@ function renderAssistantResponse(result: AgentUiResponse, mode: ShellMode, onUse
         <div className="space-y-4">
           {result.tables.map((table) => (
             <div key={`${table.type}-${table.title}`}>{renderTable(table)}</div>
+          ))}
+        </div>
+      ) : null}
+
+      {result.charts && result.charts.length > 0 ? (
+        <div className="space-y-4">
+          {result.charts.map((chart) => (
+            <div key={`${chart.type}-${chart.title}`}>{renderChart(chart)}</div>
           ))}
         </div>
       ) : null}

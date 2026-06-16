@@ -1,4 +1,4 @@
-import type { AgentUiResponse, AgentCardBlock, AgentTableBlock } from "@/types/agentUi";
+import type { AgentUiResponse, AgentCardBlock, AgentTableBlock, AgentChartBlock } from "@/types/agentUi";
 
 const VALID_KINDS = new Set([
   "best_sellers",
@@ -26,6 +26,12 @@ const VALID_TABLE_TYPES = new Set([
   "issue_table",
 ]);
 
+const VALID_CHART_TYPES = new Set([
+  "pie_chart",
+  "bar_chart",
+  "line_chart",
+]);
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -38,6 +44,16 @@ function isValidTable(table: unknown): table is AgentTableBlock {
   if (!isRecord(table)) return false;
   if (typeof table.type !== "string" || !VALID_TABLE_TYPES.has(table.type)) return false;
   if (!Array.isArray(table.rows)) return false;
+  return true;
+}
+
+function isValidChart(chart: unknown): chart is AgentChartBlock {
+  if (!isRecord(chart)) return false;
+  if (typeof chart.type !== "string" || !VALID_CHART_TYPES.has(chart.type)) return false;
+  if (typeof chart.title !== "string") return false;
+  if (chart.type === "pie_chart" && !Array.isArray(chart.segments)) return false;
+  if (chart.type === "bar_chart" && !Array.isArray(chart.bars)) return false;
+  if (chart.type === "line_chart" && !Array.isArray(chart.series)) return false;
   return true;
 }
 
@@ -67,6 +83,10 @@ export function validateAndNormalizeResponse(
     ? raw.tables.filter(isValidTable)
     : [];
 
+  const charts = Array.isArray(raw.charts)
+    ? raw.charts.filter(isValidChart)
+    : undefined;
+
   const toolTrace = Array.isArray(raw.toolTrace) ? raw.toolTrace : [];
 
   return {
@@ -79,6 +99,7 @@ export function validateAndNormalizeResponse(
     primaryCards,
     secondaryCards,
     tables,
+    charts: charts && charts.length > 0 ? charts : undefined,
     toolTrace,
     diagnostics: isRecord(raw.diagnostics)
       ? (raw.diagnostics as unknown as AgentUiResponse["diagnostics"])

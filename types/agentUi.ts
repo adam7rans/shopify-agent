@@ -81,6 +81,55 @@ export interface CodeCardBlock {
   filename?: string;
 }
 
+export interface PieChartSegment {
+  label: string;
+  value: number;
+  category?: string;
+}
+
+export interface PieChartBlock {
+  type: "pie_chart";
+  title: string;
+  segments: PieChartSegment[];
+  valueLabel?: string;
+}
+
+export interface BarChartBar {
+  label: string;
+  value: number;
+  category?: string;
+}
+
+export interface BarChartBlock {
+  type: "bar_chart";
+  title: string;
+  bars: BarChartBar[];
+  xAxisLabel?: string;
+  yAxisLabel?: string;
+  valueLabel?: string;
+}
+
+export interface LineChartDataPoint {
+  x: string;
+  y: number;
+}
+
+export interface LineChartSeries {
+  name: string;
+  dataPoints: LineChartDataPoint[];
+}
+
+export interface LineChartBlock {
+  type: "line_chart";
+  title: string;
+  series: LineChartSeries[];
+  xAxisLabel?: string;
+  yAxisLabel?: string;
+  enableBrush?: boolean;
+}
+
+export type AgentChartBlock = PieChartBlock | BarChartBlock | LineChartBlock;
+
 export type AgentCardBlock =
   | InsightCardBlock
   | InventoryRiskCardBlock
@@ -191,6 +240,7 @@ export interface AgentUiResponse {
   primaryCards: AgentCardBlock[];
   secondaryCards: AgentCardBlock[];
   tables: AgentTableBlock[];
+  charts?: AgentChartBlock[];
   toolTrace: AgentToolTraceEntry[];
   diagnostics?: DiagnosticsSummaryBlock;
   suggestedPrompts?: string[];
