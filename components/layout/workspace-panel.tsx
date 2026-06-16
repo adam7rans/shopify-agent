@@ -1,5 +1,6 @@
 import type { ConversationTurn, ShellMode } from "@/components/layout/shellTypes";
 import { renderChart } from "@/components/layout/chart-blocks";
+import { LiquidCodeBlock } from "@/components/layout/liquid-code-block";
 import type {
   AgentCardBlock,
   AgentTableBlock,
@@ -171,6 +172,10 @@ function renderTextCard(card: TextCardBlock) {
 }
 
 function renderCodeCard(card: CodeCardBlock) {
+  if (card.language?.toLowerCase() === "liquid") {
+    return <LiquidCodeBlock content={card.content} filename={card.filename} />;
+  }
+
   return (
     <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white/96 shadow-panel">
       {card.filename ? (
