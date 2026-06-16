@@ -19,7 +19,7 @@ The app is an AI-powered operational surface for Shopify store operations — no
 ## High-level structure
 
 - `app/`
-  - homepage and `/api/agent`
+  - homepage plus `/api/agent` and `/api/agent/stream`
 - `components/layout/`
   - app shell, threaded conversation surface, onboarding, generative UI rendering
 - `lib/agent/`
@@ -37,7 +37,7 @@ The app is an AI-powered operational surface for Shopify store operations — no
 - `data/sample-documents/`
   - sample PDF invoices and purchase orders for the document parsing tool
 - `public/products/`
-  - generated product placeholder images (600x600 PNG)
+  - real product images keyed by handle
 
 ## Agent architecture
 
@@ -69,9 +69,16 @@ Eight tools are defined in `lib/agent/toolDefinitions.ts`:
 
 Each tool executor is a thin adapter — the real data logic lives in `lib/tools/*.ts` and `lib/shopify/`.
 
-### Deterministic fallback
+### Shared route architecture
 
-When no OpenAI key is configured (or the agent loop fails), the API route falls back to the original deterministic flow: intent classification via `lib/agent/intentRouter.ts` → hardcoded TypeScript workflow functions. This ensures the app always works, even without LLM access.
+Both product API routes now use the same core loop:
+
+- `/api/agent`
+  - a thin JSON wrapper around `runAgentLoop(prompt)`
+- `/api/agent/stream`
+  - an SSE wrapper around `runAgentLoop(prompt, onLog)`
+
+That means the app no longer splits product requests between an agent path and a separate deterministic workflow system. Structured failures stay inside the agent architecture instead of routing into hardcoded business flows.
 
 ## Generative UI
 
@@ -101,7 +108,7 @@ When asked to generate Shopify pages, the LLM:
 2. Generates valid Shopify Liquid template code referencing real product handles
 3. Returns the code in a `code` block with `language: "liquid"`
 
-Product images are served from `/products/{handle}.png` — generated placeholder images created by `scripts/generate-product-images.ts`.
+Product images are served from `/products/{handle}.png` and reference real downloaded product photos keyed by product handle.
 
 ## Document parsing
 
@@ -176,7 +183,7 @@ Those same product definitions also feed the Shopify sync script so seeded live 
 
 ## Shared `AgentUiResponse`
 
-All paths (agent loop and deterministic fallback) return the same UI contract from `types/agentUi.ts`.
+All agent responses return the same UI contract from `types/agentUi.ts`.
 
 That model supports:
 
@@ -208,6 +215,7 @@ The current UI is a threaded conversation surface:
 
 - the same thread shows:
   - diagnostics summary
+  - a real-time activity log panel
   - source badges
   - query windows
   - counts
@@ -233,13 +241,13 @@ Supporting scripts:
 - `scripts/seed-shopify-orders.ts`
 - `scripts/generate-product-images.ts`
 - `scripts/test-agent-flows.ts`
+- `scripts/test-agent-stream.ts`
 
 ## Future path
 
 The most likely next production-facing steps are:
 
 - add Convex for conversation persistence, tool logs, cached analytics, and app data
-- add streaming responses for faster perceived latency
 - expand tool set with write operations (place reorder, update inventory)
 - add supplier and warehouse directory questions
 - add multi-modal inputs (upload an invoice photo, paste a screenshot)

@@ -21,9 +21,8 @@ This project currently includes:
 - a live Shopify path for products, inventory, and orders
 - a merchant-facing threaded UI with:
   - `User mode` with contextual loading indicators
-  - `Diagnostics mode` with full tool traces
-- a deterministic fallback when no LLM is configured
-- generated product placeholder images (600x600 PNG)
+  - `Diagnostics mode` with full tool traces and a real-time activity log
+- real product images keyed by `/products/{handle}.png`
 - sample PDF supplier documents for document parsing demos
 - scripts for:
   - live Shopify connection testing
@@ -42,6 +41,12 @@ The LLM is not a classifier routing to hardcoded workflows. It is the decision-m
 - it handles queries that don't map to any pre-programmed workflow (e.g., "compare Korean and Japanese inventory", "match invoice SKUs to our stock levels")
 
 The system prompt provides tool descriptions and UI component schemas. The LLM does the rest.
+
+Every product request now uses the same core architecture:
+
+- `/api/agent` returns the final structured JSON result
+- `/api/agent/stream` streams real-time activity logs and then the final result
+- both routes run through the same multi-turn agent loop
 
 ## What is live
 
@@ -67,7 +72,6 @@ This is deliberate. The app treats Shopify as the commerce source of truth and e
 The next production-facing steps would likely be:
 
 - add Convex for conversations, tool logs, cached analytics, and app data
-- add streaming responses for faster perceived latency
 - expand tool set with write operations (place reorder, update inventory, send supplier emails)
 - add multi-modal inputs (photo upload of invoices, screenshot parsing)
 - broader financial reporting and trend analysis

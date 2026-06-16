@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { ChatPanel } from "@/components/layout/chat-panel";
+import { ActivityLogPanel } from "@/components/layout/activity-log-panel";
 import type {
   ConversationTurn,
   ShellMode,
@@ -10,6 +11,7 @@ import type {
 import { SidebarDock } from "@/components/layout/sidebar-dock";
 import { WorkspacePanel } from "@/components/layout/workspace-panel";
 import type { AgentUiResponse } from "@/types/agentUi";
+import type { ActivityLogStreamEvent } from "@/types/activityLog";
 
 const STARTER_PROMPT_GROUPS: StarterPromptGroup[] = [
   {
@@ -68,13 +70,48 @@ export function BestSellersShell({
   const [prompt, setPrompt] = useState("");
   const [turns, setTurns] = useState<ConversationTurn[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [visibleTurnId, setVisibleTurnId] = useState<string | null>(null);
+  const turnRefs = useRef<Map<string, HTMLElement>>(new Map());
 
-  async function runPrompt(nextPrompt = prompt) {
-    const trimmedPrompt = nextPrompt.trim();
-
-    if (!trimmedPrompt) {
-      return;
+  const registerTurnRef = useCallback((id: string, el: HTMLElement | null) => {
+    if (el) {
+      turnRefs.current.set(id, el);
+    } else {
+      turnRefs.current.delete(id);
     }
+  }, []);
+
+  useEffect(() => {
+    if (mode !== "diagnostics" || turns.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let bestEntry: IntersectionObserverEntry | null = null;
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
+              bestEntry = entry;
+            }
+          }
+        }
+        if (bestEntry) {
+          const turnId = bestEntry.target.getAttribute("data-turn-id");
+          if (turnId) setVisibleTurnId(turnId);
+        }
+      },
+      { threshold: [0.1, 0.3, 0.5, 0.7] },
+    );
+
+    for (const [, el] of turnRefs.current) {
+      observer.observe(el);
+    }
+
+    return () => observer.disconnect();
+  }, [mode, turns.length]);
+
+  async function runPromptWithStream(nextPrompt: string) {
+    const trimmedPrompt = nextPrompt.trim();
+    if (!trimmedPrompt) return;
 
     const turnId = createTurnId();
 
@@ -87,37 +124,101 @@ export function BestSellersShell({
         result: null,
         error: null,
         isLoading: true,
+        activityLog: [],
       },
     ]);
     setPrompt("");
+    setVisibleTurnId(turnId);
 
     try {
-      const response = await fetch("/api/agent", {
+      const response = await fetch("/api/agent/stream", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: trimmedPrompt }),
       });
 
-      const payload = (await response.json()) as AgentUiResponse | { error: string };
+      if (!response.ok || !response.body) {
+        let message = `Streaming request failed with status ${response.status}.`;
 
-      if (!response.ok || "error" in payload) {
-        throw new Error("error" in payload ? payload.error : "Failed to run prompt.");
+        try {
+          const payload = (await response.json()) as { answer?: { body?: string }; error?: string };
+          message = payload.answer?.body ?? payload.error ?? message;
+        } catch {
+          // fall through to default message
+        }
+
+        setTurns((currentTurns) =>
+          currentTurns.map((turn) =>
+            turn.id === turnId
+              ? { ...turn, error: message, isLoading: false }
+              : turn,
+          ),
+        );
+        return;
       }
 
-      setTurns((currentTurns) =>
-        currentTurns.map((turn) =>
-          turn.id === turnId
-            ? {
-                ...turn,
-                result: payload,
-                error: null,
-                isLoading: false,
-              }
-            : turn,
-        ),
-      );
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        const lines = buffer.split("\n\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          const dataLine = line.trim();
+          if (!dataLine.startsWith("data: ")) continue;
+
+          try {
+            const event = JSON.parse(dataLine.slice(6)) as ActivityLogStreamEvent;
+
+            if (event.type === "log" && event.entry) {
+              setTurns((currentTurns) =>
+                currentTurns.map((turn) =>
+                  turn.id === turnId
+                    ? { ...turn, activityLog: [...turn.activityLog, event.entry!] }
+                    : turn,
+                ),
+              );
+            }
+
+            if (event.type === "result" && event.data) {
+              setTurns((currentTurns) =>
+                currentTurns.map((turn) =>
+                  turn.id === turnId
+                    ? {
+                        ...turn,
+                        result: event.data as AgentUiResponse,
+                        isLoading: false,
+                      }
+                    : turn,
+                ),
+              );
+            }
+
+            if (event.type === "error") {
+              setTurns((currentTurns) =>
+                currentTurns.map((turn) =>
+                  turn.id === turnId
+                    ? {
+                        ...turn,
+                        error: event.error ?? "Unknown error",
+                        isLoading: false,
+                      }
+                    : turn,
+                ),
+              );
+            }
+          } catch {
+            // skip malformed SSE lines
+          }
+        }
+      }
     } catch (caughtError) {
       const message =
         caughtError instanceof Error ? caughtError.message : "Unknown error";
@@ -125,12 +226,7 @@ export function BestSellersShell({
       setTurns((currentTurns) =>
         currentTurns.map((turn) =>
           turn.id === turnId
-            ? {
-                ...turn,
-                result: null,
-                error: message,
-                isLoading: false,
-              }
+            ? { ...turn, error: message, isLoading: false }
             : turn,
         ),
       );
@@ -141,15 +237,28 @@ export function BestSellersShell({
 
   function handleUsePrompt(nextPrompt: string) {
     setPrompt(nextPrompt);
-    void runPrompt(nextPrompt);
+    void runPromptWithStream(nextPrompt);
   }
+
+  const activeLogs =
+    visibleTurnId
+      ? turns.find((t) => t.id === visibleTurnId)?.activityLog ?? []
+      : turns.length > 0
+        ? turns[turns.length - 1].activityLog
+        : [];
+
+  const showLogPanel = mode === "diagnostics" && turns.length > 0;
 
   const hasTurns = turns.length > 0;
 
   return (
     <div className="mx-auto min-h-full max-w-[1440px] pl-[88px] md:pl-[96px]">
       <SidebarDock mode={mode} onModeChange={setMode} currentRoute="home" />
-      <section className="min-w-0">
+      <section
+        className={`min-w-0 transition-[padding] duration-300 ${
+          showLogPanel ? "pr-[356px]" : ""
+        }`}
+      >
         {hasTurns ? (
           <>
             <div className="mx-auto max-w-[1100px] pt-8 pb-44 md:pt-12 md:pb-48">
@@ -157,10 +266,15 @@ export function BestSellersShell({
                 turns={turns}
                 mode={mode}
                 onUsePrompt={handleUsePrompt}
+                onRegisterTurnRef={registerTurnRef}
               />
             </div>
             {mode === "diagnostics" ? (
-              <div className="pointer-events-none fixed right-4 bottom-24 z-20 flex flex-col items-end gap-2 md:right-6 md:bottom-28">
+              <div
+                className={`pointer-events-none fixed bottom-24 z-20 flex flex-col items-end gap-2 transition-[right] duration-300 md:bottom-28 ${
+                  showLogPanel ? "right-[372px]" : "right-4 md:right-6"
+                }`}
+              >
                 <div className="rounded-full border border-plum/20 bg-white/90 px-3 py-1 text-xs font-medium uppercase tracking-[0.16em] text-plum shadow-panel backdrop-blur">
                   {storeModeLabel}
                 </div>
@@ -169,12 +283,16 @@ export function BestSellersShell({
                 </div>
               </div>
             ) : null}
-            <div className="fixed right-4 bottom-4 left-[88px] z-20 md:right-6 md:bottom-6 md:left-[96px]">
+            <div
+              className={`fixed bottom-4 left-[88px] z-20 transition-[right] duration-300 md:bottom-6 md:left-[96px] ${
+                showLogPanel ? "right-[372px]" : "right-4 md:right-6"
+              }`}
+            >
               <div className="mx-auto max-w-[1100px]">
                 <ChatPanel
                   prompt={prompt}
                   onPromptChange={setPrompt}
-                  onRunPrompt={() => void runPrompt()}
+                  onRunPrompt={() => void runPromptWithStream(prompt)}
                   onUsePrompt={handleUsePrompt}
                   starterGroups={STARTER_PROMPT_GROUPS}
                   isLoading={isSubmitting}
@@ -189,7 +307,7 @@ export function BestSellersShell({
               <ChatPanel
                 prompt={prompt}
                 onPromptChange={setPrompt}
-                onRunPrompt={() => void runPrompt()}
+                onRunPrompt={() => void runPromptWithStream(prompt)}
                 onUsePrompt={handleUsePrompt}
                 starterGroups={STARTER_PROMPT_GROUPS}
                 isLoading={isSubmitting}
@@ -199,6 +317,8 @@ export function BestSellersShell({
           </div>
         )}
       </section>
+
+      <ActivityLogPanel logs={activeLogs} visible={showLogPanel} />
     </div>
   );
 }

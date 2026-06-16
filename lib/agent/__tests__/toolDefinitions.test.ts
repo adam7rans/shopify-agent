@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { agentTools } from "../toolDefinitions";
 
+function getFunctionTools() {
+  return agentTools.filter((tool) => tool.type === "function");
+}
+
 describe("agentTools", () => {
   it("exports 8 tool definitions", () => {
     expect(agentTools).toHaveLength(8);
@@ -24,40 +28,40 @@ describe("agentTools", () => {
   ];
 
   it("contains all expected tool names", () => {
-    const names = agentTools.map((t) => t.function.name);
+    const names = getFunctionTools().map((t) => t.function.name);
     for (const expected of expectedTools) {
       expect(names).toContain(expected);
     }
   });
 
   it("every tool has a description", () => {
-    for (const tool of agentTools) {
+    for (const tool of getFunctionTools()) {
       expect(tool.function.description).toBeTruthy();
       expect(tool.function.description!.length).toBeGreaterThan(20);
     }
   });
 
   it("every tool has a parameters object schema", () => {
-    for (const tool of agentTools) {
+    for (const tool of getFunctionTools()) {
       expect(tool.function.parameters).toBeDefined();
       expect(tool.function.parameters!.type).toBe("object");
     }
   });
 
   it("parse_document requires filename", () => {
-    const parseTool = agentTools.find((t) => t.function.name === "parse_document");
+    const parseTool = getFunctionTools().find((t) => t.function.name === "parse_document");
     const params = parseTool!.function.parameters as Record<string, unknown>;
     expect(params.required).toContain("filename");
   });
 
   it("list_documents has no required parameters", () => {
-    const listTool = agentTools.find((t) => t.function.name === "list_documents");
+    const listTool = getFunctionTools().find((t) => t.function.name === "list_documents");
     const params = listTool!.function.parameters as Record<string, unknown>;
     expect(params.required).toBeUndefined();
   });
 
   it("search_products supports category, country, tags, sort_by, limit", () => {
-    const tool = agentTools.find((t) => t.function.name === "search_products");
+    const tool = getFunctionTools().find((t) => t.function.name === "search_products");
     const props = (tool!.function.parameters as Record<string, unknown>).properties as Record<string, unknown>;
     expect(props).toHaveProperty("category");
     expect(props).toHaveProperty("country");
@@ -67,7 +71,7 @@ describe("agentTools", () => {
   });
 
   it("get_sales_data has valid date_range enum", () => {
-    const tool = agentTools.find((t) => t.function.name === "get_sales_data");
+    const tool = getFunctionTools().find((t) => t.function.name === "get_sales_data");
     const props = (tool!.function.parameters as Record<string, unknown>).properties as Record<string, { enum?: string[] }>;
     expect(props.date_range.enum).toEqual(["7d", "30d", "60d", "90d", "6mo"]);
   });

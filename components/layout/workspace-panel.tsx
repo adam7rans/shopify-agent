@@ -21,6 +21,7 @@ interface WorkspacePanelProps {
   turns: ConversationTurn[];
   mode: ShellMode;
   onUsePrompt: (prompt: string) => void;
+  onRegisterTurnRef?: (id: string, element: HTMLElement | null) => void;
 }
 
 function renderInsightCard(card: Extract<AgentCardBlock, { type: "insight" }>) {
@@ -586,6 +587,7 @@ export function WorkspacePanel({
   turns,
   mode,
   onUsePrompt,
+  onRegisterTurnRef,
 }: WorkspacePanelProps) {
   if (turns.length === 0) {
     return <section className="flex-1" />;
@@ -594,7 +596,12 @@ export function WorkspacePanel({
   return (
     <section className="space-y-6 pb-6">
       {turns.map((turn) => (
-        <article key={turn.id} className="space-y-4">
+        <article
+          key={turn.id}
+          ref={(element) => onRegisterTurnRef?.(turn.id, element)}
+          data-turn-id={turn.id}
+          className="space-y-4"
+        >
           <div className="flex justify-end">
             <div className="max-w-[48ch] rounded-[28px] border border-[#e4d2b3] bg-[#efe4d0] px-5 py-4 text-ink shadow-panel">
               <p className="text-base leading-7">{turn.prompt}</p>

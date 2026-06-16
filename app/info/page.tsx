@@ -97,8 +97,8 @@ export default function InfoPage() {
                     2. Route the intent
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-600">
-                    Kandwii uses LLM routing with deterministic fallback to select the
-                    right supported workflow.
+                    Kandwii runs a live multi-turn tool-calling loop that decides
+                    what store data to fetch and how to compose the answer.
                   </p>
                 </div>
                 <div className="rounded-2xl bg-shell p-4">

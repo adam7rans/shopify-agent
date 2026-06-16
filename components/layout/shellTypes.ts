@@ -1,4 +1,5 @@
 import type { AgentUiResponse } from "@/types/agentUi";
+import type { ActivityLogEntry } from "@/types/activityLog";
 
 export type ShellMode = "user" | "diagnostics";
 
@@ -16,4 +17,5 @@ export interface ConversationTurn {
   result: AgentUiResponse | null;
   error: string | null;
   isLoading: boolean;
+  activityLog: ActivityLogEntry[];
 }

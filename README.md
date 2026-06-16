@@ -8,7 +8,7 @@ Kandwii is a Shopify-connected AI operations demo for a fictional Japanese and K
 - A merchant-facing **User mode** and a reviewer-facing **Diagnostics mode**
 - Live Shopify product, inventory, and seeded order analytics when `SHOPIFY_MODE=live`
 - Structured answers rendered as insight cards, reorder cards, tables, diagnostics summaries, and tool traces
-- OpenAI-compatible intent routing with deterministic fallback when the LLM is unavailable
+- A real multi-turn OpenAI tool-calling loop that composes structured UI responses
 
 ## Tech stack
 
@@ -82,9 +82,9 @@ Diagnostics mode never exposes secrets, raw provider payloads, request headers, 
 - `lib/shopify/`
   - mock and live Shopify clients behind a shared adapter contract
 - `lib/tools/`
-  - deterministic flows for sales, inventory, reorder, and warehouse health
+  - business/data backends the agent uses when it calls tools
 - `lib/agent/`
-  - OpenAI-compatible intent routing plus deterministic fallback
+  - multi-turn tool-calling loop, tool schemas, executors, response validation, and streaming diagnostics
 - `types/agentUi.ts`
   - shared `AgentUiResponse` contract for cards, tables, diagnostics, and trace
 - `data/generated/`
@@ -134,22 +134,23 @@ When live Shopify mode is enabled and the app has order access:
 
 The answer and diagnostics trace both explain which window was used.
 
-## LLM intent routing and deterministic fallback
+## Agent loop and diagnostics
 
-The current supported intents are:
+Every product request now runs through one shared execution model:
 
-- `best_sellers`
-- `inventory_overview`
-- `sour_reorder`
-- `warehouse_health`
-- `unsupported`
+- the prompt enters a multi-turn tool-calling loop
+- the LLM decides which tools to call and with what parameters
+- tool results are sent back into the loop
+- the LLM returns a structured `AgentUiResponse`
+- `/api/agent` returns final JSON
+- `/api/agent/stream` emits real-time diagnostics logs and then the final result
 
-Routing behavior:
+Diagnostics mode exposes:
 
-- if `OPENAI_API_KEY` is present, Kandwii attempts OpenAI-compatible LLM routing first
-- if the LLM succeeds, the trace shows `mode: "llm"`
-- if the LLM fails or is unavailable, the app falls back to deterministic routing
-- fallback traces include only sanitized diagnostics such as status, provider code/type when available, a short safe message, and the fallback mode
+- live activity logs
+- tool trace
+- data-source labels
+- query windows and counts when the response includes them
 
 ## Environment variables
 
@@ -237,8 +238,15 @@ That verifies:
 - `sour_reorder`
 - `warehouse_health`
 - `unsupported`
+- onboarding / help responses
 
 It also checks that a normal answer and tool trace are present.
+
+To verify the streaming diagnostics path:
+
+```bash
+npm run test:agent-stream
+```
 
 ## Security note
 
