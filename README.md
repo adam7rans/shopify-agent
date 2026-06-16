@@ -1,160 +1,219 @@
 # Kandwii Shopify AI Agent
 
-Kandwii is a Shopify-connected AI operations demo for a fictional Japanese and Korean candy shop. It is designed to answer a focused set of merchant questions with structured results instead of raw chat text: what is selling, what inventory is at risk, and where fulfillment is breaking down.
+Kandwii is a Shopify-connected operations agent for a fictional Japanese and Korean candy store.
 
-## What the app demonstrates
+You ask a normal question in plain English. The app decides which tools to call, pulls the right store data, and returns a structured answer instead of a loose chat paragraph.
 
-- A mock-first Shopify adapter that can switch between generated demo data and live Shopify Admin GraphQL reads
-- A merchant-facing **User mode** and a reviewer-facing **Diagnostics mode**
-- Live Shopify product, inventory, and seeded order analytics when `SHOPIFY_MODE=live`
-- Structured answers rendered as insight cards, reorder cards, tables, diagnostics summaries, and tool traces
-- A real multi-turn OpenAI tool-calling loop that composes structured UI responses
+This repo started as a narrower workflow demo. It has since been rebuilt around one shared agent loop, so the same core system now powers:
 
-## Tech stack
+- normal user mode
+- diagnostics mode with live activity logs
+- JSON responses from `/api/agent`
+- streaming responses from `/api/agent/stream`
 
-- Next.js App Router
-- TypeScript
-- React
-- Tailwind CSS
-- Node.js
-- Shopify Admin GraphQL API
-- OpenAI-compatible routing layer
+## What this project is trying to prove
 
-## Supported question families
+This is not a generic chatbot glued onto Shopify.
 
-### Sales performance
+The point of the project is to show a real agent loop that can:
+
+- read live Shopify products, inventory, and recent orders
+- call multiple tools in sequence when a prompt needs it
+- return structured UI blocks such as tables, cards, code output, and diagnostics
+- stay inspectable in diagnostics mode so a reviewer can see what actually happened
+
+## What you can ask it today
+
+### Sales
 
 - `Which candy is performing best?`
 - `What are our best-selling candies recently?`
-- `What were our best-selling candies last month?`
 - `Show the top 10 sellers over the past six months.`
 
-### Inventory visibility
+### Inventory
 
 - `What does our inventory look like?`
-- `Show me our inventory`
-- `Which SKUs are low on stock?`
+- `Show me all japanese gummies`
+- `Show me all korean gummies`
+- `Which Korean gummies are low in stock?`
 
-### Reorder / stockout
+### Reorder risk
 
 - `Do we need to reorder sour candy?`
-- `Should we reorder sour candy?`
 - `What sour candy is at risk of stockout?`
 
-### Fulfillment health
+### Fulfillment and warehouse health
 
+- `Where is fulfillment getting stuck?`
 - `Show me warehouse issues globally.`
-- `Which warehouse has problems?`
-- `Are there any fulfillment delays?`
 
-### Onboarding / help
+### Documents and supplier context
 
-- `What is this app for?`
-- `What can I ask?`
-- `How do I use this app?`
+- `List available supplier documents`
+- `Parse the Tokyo Treats invoice and check which SKUs need restocking`
 
-Unsupported prompts return a normal in-product response with suggested next questions.
+### Shopify Liquid generation
 
-## Product modes
+- `Generate a landing page for our Japanese gummies collection`
+
+If you ask for something outside the current scope, the app should answer cleanly and suggest better next prompts instead of bluffing.
+
+## How the agent works
+
+Here is the simplest way to think about the architecture:
+
+1. A prompt comes in through the UI.
+2. The prompt is sent into a multi-turn OpenAI tool-calling loop.
+3. The model decides which tool to call first.
+4. Tool results come back into the loop as structured data.
+5. The model can call more tools if it needs more context.
+6. The loop ends only when the model returns a valid `AgentUiResponse`.
+7. The frontend renders that response as cards, tables, code blocks, and diagnostics.
+
+There is no separate deterministic workflow router sitting next to this anymore.
+
+`/api/agent` is the plain JSON version of the loop.  
+`/api/agent/stream` is the streaming version used for diagnostics mode and live activity logs.
+
+## The tool surface
+
+The current tool set is small on purpose. Each tool has a clear job.
+
+| Tool | What it does |
+| --- | --- |
+| `search_products` | Filters the product catalog by category, country, tags, sort order, or limit |
+| `get_inventory` | Returns current inventory by SKU across locations |
+| `get_sales_data` | Returns recent sales rankings from order history |
+| `check_reorder_risk` | Calculates stockout risk and reorder recommendations |
+| `get_warehouse_health` | Returns warehouse snapshots and fulfillment issues |
+| `get_distributor_availability` | Returns supplier and distributor availability data |
+| `list_documents` | Lists sample supplier PDFs the agent can inspect |
+| `parse_document` | Extracts text from a supplier PDF so the agent can reason over it |
+
+The important detail is where these tools live.
+
+- `lib/agent/toolDefinitions.ts` defines the tool schemas exposed to the model
+- `lib/agent/toolExecutors.ts` runs the requested tool
+- `lib/tools/*.ts` contains the actual business logic
+- `lib/shopify/*` handles mock vs live Shopify access
+
+That split keeps the agent layer thin and makes the data logic easier to test.
+
+## User mode and diagnostics mode
 
 ### User mode
 
-User mode is the default experience. It keeps the interface conversational and hides backend detail by default. The goal is to make Kandwii feel understandable to a merchant who is opening the app for the first time.
+User mode is the normal product surface.
+
+It keeps the interface simple and conversational. You see the answer, the tables, the cards, and the suggested next prompts. You do not see the internal logs.
 
 ### Diagnostics mode
 
-Diagnostics mode keeps the same answers and structured UI, but adds:
+Diagnostics mode is the proof layer.
 
-- the high-level intent-routing decision
-- source labels such as `Live Shopify`, `Live Shopify Orders`, and `Mock ops`
+It keeps the same answer visible, but adds:
+
+- a live activity log panel
+- tool trace
+- source labels
 - query windows
-- summarized counts
-- the tool trace
+- summarized counts when the response includes them
 
-Diagnostics mode never exposes secrets, raw provider payloads, request headers, or tokens.
+The activity log is there so a reviewer can see that the model is actually calling tools and using real data. It is not there to expose secrets. Tokens, raw provider payloads, and sensitive headers stay hidden.
 
-## Architecture overview
+## What is live and what is still mocked
+
+This project intentionally mixes live commerce data with mocked operational data.
+
+### Live when `SHOPIFY_MODE=live`
+
+- products
+- inventory
+- recent orders
+- best-sellers
+- reorder velocity inputs
+
+### Still mocked on purpose
+
+- warehouse / 3PL operational issues
+- distributor availability
+- fulfillment snapshots outside Shopify
+- sample supplier documents
+
+That split lets the app feel real without pretending a dev store has every external business system attached.
+
+## Shopify modes
+
+### `SHOPIFY_MODE=mock`
+
+The app reads deterministic generated JSON data from `data/generated/`.
+
+This is useful for:
+
+- local development
+- stable screenshots
+- demos where you do not want live-store drift
+
+### `SHOPIFY_MODE=live`
+
+The app reads from Shopify Admin GraphQL for:
+
+- products
+- inventory
+- recent orders
+
+The live adapter normalizes Shopify data back into the same domain types used in mock mode, which keeps the rest of the app simpler.
+
+## Why the UI is structured the way it is
+
+The frontend does not just dump model text into a chat bubble.
+
+The agent is asked to return a validated `AgentUiResponse`, which can include:
+
+- a top-level answer block
+- primary cards
+- secondary cards
+- structured tables
+- diagnostics summaries
+- tool trace
+- suggested next prompts
+
+That is why the app can render:
+
+- best-seller tables
+- filtered inventory tables
+- reorder recommendations
+- Liquid code output
+- warehouse issue summaries
+
+all from one shared response contract.
+
+See: [types/agentUi.ts](/Users/adam/Documents/Kandwii/types/agentUi.ts)
+
+## File map
 
 - `app/`
-  - Next.js pages and `/api/agent`
+  - Next.js pages and API routes
 - `components/layout/`
-  - app shell, conversation UI, onboarding, result rendering, and diagnostics rendering
-- `lib/shopify/`
-  - mock and live Shopify clients behind a shared adapter contract
-- `lib/tools/`
-  - business/data backends the agent uses when it calls tools
+  - chat shell, conversation rendering, diagnostics panel, and UI chrome
 - `lib/agent/`
-  - multi-turn tool-calling loop, tool schemas, executors, response validation, and streaming diagnostics
-- `types/agentUi.ts`
-  - shared `AgentUiResponse` contract for cards, tables, diagnostics, and trace
+  - system prompt, tool definitions, tool executors, agent loop, response validation
+- `lib/tools/`
+  - sales, inventory, reorder, warehouse, and document logic
+- `lib/shopify/`
+  - shared Shopify adapter, live GraphQL client, mock client, auth helpers
+- `lib/mock/`
+  - deterministic seed generators for catalog and operations data
 - `data/generated/`
-  - deterministic mock catalog and operations data
+  - generated products, inventory, orders, and warehouse data
+- `public/products/`
+  - product images used by generated Liquid templates
 
-For more detail, see [docs/architecture.md](/Users/adam/Documents/Kandwii/docs/architecture.md).
-
-## Mock-first Shopify adapter
-
-All product, inventory, and order reads go through:
-
-- `lib/shopify/types.ts`
-- `lib/shopify/mockShopifyClient.ts`
-- `lib/shopify/liveShopifyClient.ts`
-- `lib/shopify/index.ts`
-
-That means the UI and business flows never read raw generated Shopify-like data directly.
-
-### Shopify modes
-
-- `SHOPIFY_MODE=mock`
-  - generated Kandwii JSON-backed Shopify data
-- `SHOPIFY_MODE=live`
-  - live Shopify Admin GraphQL for products, inventory, and recent orders
-  - mocked warehouse / distributor / fulfillment-ops systems remain separate on purpose
-
-## Current live behavior
-
-When live Shopify mode is enabled and the app has order access:
-
-- products come from live Shopify
-- inventory comes from live Shopify
-- best-sellers uses live Shopify Orders
-- sour reorder uses live Shopify Orders for 30-day sales velocity
-- warehouse / fulfillment remains `Live Shopify + Mock ops`
-
-### Best-sellers date-window behavior
-
-- `Which candy is performing best?`
-  - prefers the latest 30-day live order window
-- `What are our best-selling candies recently?`
-  - prefers the latest 30-day live order window
-- `What were our best-selling candies last month?`
-  - tries the previous calendar month first
-  - if that month has zero orders, it falls back to the latest 30-day live order window
-  - if needed, it falls back again to the latest 60-day live order window
-
-The answer and diagnostics trace both explain which window was used.
-
-## Agent loop and diagnostics
-
-Every product request now runs through one shared execution model:
-
-- the prompt enters a multi-turn tool-calling loop
-- the LLM decides which tools to call and with what parameters
-- tool results are sent back into the loop
-- the LLM returns a structured `AgentUiResponse`
-- `/api/agent` returns final JSON
-- `/api/agent/stream` emits real-time diagnostics logs and then the final result
-
-Diagnostics mode exposes:
-
-- live activity logs
-- tool trace
-- data-source labels
-- query windows and counts when the response includes them
+For a deeper architectural breakdown, read [docs/architecture.md](/Users/adam/Documents/Kandwii/docs/architecture.md).
 
 ## Environment variables
 
-Create a local `.env.local` file in the project root. `.env.local` is ignored by Git and must never be committed.
+Create a local `.env.local` file in the project root. It is ignored by Git and should never be committed.
 
 Start from [.env.example](/Users/adam/Documents/Kandwii/.env.example):
 
@@ -172,7 +231,7 @@ Start from [.env.example](/Users/adam/Documents/Kandwii/.env.example):
 
 ## Shopify scopes
 
-For the current live implementation, use:
+For the current live setup, use:
 
 - `read_products`
 - `write_products`
@@ -196,68 +255,79 @@ Generate deterministic mock data:
 npm run generate:mock
 ```
 
-Verify the adapters:
+Run the Shopify adapter checks:
 
 ```bash
 npm run test:mock-shopify
 npm run test:shopify-live
 ```
 
-Sync the catalog into Shopify if needed:
+Sync the seeded catalog into the Shopify dev store if needed:
 
 ```bash
 npm run sync:shopify-products
 ```
 
-Seed development-store demo orders if needed:
+Seed historical demo orders if needed:
 
 ```bash
 npm run seed:shopify-orders
 ```
 
-Start the local app:
+Start the app:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Then open [http://localhost:3000](http://localhost:3000).
 
-## Testing the flows
+## Testing
 
-Run the agent smoke test with the app server running:
+Unit tests:
+
+```bash
+npm test
+```
+
+Structured agent-flow smoke tests:
 
 ```bash
 npm run test:agent-flows
 ```
 
-That verifies:
-
-- `best_sellers`
-- `inventory_overview`
-- `sour_reorder`
-- `warehouse_health`
-- `unsupported`
-- onboarding / help responses
-
-It also checks that a normal answer and tool trace are present.
-
-To verify the streaming diagnostics path:
+Streaming diagnostics smoke test:
 
 ```bash
 npm run test:agent-stream
 ```
 
-## Security note
+Type and build checks:
+
+```bash
+npm run typecheck
+npm run lint
+npm run build
+```
+
+## A note on realism
+
+The catalog, inventory, and order data are deterministic demo data when the app runs in mock mode. That is intentional.
+
+Still, the mock generators are meant to feel plausible enough for product demos, not like flat placeholder rows. Inventory and order seeding are shaped so categories and SKUs do not all collapse into the same quantities or sales counts.
+
+When the app runs in live mode, the agent reads real Shopify products, inventory, and order-backed sales data from the dev store.
+
+## Security
 
 - `.env.local` is ignored by Git
-- API keys, Shopify secrets, and tokens must never be committed
-- diagnostics and traces are intentionally sanitized
-- the client never receives raw Shopify or OpenAI secret values
+- API keys and Shopify secrets must never be committed
+- diagnostics output is sanitized
+- the client never receives raw secret values
 
-## Vercel setup later
+## Vercel notes
 
-When you want live production mode on Vercel, set:
+For live production mode on Vercel, set:
 
 - `SHOPIFY_MODE=live`
 - `SHOPIFY_SHOP_DOMAIN`
@@ -269,8 +339,8 @@ When you want live production mode on Vercel, set:
 - `OPENAI_MODEL`
 - `DEMO_NOW`
 
-Then redeploy and verify:
+After that, redeploy and verify:
 
-- the diagnostics endpoint resolves live mode
-- the sidebar mode badge shows `Live Shopify`
-- best-sellers and sour reorder use live Shopify data
+- diagnostics resolves live mode
+- the sidebar shows `Live Shopify`
+- best-sellers and inventory answers use live store data

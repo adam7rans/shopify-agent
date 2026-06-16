@@ -9,6 +9,17 @@ function slugify(value: string) {
     .replace(/(^-|-$)/g, "");
 }
 
+function hashString(value: string) {
+  let hash = 2166136261;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
 function getRetailPrice(category: string, index: number) {
   const categoryBasePrice: Record<string, number> = {
     "Japanese gummies": 4.89,
@@ -48,23 +59,47 @@ function getCost(price: number, category: string, index: number) {
   return Number((price * multiplier).toFixed(2));
 }
 
-function getStartingInventory(category: string, index: number) {
-  const categoryBaseInventory: Record<string, number> = {
-    "Japanese gummies": 180,
-    "Korean gummies": 170,
-    "Sour candy": 84,
-    "Ramune / soda candy": 130,
-    "Chocolate biscuit sticks": 210,
-    "Mochi candy": 120,
-    "Matcha chocolate/snacks": 145,
-    "Hard candy": 160,
-    "Jelly candy": 135,
-    "Character / kawaii candy": 110,
-    "Variety boxes": 60,
-    "Seasonal limited editions": 48,
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function getStartingInventory(title: string, category: string, index: number) {
+  const categoryProfiles: Record<
+    string,
+    { base: number; min: number; max: number; spread: number }
+  > = {
+    "Japanese gummies": { base: 192, min: 96, max: 288, spread: 30 },
+    "Korean gummies": { base: 176, min: 82, max: 264, spread: 34 },
+    "Sour candy": { base: 122, min: 38, max: 212, spread: 26 },
+    "Ramune / soda candy": { base: 144, min: 72, max: 236, spread: 22 },
+    "Chocolate biscuit sticks": { base: 206, min: 118, max: 314, spread: 28 },
+    "Mochi candy": { base: 126, min: 54, max: 218, spread: 22 },
+    "Matcha chocolate/snacks": { base: 158, min: 66, max: 246, spread: 24 },
+    "Hard candy": { base: 168, min: 76, max: 258, spread: 22 },
+    "Jelly candy": { base: 151, min: 68, max: 232, spread: 24 },
+    "Character / kawaii candy": { base: 141, min: 52, max: 224, spread: 26 },
+    "Variety boxes": { base: 108, min: 28, max: 174, spread: 20 },
+    "Seasonal limited editions": { base: 84, min: 18, max: 152, spread: 24 },
   };
 
-  return categoryBaseInventory[category] + (index % 5) * 18;
+  const profile = categoryProfiles[category] ?? {
+    base: 150,
+    min: 60,
+    max: 240,
+    spread: 24,
+  };
+  const hash = hashString(`${category}:${title}:${index}`);
+  const wave = ((hash % 7) - 3) * profile.spread;
+  const jitter = (((hash >>> 3) % 17) - 8) * 4;
+  const laneShift = ((index % 4) - 1.5) * 7;
+  const scarcityPull = (hash & 1) === 0 ? 0 : -((hash >>> 9) % 20);
+  const abundanceLift = (hash & 4) === 0 ? 0 : ((hash >>> 12) % 26);
+
+  return clamp(
+    Math.round(profile.base + wave + jitter + laneShift + scarcityPull + abundanceLift),
+    profile.min,
+    profile.max,
+  );
 }
 
 export function generateProducts(): Product[] {
@@ -72,7 +107,11 @@ export function generateProducts(): Product[] {
     const price = getRetailPrice(blueprint.category, index);
     const cost = getCost(price, blueprint.category, index);
     const margin = Number((price - cost).toFixed(2));
-    const startingInventory = getStartingInventory(blueprint.category, index);
+    const startingInventory = getStartingInventory(
+      blueprint.title,
+      blueprint.category,
+      index,
+    );
     const inventoryQuantity = startingInventory;
     const productId = `product-${String(index + 1).padStart(3, "0")}`;
     const variantId = `variant-${String(index + 1).padStart(3, "0")}`;

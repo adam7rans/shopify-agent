@@ -50,6 +50,15 @@ export function ChatPanel({
     textarea.style.height = `${nextHeight}px`;
   }, [prompt]);
 
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      return;
+    }
+
+    textarea.focus();
+  }, []);
+
   return (
     <section className="mx-auto w-full max-w-[640px]">
       {!hasTurns ? (
@@ -85,6 +94,14 @@ export function ChatPanel({
             id="agent-prompt"
             value={prompt}
             onChange={(event) => onPromptChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                if (!isLoading && prompt.trim()) {
+                  onRunPrompt();
+                }
+              }
+            }}
             rows={1}
             placeholder="Ask Kandwii about sales, inventory, reorder risk, or fulfillment health."
             className="min-h-[40px] flex-1 resize-none overflow-y-auto border-0 bg-transparent px-1 py-1 text-base leading-8 text-ink outline-none placeholder:text-slate-400"

@@ -22,6 +22,7 @@ interface WorkspacePanelProps {
   mode: ShellMode;
   onUsePrompt: (prompt: string) => void;
   onRegisterTurnRef?: (id: string, element: HTMLElement | null) => void;
+  onRegisterResponseRef?: (id: string, element: HTMLElement | null) => void;
 }
 
 function renderInsightCard(card: Extract<AgentCardBlock, { type: "insight" }>) {
@@ -463,6 +464,20 @@ function renderToolTrace(trace: AgentToolTraceEntry[]) {
 }
 
 function renderAssistantResponse(result: AgentUiResponse, mode: ShellMode, onUsePrompt: (prompt: string) => void) {
+  const shouldHideInventoryHighlightCards =
+    result.kind === "inventory_overview" &&
+    result.tables.some(
+      (table) => table.type === "inventory_table" && /low stock/i.test(table.title),
+    );
+
+  const primaryCards = shouldHideInventoryHighlightCards
+    ? result.primaryCards.filter((card) => card.type !== "inventory_highlight")
+    : result.primaryCards;
+
+  const secondaryCards = shouldHideInventoryHighlightCards
+    ? result.secondaryCards.filter((card) => card.type !== "inventory_highlight")
+    : result.secondaryCards;
+
   return (
     <div className="space-y-5">
       <div className="w-fit max-w-full rounded-[28px] border border-white/70 bg-white/88 p-6 shadow-panel backdrop-blur">
@@ -503,13 +518,13 @@ function renderAssistantResponse(result: AgentUiResponse, mode: ShellMode, onUse
         </div>
       ) : null}
 
-      {result.primaryCards.length > 0 ? (
-        <div className="space-y-4">{result.primaryCards.map((card) => <div key={`${card.type}-${"sku" in card ? card.sku : "title" in card ? card.title : card.type}`}>{renderCard(card)}</div>)}</div>
+      {primaryCards.length > 0 ? (
+        <div className="space-y-4">{primaryCards.map((card) => <div key={`${card.type}-${"sku" in card ? card.sku : "title" in card ? card.title : card.type}`}>{renderCard(card)}</div>)}</div>
       ) : null}
 
-      {result.secondaryCards.length > 0 ? (
+      {secondaryCards.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-          {result.secondaryCards.map((card) => (
+          {secondaryCards.map((card) => (
             <div key={`${card.type}-${"sku" in card ? card.sku : "title" in card ? card.title : card.type}`}>{renderCard(card)}</div>
           ))}
         </div>
@@ -588,6 +603,7 @@ export function WorkspacePanel({
   mode,
   onUsePrompt,
   onRegisterTurnRef,
+  onRegisterResponseRef,
 }: WorkspacePanelProps) {
   if (turns.length === 0) {
     return <section className="flex-1" />;
@@ -609,13 +625,15 @@ export function WorkspacePanel({
           </div>
 
           <div className="max-w-full pr-0 xl:pr-12">
-            {turn.isLoading
-              ? renderLoadingState(turn.prompt)
-              : turn.error
-                ? renderErrorState(turn.error)
-                : turn.result
-                  ? renderAssistantResponse(turn.result, mode, onUsePrompt)
-                  : null}
+            <div ref={(element) => onRegisterResponseRef?.(turn.id, element)}>
+              {turn.isLoading
+                ? renderLoadingState(turn.prompt)
+                : turn.error
+                  ? renderErrorState(turn.error)
+                  : turn.result
+                    ? renderAssistantResponse(turn.result, mode, onUsePrompt)
+                    : null}
+            </div>
           </div>
         </article>
       ))}

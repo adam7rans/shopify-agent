@@ -26,6 +26,70 @@ function isoDate(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
+function hashString(value: string) {
+  let hash = 2166136261;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function buildProductDemandScores(products: Product[]) {
+  return products.map((product, index) => {
+    const hash = hashString(`${product.title}:${product.category}:${index}`);
+    const categoryBias: Record<string, number> = {
+      "Japanese gummies": 1.18,
+      "Korean gummies": 1.12,
+      "Sour candy": 1.42,
+      "Ramune / soda candy": 0.92,
+      "Chocolate biscuit sticks": 1.08,
+      "Mochi candy": 0.88,
+      "Matcha chocolate/snacks": 1.01,
+      "Hard candy": 0.8,
+      "Jelly candy": 0.95,
+      "Character / kawaii candy": 0.9,
+      "Variety boxes": 0.72,
+      "Seasonal limited editions": 0.76,
+    };
+    const seasonalBoost =
+      product.tags.includes("seasonal") || product.category === "Seasonal limited editions"
+        ? 0.85
+        : 1;
+    const sourBoost =
+      product.tags.includes("sour") || product.category === "Sour candy" ? 1.18 : 1;
+    const popularityBand = 0.74 + ((hash % 100) / 100) * 0.9;
+
+    return {
+      product,
+      score:
+        (categoryBias[product.category] ?? 1) *
+        seasonalBoost *
+        sourBoost *
+        popularityBand,
+    };
+  });
+}
+
+function pickWeightedProduct(
+  scoredProducts: Array<{ product: Product; score: number }>,
+  random: () => number,
+) {
+  const totalScore = scoredProducts.reduce((sum, entry) => sum + entry.score, 0);
+  let cursor = random() * totalScore;
+
+  for (const entry of scoredProducts) {
+    cursor -= entry.score;
+    if (cursor <= 0) {
+      return entry.product;
+    }
+  }
+
+  return scoredProducts[scoredProducts.length - 1]?.product ?? null;
+}
+
 export function generateOperationsData(products: Product[]): MockOperationsData {
   const random = createSeededRandom(42_4242);
   const endDate = new Date(Date.UTC(2026, 5, 14));
@@ -33,19 +97,26 @@ export function generateOperationsData(products: Product[]): MockOperationsData 
   const inventory: InventoryLevel[] = [];
   const orders: Order[] = [];
   const dailyMetricsMap = new Map<string, DailySalesMetric>();
+  const scoredProducts = buildProductDemandScores(products);
 
   products.forEach((product, productIndex) => {
     const variant = product.variants[0];
     const isSour = product.tags.includes("sour") || product.category === "Sour candy";
 
-    warehouses.forEach((warehouse, warehouseIndex) => {
+    warehouses.forEach((warehouse) => {
+      const hash = hashString(`${variant.sku}:${warehouse.id}:${productIndex}`);
+      const baseAvailable = Math.max(
+        6,
+        Math.round(product.startingInventory * (0.22 + ((hash % 37) / 100))),
+      );
       const available = isSour
-        ? 8 + ((productIndex + 2) * (warehouseIndex + 3) * 5) % 18
-        : 28 + ((productIndex + 3) * (warehouseIndex + 4) * 7) % 120;
-      const committed = 4 + ((productIndex + warehouseIndex) * 5) % 28;
-      const incoming = isSour
-        ? ((productIndex + 1) * (warehouseIndex + 2) * 3) % 18
-        : ((productIndex + 1) * (warehouseIndex + 2) * 9) % 96;
+        ? Math.max(5, Math.round(baseAvailable * (0.58 + ((hash >>> 5) % 20) / 100)))
+        : baseAvailable;
+      const committed = 2 + ((hash >>> 8) % 24);
+      const incoming = Math.max(
+        0,
+        Math.round(product.startingInventory * (((hash >>> 13) % 22) / 100)),
+      );
       const onHand = available + committed + incoming;
 
       inventory.push({
@@ -67,7 +138,14 @@ export function generateOperationsData(products: Product[]): MockOperationsData 
 
   let orderNumber = 1001;
   for (let cursor = new Date(startDate); cursor <= endDate; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
-    const ordersToday = 2 + Math.floor(random() * 4);
+    const weekday = cursor.getUTCDay();
+    const weekendLift = weekday === 5 || weekday === 6 ? 1.2 : 1;
+    const seasonalLift = cursor.getUTCMonth() === 4 || cursor.getUTCMonth() === 5 ? 1.15 : 1;
+    const baseOrders = 2 + Math.floor(random() * 3);
+    const ordersToday = Math.max(
+      1,
+      Math.round(baseOrders * weekendLift * seasonalLift + random() * 2),
+    );
 
     for (let index = 0; index < ordersToday; index += 1) {
       const lineItemCount = 1 + Math.floor(random() * 3);
@@ -75,17 +153,15 @@ export function generateOperationsData(products: Product[]): MockOperationsData 
       const region = fulfillmentRegions[Math.floor(random() * fulfillmentRegions.length)];
 
       for (let lineIndex = 0; lineIndex < lineItemCount; lineIndex += 1) {
-        const weightedIndex = Math.floor(random() * products.length);
-        const preferredProduct = products[weightedIndex];
-        const boostedProduct = products.find((product) => {
-          if (preferredProduct.tags.includes("sour") || preferredProduct.category === "Sour candy") {
-            return false;
-          }
-          return random() > 0.72 && (product.tags.includes("sour") || product.category === "Sour candy");
-        });
-        const product = boostedProduct ?? preferredProduct;
+        const product = pickWeightedProduct(scoredProducts, random) ?? products[0];
         const variant = product.variants[0];
-        const quantity = 1 + Math.floor(random() * 4);
+        const quantityRoll = random();
+        const quantity =
+          quantityRoll > 0.94
+            ? 5
+            : quantityRoll > 0.8
+              ? 3 + Math.floor(random() * 2)
+              : 1 + Math.floor(random() * 2);
         const lineRevenue = Number((quantity * variant.price).toFixed(2));
         const lineMargin = Number((quantity * variant.margin).toFixed(2));
 

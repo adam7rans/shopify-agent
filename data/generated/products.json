@@ -25,8 +25,8 @@
     "price": 4.89,
     "cost": 2.25,
     "margin": 2.64,
-    "startingInventory": 180,
-    "inventoryQuantity": 180,
+    "startingInventory": 128,
+    "inventoryQuantity": 128,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Hi-Chew fruit chew flavors and texture family.",
@@ -40,7 +40,7 @@
         "price": 4.89,
         "cost": 2.25,
         "margin": 2.64,
-        "inventoryQuantity": 180,
+        "inventoryQuantity": 128,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -74,8 +74,8 @@
     "price": 5.24,
     "cost": 2.46,
     "margin": 2.78,
-    "startingInventory": 198,
-    "inventoryQuantity": 198,
+    "startingInventory": 225,
+    "inventoryQuantity": 225,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Hi-Chew strawberry-style fruit chews.",
@@ -89,7 +89,7 @@
         "price": 5.24,
         "cost": 2.46,
         "margin": 2.78,
-        "inventoryQuantity": 198,
+        "inventoryQuantity": 225,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -122,8 +122,8 @@
     "price": 5.59,
     "cost": 2.57,
     "margin": 3.02,
-    "startingInventory": 216,
-    "inventoryQuantity": 216,
+    "startingInventory": 288,
+    "inventoryQuantity": 288,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Kasugai fruit gummy assortments.",
@@ -137,7 +137,7 @@
         "price": 5.59,
         "cost": 2.57,
         "margin": 3.02,
-        "inventoryQuantity": 216,
+        "inventoryQuantity": 288,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -170,8 +170,8 @@
     "price": 4.89,
     "cost": 2.3,
     "margin": 2.59,
-    "startingInventory": 234,
-    "inventoryQuantity": 234,
+    "startingInventory": 118,
+    "inventoryQuantity": 118,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Kasugai muscat gummy products.",
@@ -185,7 +185,7 @@
         "price": 4.89,
         "cost": 2.3,
         "margin": 2.59,
-        "inventoryQuantity": 234,
+        "inventoryQuantity": 118,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -218,8 +218,8 @@
     "price": 5.24,
     "cost": 2.41,
     "margin": 2.83,
-    "startingInventory": 252,
-    "inventoryQuantity": 252,
+    "startingInventory": 206,
+    "inventoryQuantity": 206,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by UHA Kororo grape jelly candy style.",
@@ -233,7 +233,7 @@
         "price": 5.24,
         "cost": 2.41,
         "margin": 2.83,
-        "inventoryQuantity": 252,
+        "inventoryQuantity": 206,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -266,8 +266,8 @@
     "price": 5.59,
     "cost": 2.63,
     "margin": 2.96,
-    "startingInventory": 180,
-    "inventoryQuantity": 180,
+    "startingInventory": 133,
+    "inventoryQuantity": 133,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by UHA Kororo peach formats.",
@@ -281,7 +281,7 @@
         "price": 5.59,
         "cost": 2.63,
         "margin": 2.96,
-        "inventoryQuantity": 180,
+        "inventoryQuantity": 133,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -315,8 +315,8 @@
     "price": 3.79,
     "cost": 1.52,
     "margin": 2.27,
-    "startingInventory": 148,
-    "inventoryQuantity": 148,
+    "startingInventory": 72,
+    "inventoryQuantity": 72,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by UHA Puccho soda and ramune style chews.",
@@ -330,7 +330,7 @@
         "price": 3.79,
         "cost": 1.52,
         "margin": 2.27,
-        "inventoryQuantity": 148,
+        "inventoryQuantity": 72,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -363,8 +363,8 @@
     "price": 4.14,
     "cost": 1.7,
     "margin": 2.44,
-    "startingInventory": 166,
-    "inventoryQuantity": 166,
+    "startingInventory": 210,
+    "inventoryQuantity": 210,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Morinaga Ramune tablet candy.",
@@ -378,7 +378,7 @@
         "price": 4.14,
         "cost": 1.7,
         "margin": 2.44,
-        "inventoryQuantity": 166,
+        "inventoryQuantity": 210,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -412,8 +412,8 @@
     "price": 4.69,
     "cost": 1.97,
     "margin": 2.72,
-    "startingInventory": 138,
-    "inventoryQuantity": 138,
+    "startingInventory": 91,
+    "inventoryQuantity": 91,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Nobel Super Lemon style products.",
@@ -427,7 +427,7 @@
         "price": 4.69,
         "cost": 1.97,
         "margin": 2.72,
-        "inventoryQuantity": 138,
+        "inventoryQuantity": 91,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -460,8 +460,8 @@
     "price": 3.49,
     "cost": 1.36,
     "margin": 2.13,
-    "startingInventory": 232,
-    "inventoryQuantity": 232,
+    "startingInventory": 142,
+    "inventoryQuantity": 142,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by assorted Japanese ramune hard candies.",
@@ -475,7 +475,7 @@
         "price": 3.49,
         "cost": 1.36,
         "margin": 2.13,
-        "inventoryQuantity": 232,
+        "inventoryQuantity": 142,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -508,8 +508,8 @@
     "price": 5.64,
     "cost": 2.71,
     "margin": 2.93,
-    "startingInventory": 210,
-    "inventoryQuantity": 210,
+    "startingInventory": 127,
+    "inventoryQuantity": 127,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by strawberry Pocky-style biscuit sticks.",
@@ -523,7 +523,7 @@
         "price": 5.64,
         "cost": 2.71,
         "margin": 2.93,
-        "inventoryQuantity": 210,
+        "inventoryQuantity": 127,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -557,8 +557,8 @@
     "price": 5.99,
     "cost": 2.94,
     "margin": 3.05,
-    "startingInventory": 228,
-    "inventoryQuantity": 228,
+    "startingInventory": 314,
+    "inventoryQuantity": 314,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by matcha Pocky-style biscuit stick formats.",
@@ -572,7 +572,7 @@
         "price": 5.99,
         "cost": 2.94,
         "margin": 3.05,
-        "inventoryQuantity": 228,
+        "inventoryQuantity": 314,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -605,8 +605,8 @@
     "price": 5.29,
     "cost": 2.54,
     "margin": 2.75,
-    "startingInventory": 246,
-    "inventoryQuantity": 246,
+    "startingInventory": 273,
+    "inventoryQuantity": 273,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Pretz savory biscuit stick flavors.",
@@ -620,7 +620,7 @@
         "price": 5.29,
         "cost": 2.54,
         "margin": 2.75,
-        "inventoryQuantity": 246,
+        "inventoryQuantity": 273,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -654,8 +654,8 @@
     "price": 5.84,
     "cost": 2.8,
     "margin": 3.04,
-    "startingInventory": 164,
-    "inventoryQuantity": 164,
+    "startingInventory": 140,
+    "inventoryQuantity": 140,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Meiji Apollo chocolate pieces.",
@@ -669,7 +669,7 @@
         "price": 5.84,
         "cost": 2.8,
         "margin": 3.04,
-        "inventoryQuantity": 164,
+        "inventoryQuantity": 140,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -702,8 +702,8 @@
     "price": 6.19,
     "cost": 2.91,
     "margin": 3.28,
-    "startingInventory": 182,
-    "inventoryQuantity": 182,
+    "startingInventory": 142,
+    "inventoryQuantity": 142,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Meiji Choco Baby candy format.",
@@ -717,7 +717,7 @@
         "price": 6.19,
         "cost": 2.91,
         "margin": 3.28,
-        "inventoryQuantity": 182,
+        "inventoryQuantity": 142,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -750,8 +750,8 @@
     "price": 5.79,
     "cost": 2.9,
     "margin": 2.89,
-    "startingInventory": 145,
-    "inventoryQuantity": 145,
+    "startingInventory": 125,
+    "inventoryQuantity": 125,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Meiji macadamia chocolate products.",
@@ -765,7 +765,7 @@
         "price": 5.79,
         "cost": 2.9,
         "margin": 2.89,
-        "inventoryQuantity": 145,
+        "inventoryQuantity": 125,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -799,8 +799,8 @@
     "price": 12.84,
     "cost": 6.68,
     "margin": 6.16,
-    "startingInventory": 66,
-    "inventoryQuantity": 66,
+    "startingInventory": 93,
+    "inventoryQuantity": 93,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Meiji Meltykiss seasonal chocolate releases.",
@@ -814,7 +814,7 @@
         "price": 12.84,
         "cost": 6.68,
         "margin": 6.16,
-        "inventoryQuantity": 66,
+        "inventoryQuantity": 93,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -848,8 +848,8 @@
     "price": 6.19,
     "cost": 2.97,
     "margin": 3.22,
-    "startingInventory": 146,
-    "inventoryQuantity": 146,
+    "startingInventory": 103,
+    "inventoryQuantity": 103,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Kinoko no Yama mushroom biscuit candies.",
@@ -863,7 +863,7 @@
         "price": 6.19,
         "cost": 2.97,
         "margin": 3.22,
-        "inventoryQuantity": 146,
+        "inventoryQuantity": 103,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -897,8 +897,8 @@
     "price": 5.49,
     "cost": 2.58,
     "margin": 2.91,
-    "startingInventory": 164,
-    "inventoryQuantity": 164,
+    "startingInventory": 53,
+    "inventoryQuantity": 53,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Takenoko no Sato biscuit candies.",
@@ -912,7 +912,7 @@
         "price": 5.49,
         "cost": 2.58,
         "margin": 2.91,
-        "inventoryQuantity": 164,
+        "inventoryQuantity": 53,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -945,8 +945,8 @@
     "price": 19.34,
     "cost": 11.41,
     "margin": 7.93,
-    "startingInventory": 132,
-    "inventoryQuantity": 132,
+    "startingInventory": 151,
+    "inventoryQuantity": 151,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Tirol Chocolate mini assortment packs.",
@@ -960,7 +960,7 @@
         "price": 19.34,
         "cost": 11.41,
         "margin": 7.93,
-        "inventoryQuantity": 132,
+        "inventoryQuantity": 151,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -993,8 +993,8 @@
     "price": 6.49,
     "cost": 3.18,
     "margin": 3.31,
-    "startingInventory": 145,
-    "inventoryQuantity": 145,
+    "startingInventory": 179,
+    "inventoryQuantity": 179,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Bourbon Alfort mini biscuit chocolates.",
@@ -1008,7 +1008,7 @@
         "price": 6.49,
         "cost": 3.18,
         "margin": 3.31,
-        "inventoryQuantity": 145,
+        "inventoryQuantity": 179,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -1041,8 +1041,8 @@
     "price": 5.79,
     "cost": 2.9,
     "margin": 2.89,
-    "startingInventory": 163,
-    "inventoryQuantity": 163,
+    "startingInventory": 115,
+    "inventoryQuantity": 115,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Bourbon Elise wafer rolls.",
@@ -1056,7 +1056,7 @@
         "price": 5.79,
         "cost": 2.9,
         "margin": 2.89,
-        "inventoryQuantity": 163,
+        "inventoryQuantity": 115,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -1090,8 +1090,8 @@
     "price": 6.14,
     "cost": 3.01,
     "margin": 3.13,
-    "startingInventory": 181,
-    "inventoryQuantity": 181,
+    "startingInventory": 130,
+    "inventoryQuantity": 130,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Japanese matcha KitKat releases.",
@@ -1105,7 +1105,7 @@
         "price": 6.14,
         "cost": 3.01,
         "margin": 3.13,
-        "inventoryQuantity": 181,
+        "inventoryQuantity": 130,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -1139,8 +1139,8 @@
     "price": 5.39,
     "cost": 2.48,
     "margin": 2.91,
-    "startingInventory": 174,
-    "inventoryQuantity": 174,
+    "startingInventory": 140,
+    "inventoryQuantity": 140,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by sakura mochi candy and rice-based confections.",
@@ -1154,7 +1154,7 @@
         "price": 5.39,
         "cost": 2.48,
         "margin": 2.91,
-        "inventoryQuantity": 174,
+        "inventoryQuantity": 140,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -1187,8 +1187,8 @@
     "price": 3.49,
     "cost": 1.33,
     "margin": 2.16,
-    "startingInventory": 232,
-    "inventoryQuantity": 232,
+    "startingInventory": 195,
+    "inventoryQuantity": 195,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Japanese Hokkaido milk candy formats.",
@@ -1202,7 +1202,7 @@
         "price": 3.49,
         "cost": 1.33,
         "margin": 2.16,
-        "inventoryQuantity": 232,
+        "inventoryQuantity": 195,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -1236,8 +1236,8 @@
     "price": 5.84,
     "cost": 2.8,
     "margin": 3.04,
-    "startingInventory": 110,
-    "inventoryQuantity": 110,
+    "startingInventory": 175,
+    "inventoryQuantity": 175,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Sanrio-adjacent kawaii candy assortments.",
@@ -1251,7 +1251,7 @@
         "price": 5.84,
         "cost": 2.8,
         "margin": 3.04,
-        "inventoryQuantity": 110,
+        "inventoryQuantity": 175,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -1285,8 +1285,8 @@
     "price": 6.19,
     "cost": 2.91,
     "margin": 3.28,
-    "startingInventory": 128,
-    "inventoryQuantity": 128,
+    "startingInventory": 116,
+    "inventoryQuantity": 116,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Japanese character candy tins and gift packs.",
@@ -1300,7 +1300,7 @@
         "price": 6.19,
         "cost": 2.91,
         "margin": 3.28,
-        "inventoryQuantity": 128,
+        "inventoryQuantity": 116,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -1334,8 +1334,8 @@
     "price": 5.79,
     "cost": 2.9,
     "margin": 2.89,
-    "startingInventory": 181,
-    "inventoryQuantity": 181,
+    "startingInventory": 98,
+    "inventoryQuantity": 98,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Uji matcha snack and puff products.",
@@ -1349,7 +1349,7 @@
         "price": 5.79,
         "cost": 2.9,
         "margin": 2.89,
-        "inventoryQuantity": 181,
+        "inventoryQuantity": 98,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -1382,8 +1382,8 @@
     "price": 4.74,
     "cost": 2.04,
     "margin": 2.7,
-    "startingInventory": 189,
-    "inventoryQuantity": 189,
+    "startingInventory": 148,
+    "inventoryQuantity": 148,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by assorted Japanese jelly gift boxes.",
@@ -1397,7 +1397,7 @@
         "price": 4.74,
         "cost": 2.04,
         "margin": 2.7,
-        "inventoryQuantity": 189,
+        "inventoryQuantity": 148,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -1431,8 +1431,8 @@
     "price": 13.19,
     "cost": 6.99,
     "margin": 6.2,
-    "startingInventory": 120,
-    "inventoryQuantity": 120,
+    "startingInventory": 82,
+    "inventoryQuantity": 82,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Japanese seasonal KitKat launches.",
@@ -1446,7 +1446,7 @@
         "price": 13.19,
         "cost": 6.99,
         "margin": 6.2,
-        "inventoryQuantity": 120,
+        "inventoryQuantity": 82,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -1480,8 +1480,8 @@
     "price": 5.29,
     "cost": 2.54,
     "margin": 2.75,
-    "startingInventory": 210,
-    "inventoryQuantity": 210,
+    "startingInventory": 296,
+    "inventoryQuantity": 296,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Lotte Pepero almond variants.",
@@ -1495,7 +1495,7 @@
         "price": 5.29,
         "cost": 2.54,
         "margin": 2.75,
-        "inventoryQuantity": 210,
+        "inventoryQuantity": 296,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -1528,8 +1528,8 @@
     "price": 5.64,
     "cost": 2.76,
     "margin": 2.88,
-    "startingInventory": 228,
-    "inventoryQuantity": 228,
+    "startingInventory": 171,
+    "inventoryQuantity": 171,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by white-cookie Pepero styles.",
@@ -1543,7 +1543,7 @@
         "price": 5.64,
         "cost": 2.76,
         "margin": 2.88,
-        "inventoryQuantity": 228,
+        "inventoryQuantity": 171,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -1577,8 +1577,8 @@
     "price": 19.69,
     "cost": 11.42,
     "margin": 8.27,
-    "startingInventory": 96,
-    "inventoryQuantity": 96,
+    "startingInventory": 94,
+    "inventoryQuantity": 94,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Orion Choco Pie snack cakes.",
@@ -1592,7 +1592,7 @@
         "price": 19.69,
         "cost": 11.42,
         "margin": 8.27,
-        "inventoryQuantity": 96,
+        "inventoryQuantity": 94,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -1625,8 +1625,8 @@
     "price": 4.59,
     "cost": 2.07,
     "margin": 2.52,
-    "startingInventory": 224,
-    "inventoryQuantity": 224,
+    "startingInventory": 264,
+    "inventoryQuantity": 264,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Lotte Malang Cow soft chews.",
@@ -1640,7 +1640,7 @@
         "price": 4.59,
         "cost": 2.07,
         "margin": 2.52,
-        "inventoryQuantity": 224,
+        "inventoryQuantity": 264,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -1673,8 +1673,8 @@
     "price": 3.84,
     "cost": 1.46,
     "margin": 2.38,
-    "startingInventory": 232,
-    "inventoryQuantity": 232,
+    "startingInventory": 223,
+    "inventoryQuantity": 223,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Lotte Anytime candy line.",
@@ -1688,7 +1688,7 @@
         "price": 3.84,
         "cost": 1.46,
         "margin": 2.38,
-        "inventoryQuantity": 232,
+        "inventoryQuantity": 223,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -1721,8 +1721,8 @@
     "price": 5.29,
     "cost": 2.38,
     "margin": 2.91,
-    "startingInventory": 170,
-    "inventoryQuantity": 170,
+    "startingInventory": 261,
+    "inventoryQuantity": 261,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Crown MyChew grape-style chews.",
@@ -1736,7 +1736,7 @@
         "price": 5.29,
         "cost": 2.38,
         "margin": 2.91,
-        "inventoryQuantity": 170,
+        "inventoryQuantity": 261,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -1769,8 +1769,8 @@
     "price": 5.79,
     "cost": 2.84,
     "margin": 2.95,
-    "startingInventory": 163,
-    "inventoryQuantity": 163,
+    "startingInventory": 206,
+    "inventoryQuantity": 206,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Haitai Homerun Ball snacks.",
@@ -1784,7 +1784,7 @@
         "price": 5.79,
         "cost": 2.84,
         "margin": 2.95,
-        "inventoryQuantity": 163,
+        "inventoryQuantity": 206,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -1817,8 +1817,8 @@
     "price": 5.84,
     "cost": 2.8,
     "margin": 3.04,
-    "startingInventory": 146,
-    "inventoryQuantity": 146,
+    "startingInventory": 89,
+    "inventoryQuantity": 89,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Korean honey butter snack popularity.",
@@ -1832,7 +1832,7 @@
         "price": 5.84,
         "cost": 2.8,
         "margin": 3.04,
-        "inventoryQuantity": 146,
+        "inventoryQuantity": 89,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -1865,8 +1865,8 @@
     "price": 6.49,
     "cost": 3.18,
     "margin": 3.31,
-    "startingInventory": 199,
-    "inventoryQuantity": 199,
+    "startingInventory": 224,
+    "inventoryQuantity": 224,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Lotte Binch biscuit snacks.",
@@ -1880,7 +1880,7 @@
         "price": 6.49,
         "cost": 3.18,
         "margin": 3.31,
-        "inventoryQuantity": 199,
+        "inventoryQuantity": 224,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -1913,8 +1913,8 @@
     "price": 4.59,
     "cost": 2.07,
     "margin": 2.52,
-    "startingInventory": 242,
-    "inventoryQuantity": 242,
+    "startingInventory": 214,
+    "inventoryQuantity": 214,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Korean cola chew candies.",
@@ -1928,7 +1928,7 @@
         "price": 4.59,
         "cost": 2.07,
         "margin": 2.52,
-        "inventoryQuantity": 242,
+        "inventoryQuantity": 214,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -1961,8 +1961,8 @@
     "price": 4.94,
     "cost": 2.17,
     "margin": 2.77,
-    "startingInventory": 170,
-    "inventoryQuantity": 170,
+    "startingInventory": 264,
+    "inventoryQuantity": 264,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Korean grape gummy pouches.",
@@ -1976,7 +1976,7 @@
         "price": 4.94,
         "cost": 2.17,
         "margin": 2.77,
-        "inventoryQuantity": 170,
+        "inventoryQuantity": 264,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -2009,8 +2009,8 @@
     "price": 5.09,
     "cost": 2.24,
     "margin": 2.85,
-    "startingInventory": 153,
-    "inventoryQuantity": 153,
+    "startingInventory": 144,
+    "inventoryQuantity": 144,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Korean yogurt jelly candies.",
@@ -2024,7 +2024,7 @@
         "price": 5.09,
         "cost": 2.24,
         "margin": 2.85,
-        "inventoryQuantity": 153,
+        "inventoryQuantity": 144,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -2058,8 +2058,8 @@
     "price": 3.99,
     "cost": 1.68,
     "margin": 2.31,
-    "startingInventory": 120,
-    "inventoryQuantity": 120,
+    "startingInventory": 38,
+    "inventoryQuantity": 38,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Korean sour belt candies.",
@@ -2073,7 +2073,7 @@
         "price": 3.99,
         "cost": 1.68,
         "margin": 2.31,
-        "inventoryQuantity": 120,
+        "inventoryQuantity": 38,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -2107,8 +2107,8 @@
     "price": 4.34,
     "cost": 1.87,
     "margin": 2.47,
-    "startingInventory": 138,
-    "inventoryQuantity": 138,
+    "startingInventory": 89,
+    "inventoryQuantity": 89,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Korean sour strip and belt candies.",
@@ -2122,7 +2122,7 @@
         "price": 4.34,
         "cost": 1.87,
         "margin": 2.47,
-        "inventoryQuantity": 138,
+        "inventoryQuantity": 89,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -2155,8 +2155,8 @@
     "price": 5.09,
     "cost": 2.19,
     "margin": 2.9,
-    "startingInventory": 207,
-    "inventoryQuantity": 207,
+    "startingInventory": 150,
+    "inventoryQuantity": 150,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Jeju tangerine candy and jelly formats.",
@@ -2170,7 +2170,7 @@
         "price": 5.09,
         "cost": 2.19,
         "margin": 2.9,
-        "inventoryQuantity": 207,
+        "inventoryQuantity": 150,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -2203,8 +2203,8 @@
     "price": 4.59,
     "cost": 2.07,
     "margin": 2.52,
-    "startingInventory": 170,
-    "inventoryQuantity": 170,
+    "startingInventory": 138,
+    "inventoryQuantity": 138,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Korean banana milk flavored candies.",
@@ -2218,7 +2218,7 @@
         "price": 4.59,
         "cost": 2.07,
         "margin": 2.52,
-        "inventoryQuantity": 170,
+        "inventoryQuantity": 138,
         "fulfillmentRegion": "Middle East"
       }
     ],
@@ -2252,8 +2252,8 @@
     "price": 4.34,
     "cost": 1.82,
     "margin": 2.52,
-    "startingInventory": 102,
-    "inventoryQuantity": 102,
+    "startingInventory": 119,
+    "inventoryQuantity": 119,
     "fulfillmentRegion": "United States",
     "isRealWorldInspired": true,
     "sourceNote": "Inspired by Anytime-style refreshment candies with citrus profiles.",
@@ -2267,7 +2267,7 @@
         "price": 4.34,
         "cost": 1.82,
         "margin": 2.52,
-        "inventoryQuantity": 102,
+        "inventoryQuantity": 119,
         "fulfillmentRegion": "United States"
       }
     ],
@@ -2300,8 +2300,8 @@
     "price": 19.69,
     "cost": 11.62,
     "margin": 8.07,
-    "startingInventory": 96,
-    "inventoryQuantity": 96,
+    "startingInventory": 150,
+    "inventoryQuantity": 150,
     "fulfillmentRegion": "China / Asia",
     "isRealWorldInspired": true,
     "sourceNote": "Internal Kandwii curation inspired by Korean snack box formats.",
@@ -2315,7 +2315,7 @@
         "price": 19.69,
         "cost": 11.62,
         "margin": 8.07,
-        "inventoryQuantity": 96,
+        "inventoryQuantity": 150,
         "fulfillmentRegion": "China / Asia"
       }
     ],
@@ -2348,8 +2348,8 @@
     "price": 18.99,
     "cost": 11.01,
     "margin": 7.98,
-    "startingInventory": 114,
-    "inventoryQuantity": 114,
+    "startingInventory": 97,
+    "inventoryQuantity": 97,
     "fulfillmentRegion": "Europe",
     "isRealWorldInspired": true,
     "sourceNote": "Internal Kandwii curation inspired by Japanese candy subscription boxes.",
@@ -2363,7 +2363,7 @@
         "price": 18.99,
         "cost": 11.01,
         "margin": 7.98,
-        "inventoryQuantity": 114,
+        "inventoryQuantity": 97,
         "fulfillmentRegion": "Europe"
       }
     ],
@@ -2397,8 +2397,8 @@
     "price": 12.84,
     "cost": 6.81,
     "margin": 6.03,
-    "startingInventory": 120,
-    "inventoryQuantity": 120,
+    "startingInventory": 116,
+    "inventoryQuantity": 116,
     "fulfillmentRegion": "Middle East",
     "isRealWorldInspired": true,
     "sourceNote": "Kandwii house seasonal assortment inspired by winter strawberry chocolate releases in Japan and Korea.",
@@ -2412,7 +2412,7 @@
         "price": 12.84,
         "cost": 6.81,
         "margin": 6.03,
-        "inventoryQuantity": 120,
+        "inventoryQuantity": 116,
         "fulfillmentRegion": "Middle East"
       }
     ],

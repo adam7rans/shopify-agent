@@ -72,6 +72,7 @@ export function BestSellersShell({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [visibleTurnId, setVisibleTurnId] = useState<string | null>(null);
   const turnRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const responseRefs = useRef<Map<string, HTMLElement>>(new Map());
 
   const registerTurnRef = useCallback((id: string, el: HTMLElement | null) => {
     if (el) {
@@ -79,6 +80,38 @@ export function BestSellersShell({
     } else {
       turnRefs.current.delete(id);
     }
+  }, []);
+
+  const registerResponseRef = useCallback((id: string, el: HTMLElement | null) => {
+    if (el) {
+      responseRefs.current.set(id, el);
+    } else {
+      responseRefs.current.delete(id);
+    }
+  }, []);
+
+  const queueScrollToResponse = useCallback((id: string, attempt = 0) => {
+    const element = responseRefs.current.get(id);
+
+    if (!element) {
+      if (attempt < 10) {
+        requestAnimationFrame(() => queueScrollToResponse(id, attempt + 1));
+      }
+      return;
+    }
+
+    const topInset = 12;
+    const absoluteTop = window.scrollY + element.getBoundingClientRect().top;
+    const nextTop = Math.max(absoluteTop - topInset, 0);
+
+    if (Math.abs(window.scrollY - nextTop) < 4) {
+      return;
+    }
+
+    window.scrollTo({
+      top: nextTop,
+      behavior: "smooth",
+    });
   }, []);
 
   useEffect(() => {
@@ -129,6 +162,7 @@ export function BestSellersShell({
     ]);
     setPrompt("");
     setVisibleTurnId(turnId);
+    requestAnimationFrame(() => queueScrollToResponse(turnId));
 
     try {
       const response = await fetch("/api/agent/stream", {
@@ -154,6 +188,7 @@ export function BestSellersShell({
               : turn,
           ),
         );
+        requestAnimationFrame(() => queueScrollToResponse(turnId));
         return;
       }
 
@@ -199,6 +234,7 @@ export function BestSellersShell({
                     : turn,
                 ),
               );
+              requestAnimationFrame(() => queueScrollToResponse(turnId));
             }
 
             if (event.type === "error") {
@@ -213,6 +249,7 @@ export function BestSellersShell({
                     : turn,
                 ),
               );
+              requestAnimationFrame(() => queueScrollToResponse(turnId));
             }
           } catch {
             // skip malformed SSE lines
@@ -230,6 +267,7 @@ export function BestSellersShell({
             : turn,
         ),
       );
+      requestAnimationFrame(() => queueScrollToResponse(turnId));
     } finally {
       setIsSubmitting(false);
     }
@@ -267,6 +305,7 @@ export function BestSellersShell({
                 mode={mode}
                 onUsePrompt={handleUsePrompt}
                 onRegisterTurnRef={registerTurnRef}
+                onRegisterResponseRef={registerResponseRef}
               />
             </div>
             {mode === "diagnostics" ? (

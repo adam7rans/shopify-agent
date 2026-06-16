@@ -7,10 +7,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 112,
-    "committed": 4,
-    "incoming": 18,
-    "onHand": 134,
+    "available": 58,
+    "committed": 16,
+    "incoming": 27,
+    "onHand": 101,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -21,10 +21,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 133,
-    "committed": 9,
-    "incoming": 27,
-    "onHand": 169,
+    "available": 49,
+    "committed": 4,
+    "incoming": 1,
+    "onHand": 54,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -35,10 +35,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 34,
+    "available": 44,
     "committed": 14,
-    "incoming": 36,
-    "onHand": 84,
+    "incoming": 10,
+    "onHand": 68,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -49,10 +49,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 55,
-    "committed": 19,
-    "incoming": 45,
-    "onHand": 119,
+    "available": 35,
+    "committed": 10,
+    "incoming": 14,
+    "onHand": 59,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -63,10 +63,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 140,
+    "available": 88,
     "committed": 9,
-    "incoming": 36,
-    "onHand": 185,
+    "incoming": 20,
+    "onHand": 117,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -77,10 +77,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 48,
-    "committed": 14,
-    "incoming": 54,
-    "onHand": 116,
+    "available": 110,
+    "committed": 16,
+    "incoming": 29,
+    "onHand": 155,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -91,10 +91,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 76,
-    "committed": 19,
-    "incoming": 72,
-    "onHand": 167,
+    "available": 74,
+    "committed": 9,
+    "incoming": 36,
+    "onHand": 119,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -105,10 +105,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 104,
-    "committed": 24,
-    "incoming": 90,
-    "onHand": 218,
+    "available": 101,
+    "committed": 25,
+    "incoming": 11,
+    "onHand": 137,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -119,10 +119,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 48,
-    "committed": 14,
-    "incoming": 54,
-    "onHand": 116,
+    "available": 72,
+    "committed": 2,
+    "incoming": 14,
+    "onHand": 88,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -133,10 +133,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 83,
-    "committed": 19,
-    "incoming": 81,
-    "onHand": 183,
+    "available": 78,
+    "committed": 13,
+    "incoming": 12,
+    "onHand": 103,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -147,10 +147,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 118,
-    "committed": 24,
-    "incoming": 12,
-    "onHand": 154,
+    "available": 127,
+    "committed": 18,
+    "incoming": 14,
+    "onHand": 159,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -161,10 +161,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 33,
-    "committed": 29,
-    "incoming": 39,
-    "onHand": 101,
+    "available": 130,
+    "committed": 11,
+    "incoming": 35,
+    "onHand": 176,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -175,10 +175,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 76,
-    "committed": 19,
-    "incoming": 72,
-    "onHand": 167,
+    "available": 68,
+    "committed": 11,
+    "incoming": 20,
+    "onHand": 99,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -189,10 +189,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 118,
-    "committed": 24,
-    "incoming": 12,
-    "onHand": 154,
+    "available": 60,
+    "committed": 25,
+    "incoming": 6,
+    "onHand": 91,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -203,10 +203,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 40,
-    "committed": 29,
-    "incoming": 48,
-    "onHand": 117,
+    "available": 57,
+    "committed": 15,
+    "incoming": 12,
+    "onHand": 84,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -217,10 +217,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 82,
-    "committed": 6,
-    "incoming": 84,
-    "onHand": 172,
+    "available": 39,
+    "committed": 15,
+    "incoming": 14,
+    "onHand": 68,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -231,10 +231,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 104,
-    "committed": 24,
-    "incoming": 90,
-    "onHand": 218,
+    "available": 66,
+    "committed": 4,
+    "incoming": 0,
+    "onHand": 70,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -245,10 +245,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 33,
-    "committed": 29,
-    "incoming": 39,
-    "onHand": 101,
+    "available": 74,
+    "committed": 11,
+    "incoming": 8,
+    "onHand": 93,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -260,9 +260,9 @@
     "locationName": "US-NJ",
     "region": "United States",
     "available": 82,
-    "committed": 6,
-    "incoming": 84,
-    "onHand": 172,
+    "committed": 15,
+    "incoming": 25,
+    "onHand": 122,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -273,10 +273,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 131,
-    "committed": 11,
-    "incoming": 33,
-    "onHand": 175,
+    "available": 64,
+    "committed": 22,
+    "incoming": 8,
+    "onHand": 94,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -287,10 +287,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 132,
-    "committed": 29,
-    "incoming": 12,
-    "onHand": 173,
+    "available": 31,
+    "committed": 12,
+    "incoming": 8,
+    "onHand": 51,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -301,10 +301,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 68,
-    "committed": 6,
-    "incoming": 66,
-    "onHand": 140,
+    "available": 65,
+    "committed": 24,
+    "incoming": 27,
+    "onHand": 116,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -315,10 +315,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 124,
-    "committed": 11,
-    "incoming": 24,
-    "onHand": 159,
+    "available": 40,
+    "committed": 19,
+    "incoming": 8,
+    "onHand": 67,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -329,10 +329,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 60,
-    "committed": 16,
-    "incoming": 78,
-    "onHand": 154,
+    "available": 53,
+    "committed": 17,
+    "incoming": 16,
+    "onHand": 86,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -343,10 +343,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 40,
-    "committed": 6,
-    "incoming": 30,
-    "onHand": 76,
+    "available": 31,
+    "committed": 15,
+    "incoming": 3,
+    "onHand": 49,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -357,10 +357,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 103,
-    "committed": 11,
-    "incoming": 93,
-    "onHand": 207,
+    "available": 27,
+    "committed": 23,
+    "incoming": 4,
+    "onHand": 54,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -371,10 +371,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 46,
-    "committed": 16,
-    "incoming": 60,
-    "onHand": 122,
+    "available": 29,
+    "committed": 4,
+    "incoming": 11,
+    "onHand": 44,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -385,10 +385,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 109,
-    "committed": 21,
-    "incoming": 27,
-    "onHand": 157,
+    "available": 22,
+    "committed": 25,
+    "incoming": 1,
+    "onHand": 48,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -399,10 +399,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 68,
-    "committed": 11,
-    "incoming": 48,
-    "onHand": 127,
+    "available": 113,
+    "committed": 24,
+    "incoming": 44,
+    "onHand": 181,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -413,10 +413,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 138,
-    "committed": 16,
-    "incoming": 24,
-    "onHand": 178,
+    "available": 55,
+    "committed": 8,
+    "incoming": 21,
+    "onHand": 84,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -427,10 +427,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 88,
-    "committed": 21,
-    "incoming": 0,
-    "onHand": 109,
+    "available": 48,
+    "committed": 12,
+    "incoming": 38,
+    "onHand": 98,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -441,10 +441,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 38,
-    "committed": 26,
-    "incoming": 72,
-    "onHand": 136,
+    "available": 99,
+    "committed": 11,
+    "incoming": 42,
+    "onHand": 152,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -455,10 +455,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 14,
-    "committed": 16,
-    "incoming": 0,
-    "onHand": 30,
+    "available": 35,
+    "committed": 13,
+    "incoming": 4,
+    "onHand": 52,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -469,10 +469,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 10,
+    "available": 39,
     "committed": 21,
-    "incoming": 9,
-    "onHand": 40,
+    "incoming": 13,
+    "onHand": 73,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -483,10 +483,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 24,
-    "committed": 26,
-    "incoming": 0,
-    "onHand": 50,
+    "available": 18,
+    "committed": 12,
+    "incoming": 6,
+    "onHand": 36,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -497,10 +497,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 20,
-    "committed": 31,
-    "incoming": 9,
-    "onHand": 60,
+    "available": 23,
+    "committed": 14,
+    "incoming": 6,
+    "onHand": 43,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -511,10 +511,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 124,
-    "committed": 21,
-    "incoming": 84,
-    "onHand": 229,
+    "available": 43,
+    "committed": 18,
+    "incoming": 17,
+    "onHand": 78,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -525,10 +525,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 88,
-    "committed": 26,
-    "incoming": 78,
-    "onHand": 192,
+    "available": 80,
+    "committed": 23,
+    "incoming": 13,
+    "onHand": 116,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -539,10 +539,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 52,
-    "committed": 31,
-    "incoming": 72,
-    "onHand": 155,
+    "available": 62,
+    "committed": 25,
+    "incoming": 7,
+    "onHand": 94,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -553,10 +553,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 136,
-    "committed": 8,
-    "incoming": 66,
-    "onHand": 210,
+    "available": 53,
+    "committed": 3,
+    "incoming": 17,
+    "onHand": 73,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -567,10 +567,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 32,
-    "committed": 26,
-    "incoming": 6,
-    "onHand": 64,
+    "available": 69,
+    "committed": 18,
+    "incoming": 18,
+    "onHand": 105,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -581,10 +581,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 123,
-    "committed": 31,
-    "incoming": 9,
-    "onHand": 163,
+    "available": 32,
+    "committed": 12,
+    "incoming": 14,
+    "onHand": 58,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -595,10 +595,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 94,
-    "committed": 8,
-    "incoming": 12,
-    "onHand": 114,
+    "available": 53,
+    "committed": 19,
+    "incoming": 17,
+    "onHand": 89,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -609,10 +609,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 65,
-    "committed": 13,
+    "available": 46,
+    "committed": 12,
     "incoming": 15,
-    "onHand": 93,
+    "onHand": 73,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -623,10 +623,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 60,
-    "committed": 31,
-    "incoming": 24,
-    "onHand": 115,
+    "available": 160,
+    "committed": 12,
+    "incoming": 63,
+    "onHand": 235,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -637,10 +637,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 38,
-    "committed": 8,
-    "incoming": 36,
-    "onHand": 82,
+    "available": 79,
+    "committed": 17,
+    "incoming": 6,
+    "onHand": 102,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -651,10 +651,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 136,
-    "committed": 13,
-    "incoming": 48,
-    "onHand": 197,
+    "available": 107,
+    "committed": 3,
+    "incoming": 16,
+    "onHand": 126,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -665,10 +665,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 114,
-    "committed": 18,
-    "incoming": 60,
-    "onHand": 192,
+    "available": 144,
+    "committed": 11,
+    "incoming": 50,
+    "onHand": 205,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -679,10 +679,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 88,
-    "committed": 8,
-    "incoming": 42,
-    "onHand": 138,
+    "available": 131,
+    "committed": 3,
+    "incoming": 3,
+    "onHand": 137,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -693,10 +693,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 73,
-    "committed": 13,
-    "incoming": 63,
-    "onHand": 149,
+    "available": 74,
+    "committed": 17,
+    "incoming": 19,
+    "onHand": 110,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -707,10 +707,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 58,
-    "committed": 18,
-    "incoming": 84,
-    "onHand": 160,
+    "available": 87,
+    "committed": 8,
+    "incoming": 38,
+    "onHand": 133,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -721,10 +721,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 43,
-    "committed": 23,
-    "incoming": 9,
-    "onHand": 75,
+    "available": 68,
+    "committed": 8,
+    "incoming": 0,
+    "onHand": 76,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -735,10 +735,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 116,
-    "committed": 13,
-    "incoming": 60,
-    "onHand": 189,
+    "available": 56,
+    "committed": 10,
+    "incoming": 10,
+    "onHand": 76,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -749,10 +749,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 108,
-    "committed": 18,
-    "incoming": 90,
-    "onHand": 216,
+    "available": 46,
+    "committed": 21,
+    "incoming": 29,
+    "onHand": 96,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -763,10 +763,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 100,
-    "committed": 23,
-    "incoming": 24,
-    "onHand": 147,
+    "available": 38,
+    "committed": 2,
+    "incoming": 7,
+    "onHand": 47,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -777,10 +777,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 92,
-    "committed": 28,
-    "incoming": 54,
-    "onHand": 174,
+    "available": 71,
+    "committed": 24,
+    "incoming": 1,
+    "onHand": 96,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -791,10 +791,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 144,
-    "committed": 18,
-    "incoming": 78,
-    "onHand": 240,
+    "available": 60,
+    "committed": 21,
+    "incoming": 21,
+    "onHand": 102,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -805,10 +805,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 143,
-    "committed": 23,
-    "incoming": 21,
-    "onHand": 187,
+    "available": 60,
+    "committed": 6,
+    "incoming": 28,
+    "onHand": 94,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -819,10 +819,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 142,
-    "committed": 28,
-    "incoming": 60,
-    "onHand": 230,
+    "available": 68,
+    "committed": 9,
+    "incoming": 28,
+    "onHand": 105,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -833,10 +833,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 141,
-    "committed": 5,
-    "incoming": 3,
-    "onHand": 149,
+    "available": 40,
+    "committed": 25,
+    "incoming": 21,
+    "onHand": 86,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -847,10 +847,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 52,
-    "committed": 23,
-    "incoming": 0,
-    "onHand": 75,
+    "available": 28,
+    "committed": 3,
+    "incoming": 26,
+    "onHand": 57,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -861,10 +861,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 58,
-    "committed": 28,
-    "incoming": 48,
-    "onHand": 134,
+    "available": 70,
+    "committed": 6,
+    "incoming": 16,
+    "onHand": 92,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -875,10 +875,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 64,
-    "committed": 5,
-    "incoming": 0,
-    "onHand": 69,
+    "available": 46,
+    "committed": 23,
+    "incoming": 26,
+    "onHand": 95,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -889,10 +889,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 70,
-    "committed": 10,
-    "incoming": 48,
-    "onHand": 128,
+    "available": 59,
+    "committed": 16,
+    "incoming": 9,
+    "onHand": 84,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -903,10 +903,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 80,
-    "committed": 28,
-    "incoming": 18,
-    "onHand": 126,
+    "available": 22,
+    "committed": 3,
+    "incoming": 7,
+    "onHand": 32,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -917,10 +917,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 93,
-    "committed": 5,
-    "incoming": 75,
-    "onHand": 173,
+    "available": 29,
+    "committed": 8,
+    "incoming": 8,
+    "onHand": 45,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -931,10 +931,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 106,
-    "committed": 10,
-    "incoming": 36,
-    "onHand": 152,
+    "available": 33,
+    "committed": 5,
+    "incoming": 19,
+    "onHand": 57,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -945,10 +945,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 119,
-    "committed": 15,
-    "incoming": 93,
-    "onHand": 227,
+    "available": 34,
+    "committed": 24,
+    "incoming": 6,
+    "onHand": 64,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -959,10 +959,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 108,
-    "committed": 5,
-    "incoming": 36,
-    "onHand": 149,
+    "available": 59,
+    "committed": 7,
+    "incoming": 5,
+    "onHand": 71,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -973,10 +973,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 128,
-    "committed": 10,
-    "incoming": 6,
-    "onHand": 144,
+    "available": 52,
+    "committed": 17,
+    "incoming": 20,
+    "onHand": 89,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -987,10 +987,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 28,
-    "committed": 15,
-    "incoming": 72,
-    "onHand": 115,
+    "available": 23,
+    "committed": 4,
+    "incoming": 2,
+    "onHand": 29,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1001,10 +1001,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 48,
-    "committed": 20,
-    "incoming": 42,
-    "onHand": 110,
+    "available": 36,
+    "committed": 5,
+    "incoming": 3,
+    "onHand": 44,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1015,10 +1015,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 136,
-    "committed": 10,
-    "incoming": 54,
-    "onHand": 200,
+    "available": 24,
+    "committed": 12,
+    "incoming": 4,
+    "onHand": 40,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1029,10 +1029,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 43,
-    "committed": 15,
-    "incoming": 33,
-    "onHand": 91,
+    "available": 24,
+    "committed": 21,
+    "incoming": 9,
+    "onHand": 54,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1043,10 +1043,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 70,
-    "committed": 20,
-    "incoming": 12,
-    "onHand": 102,
+    "available": 29,
+    "committed": 2,
+    "incoming": 3,
+    "onHand": 34,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1057,10 +1057,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 97,
-    "committed": 25,
-    "incoming": 87,
-    "onHand": 209,
+    "available": 22,
+    "committed": 4,
+    "incoming": 11,
+    "onHand": 37,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1072,9 +1072,9 @@
     "locationName": "EU-WAW",
     "region": "Europe",
     "available": 44,
-    "committed": 15,
-    "incoming": 72,
-    "onHand": 131,
+    "committed": 5,
+    "incoming": 2,
+    "onHand": 51,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1085,10 +1085,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 78,
-    "committed": 20,
-    "incoming": 60,
-    "onHand": 158,
+    "available": 83,
+    "committed": 9,
+    "incoming": 21,
+    "onHand": 113,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1099,10 +1099,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 112,
-    "committed": 25,
-    "incoming": 48,
-    "onHand": 185,
+    "available": 45,
+    "committed": 10,
+    "incoming": 6,
+    "onHand": 61,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1113,10 +1113,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 146,
-    "committed": 30,
-    "incoming": 36,
-    "onHand": 212,
+    "available": 62,
+    "committed": 5,
+    "incoming": 9,
+    "onHand": 76,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1127,10 +1127,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 72,
-    "committed": 20,
-    "incoming": 90,
-    "onHand": 182,
+    "available": 84,
+    "committed": 22,
+    "incoming": 14,
+    "onHand": 120,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1141,10 +1141,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 113,
-    "committed": 25,
-    "incoming": 87,
-    "onHand": 225,
+    "available": 54,
+    "committed": 5,
+    "incoming": 36,
+    "onHand": 95,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1155,10 +1155,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 34,
-    "committed": 30,
-    "incoming": 84,
-    "onHand": 148,
+    "available": 86,
+    "committed": 18,
+    "incoming": 0,
+    "onHand": 104,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1169,10 +1169,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 75,
-    "committed": 7,
-    "incoming": 81,
-    "onHand": 163,
+    "available": 93,
+    "committed": 22,
+    "incoming": 5,
+    "onHand": 120,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1183,10 +1183,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 100,
-    "committed": 25,
-    "incoming": 12,
-    "onHand": 137,
+    "available": 25,
+    "committed": 10,
+    "incoming": 10,
+    "onHand": 45,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1197,10 +1197,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 28,
-    "committed": 30,
-    "incoming": 18,
-    "onHand": 76,
+    "available": 48,
+    "committed": 16,
+    "incoming": 7,
+    "onHand": 71,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1211,10 +1211,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 76,
-    "committed": 7,
-    "incoming": 24,
-    "onHand": 107,
+    "available": 56,
+    "committed": 2,
+    "incoming": 0,
+    "onHand": 58,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1225,10 +1225,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 124,
-    "committed": 12,
-    "incoming": 30,
-    "onHand": 166,
+    "available": 59,
+    "committed": 15,
+    "incoming": 5,
+    "onHand": 79,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1239,10 +1239,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 128,
-    "committed": 30,
-    "incoming": 30,
-    "onHand": 188,
+    "available": 44,
+    "committed": 5,
+    "incoming": 1,
+    "onHand": 50,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1253,10 +1253,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 63,
-    "committed": 7,
-    "incoming": 45,
-    "onHand": 115,
+    "available": 35,
+    "committed": 15,
+    "incoming": 4,
+    "onHand": 54,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1267,10 +1267,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 118,
-    "committed": 12,
-    "incoming": 60,
-    "onHand": 190,
+    "available": 44,
+    "committed": 13,
+    "incoming": 5,
+    "onHand": 62,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1281,10 +1281,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 53,
-    "committed": 17,
-    "incoming": 75,
-    "onHand": 145,
+    "available": 57,
+    "committed": 24,
+    "incoming": 1,
+    "onHand": 82,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1295,10 +1295,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 36,
-    "committed": 7,
-    "incoming": 48,
-    "onHand": 91,
+    "available": 62,
+    "committed": 20,
+    "incoming": 7,
+    "onHand": 89,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1309,10 +1309,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 98,
-    "committed": 12,
-    "incoming": 72,
-    "onHand": 182,
+    "available": 67,
+    "committed": 21,
+    "incoming": 27,
+    "onHand": 115,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1323,10 +1323,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 40,
+    "available": 76,
     "committed": 17,
-    "incoming": 0,
-    "onHand": 57,
+    "incoming": 4,
+    "onHand": 97,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1337,10 +1337,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 102,
-    "committed": 22,
-    "incoming": 24,
-    "onHand": 148,
+    "available": 70,
+    "committed": 9,
+    "incoming": 1,
+    "onHand": 80,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1351,10 +1351,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 64,
-    "committed": 12,
-    "incoming": 66,
-    "onHand": 142,
+    "available": 51,
+    "committed": 25,
+    "incoming": 39,
+    "onHand": 115,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1365,10 +1365,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 133,
-    "committed": 17,
-    "incoming": 3,
-    "onHand": 153,
+    "available": 57,
+    "committed": 12,
+    "incoming": 12,
+    "onHand": 81,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1380,9 +1380,9 @@
     "locationName": "US-NJ",
     "region": "United States",
     "available": 82,
-    "committed": 22,
-    "incoming": 36,
-    "onHand": 140,
+    "committed": 3,
+    "incoming": 21,
+    "onHand": 106,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1393,10 +1393,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 31,
-    "committed": 27,
-    "incoming": 69,
-    "onHand": 127,
+    "available": 107,
+    "committed": 25,
+    "incoming": 2,
+    "onHand": 134,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1407,10 +1407,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 92,
-    "committed": 17,
-    "incoming": 84,
-    "onHand": 193,
+    "available": 51,
+    "committed": 10,
+    "incoming": 25,
+    "onHand": 86,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1421,10 +1421,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 48,
-    "committed": 22,
-    "incoming": 30,
-    "onHand": 100,
+    "available": 44,
+    "committed": 9,
+    "incoming": 32,
+    "onHand": 85,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1435,10 +1435,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 124,
-    "committed": 27,
-    "incoming": 72,
-    "onHand": 223,
+    "available": 72,
+    "committed": 18,
+    "incoming": 33,
+    "onHand": 123,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1449,10 +1449,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 80,
-    "committed": 4,
+    "available": 74,
+    "committed": 7,
     "incoming": 18,
-    "onHand": 102,
+    "onHand": 99,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1463,10 +1463,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 120,
-    "committed": 22,
-    "incoming": 6,
-    "onHand": 148,
+    "available": 53,
+    "committed": 15,
+    "incoming": 24,
+    "onHand": 92,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1477,10 +1477,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 83,
-    "committed": 27,
-    "incoming": 57,
-    "onHand": 167,
+    "available": 45,
+    "committed": 13,
+    "incoming": 20,
+    "onHand": 78,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1491,10 +1491,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 46,
-    "committed": 4,
-    "incoming": 12,
-    "onHand": 62,
+    "available": 41,
+    "committed": 12,
+    "incoming": 1,
+    "onHand": 54,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1505,10 +1505,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 129,
-    "committed": 9,
-    "incoming": 63,
-    "onHand": 201,
+    "available": 58,
+    "committed": 6,
+    "incoming": 23,
+    "onHand": 87,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1519,10 +1519,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 28,
-    "committed": 27,
-    "incoming": 24,
-    "onHand": 79,
+    "available": 44,
+    "committed": 13,
+    "incoming": 16,
+    "onHand": 73,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1533,10 +1533,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 118,
-    "committed": 4,
-    "incoming": 84,
-    "onHand": 206,
+    "available": 24,
+    "committed": 7,
+    "incoming": 17,
+    "onHand": 48,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1547,10 +1547,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 88,
-    "committed": 9,
-    "incoming": 48,
-    "onHand": 145,
+    "available": 36,
+    "committed": 16,
+    "incoming": 6,
+    "onHand": 58,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1561,10 +1561,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 58,
-    "committed": 14,
-    "incoming": 12,
-    "onHand": 84,
+    "available": 39,
+    "committed": 11,
+    "incoming": 19,
+    "onHand": 69,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1575,10 +1575,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 56,
-    "committed": 4,
-    "incoming": 42,
-    "onHand": 102,
+    "available": 83,
+    "committed": 5,
+    "incoming": 1,
+    "onHand": 89,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1589,10 +1589,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 33,
+    "available": 86,
     "committed": 9,
-    "incoming": 15,
-    "onHand": 57,
+    "incoming": 30,
+    "onHand": 125,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1603,10 +1603,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 130,
-    "committed": 14,
-    "incoming": 84,
-    "onHand": 228,
+    "available": 81,
+    "committed": 12,
+    "incoming": 22,
+    "onHand": 115,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1617,10 +1617,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 107,
-    "committed": 19,
-    "incoming": 57,
-    "onHand": 183,
+    "available": 70,
+    "committed": 16,
+    "incoming": 21,
+    "onHand": 107,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1631,10 +1631,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 84,
-    "committed": 9,
-    "incoming": 60,
-    "onHand": 153,
+    "available": 46,
+    "committed": 18,
+    "incoming": 4,
+    "onHand": 68,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1645,10 +1645,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 68,
-    "committed": 14,
-    "incoming": 42,
-    "onHand": 124,
+    "available": 34,
+    "committed": 21,
+    "incoming": 15,
+    "onHand": 70,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1659,10 +1659,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 52,
-    "committed": 19,
-    "incoming": 24,
-    "onHand": 95,
+    "available": 34,
+    "committed": 15,
+    "incoming": 2,
+    "onHand": 51,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1673,10 +1673,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 36,
-    "committed": 24,
-    "incoming": 6,
-    "onHand": 66,
+    "available": 26,
+    "committed": 4,
+    "incoming": 14,
+    "onHand": 44,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1687,10 +1687,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 112,
-    "committed": 14,
-    "incoming": 78,
-    "onHand": 204,
+    "available": 74,
+    "committed": 8,
+    "incoming": 62,
+    "onHand": 144,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1701,10 +1701,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 103,
-    "committed": 19,
-    "incoming": 69,
-    "onHand": 191,
+    "available": 169,
+    "committed": 14,
+    "incoming": 9,
+    "onHand": 192,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1715,10 +1715,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 94,
-    "committed": 24,
-    "incoming": 60,
-    "onHand": 178,
+    "available": 148,
+    "committed": 22,
+    "incoming": 27,
+    "onHand": 197,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1729,10 +1729,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 85,
-    "committed": 29,
-    "incoming": 51,
-    "onHand": 165,
+    "available": 154,
+    "committed": 25,
+    "incoming": 50,
+    "onHand": 229,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1743,10 +1743,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 140,
-    "committed": 19,
-    "incoming": 0,
-    "onHand": 159,
+    "available": 53,
+    "committed": 22,
+    "incoming": 36,
+    "onHand": 111,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1757,10 +1757,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 138,
-    "committed": 24,
-    "incoming": 0,
-    "onHand": 162,
+    "available": 89,
+    "committed": 14,
+    "incoming": 15,
+    "onHand": 118,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1771,10 +1771,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 136,
-    "committed": 29,
-    "incoming": 0,
-    "onHand": 165,
+    "available": 77,
+    "committed": 15,
+    "incoming": 9,
+    "onHand": 101,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1785,10 +1785,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 134,
-    "committed": 6,
-    "incoming": 0,
-    "onHand": 140,
+    "available": 97,
+    "committed": 16,
+    "incoming": 5,
+    "onHand": 118,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1799,10 +1799,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 48,
-    "committed": 24,
-    "incoming": 18,
-    "onHand": 90,
+    "available": 40,
+    "committed": 11,
+    "incoming": 4,
+    "onHand": 55,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1813,10 +1813,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 53,
-    "committed": 29,
-    "incoming": 27,
-    "onHand": 109,
+    "available": 38,
+    "committed": 21,
+    "incoming": 11,
+    "onHand": 70,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1827,10 +1827,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 58,
-    "committed": 6,
-    "incoming": 36,
-    "onHand": 100,
+    "available": 44,
+    "committed": 2,
+    "incoming": 17,
+    "onHand": 63,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1841,10 +1841,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 63,
-    "committed": 11,
-    "incoming": 45,
-    "onHand": 119,
+    "available": 38,
+    "committed": 16,
+    "incoming": 1,
+    "onHand": 55,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1855,10 +1855,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 76,
-    "committed": 29,
-    "incoming": 36,
-    "onHand": 141,
+    "available": 79,
+    "committed": 15,
+    "incoming": 53,
+    "onHand": 147,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1869,10 +1869,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 88,
-    "committed": 6,
-    "incoming": 54,
-    "onHand": 148,
+    "available": 77,
+    "committed": 7,
+    "incoming": 11,
+    "onHand": 95,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1883,10 +1883,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 100,
-    "committed": 11,
-    "incoming": 72,
-    "onHand": 183,
+    "available": 58,
+    "committed": 24,
+    "incoming": 34,
+    "onHand": 116,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1897,10 +1897,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 112,
-    "committed": 16,
-    "incoming": 90,
-    "onHand": 218,
+    "available": 90,
+    "committed": 15,
+    "incoming": 55,
+    "onHand": 160,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1911,10 +1911,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 104,
-    "committed": 6,
-    "incoming": 54,
-    "onHand": 164,
+    "available": 80,
+    "committed": 17,
+    "incoming": 4,
+    "onHand": 101,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1925,10 +1925,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 123,
-    "committed": 11,
-    "incoming": 81,
-    "onHand": 215,
+    "available": 56,
+    "committed": 24,
+    "incoming": 18,
+    "onHand": 98,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1939,10 +1939,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 142,
-    "committed": 16,
-    "incoming": 12,
-    "onHand": 170,
+    "available": 107,
+    "committed": 4,
+    "incoming": 45,
+    "onHand": 156,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1953,10 +1953,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 41,
-    "committed": 21,
-    "incoming": 39,
-    "onHand": 101,
+    "available": 96,
+    "committed": 4,
+    "incoming": 20,
+    "onHand": 120,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1967,10 +1967,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 132,
-    "committed": 11,
-    "incoming": 72,
-    "onHand": 215,
+    "available": 73,
+    "committed": 23,
+    "incoming": 18,
+    "onHand": 114,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1981,10 +1981,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 38,
-    "committed": 16,
-    "incoming": 12,
-    "onHand": 66,
+    "available": 91,
+    "committed": 9,
+    "incoming": 52,
+    "onHand": 152,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -1995,10 +1995,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 64,
-    "committed": 21,
-    "incoming": 48,
-    "onHand": 133,
+    "available": 89,
+    "committed": 24,
+    "incoming": 10,
+    "onHand": 123,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2009,10 +2009,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 90,
-    "committed": 26,
-    "incoming": 84,
-    "onHand": 200,
+    "available": 123,
+    "committed": 18,
+    "incoming": 39,
+    "onHand": 180,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2023,10 +2023,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 40,
-    "committed": 16,
-    "incoming": 90,
-    "onHand": 146,
+    "available": 105,
+    "committed": 12,
+    "incoming": 31,
+    "onHand": 148,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2037,10 +2037,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 73,
-    "committed": 21,
-    "incoming": 39,
-    "onHand": 133,
+    "available": 111,
+    "committed": 11,
+    "incoming": 12,
+    "onHand": 134,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2051,10 +2051,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 106,
-    "committed": 26,
-    "incoming": 84,
-    "onHand": 216,
+    "available": 119,
+    "committed": 4,
+    "incoming": 37,
+    "onHand": 160,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2065,10 +2065,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 139,
-    "committed": 31,
-    "incoming": 33,
-    "onHand": 203,
+    "available": 76,
+    "committed": 5,
+    "incoming": 31,
+    "onHand": 112,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2079,10 +2079,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 68,
-    "committed": 21,
-    "incoming": 12,
-    "onHand": 101,
+    "available": 39,
+    "committed": 6,
+    "incoming": 9,
+    "onHand": 54,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2093,10 +2093,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 108,
-    "committed": 26,
-    "incoming": 66,
-    "onHand": 200,
+    "available": 36,
+    "committed": 11,
+    "incoming": 3,
+    "onHand": 50,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2107,10 +2107,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 28,
-    "committed": 31,
-    "incoming": 24,
-    "onHand": 83,
+    "available": 37,
+    "committed": 19,
+    "incoming": 15,
+    "onHand": 71,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2121,10 +2121,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 68,
-    "committed": 8,
-    "incoming": 78,
-    "onHand": 154,
+    "available": 50,
+    "committed": 25,
+    "incoming": 17,
+    "onHand": 92,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2135,10 +2135,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 96,
-    "committed": 26,
-    "incoming": 30,
-    "onHand": 152,
+    "available": 125,
+    "committed": 3,
+    "incoming": 4,
+    "onHand": 132,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2149,10 +2149,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 143,
-    "committed": 31,
-    "incoming": 93,
-    "onHand": 267,
+    "available": 72,
+    "committed": 10,
+    "incoming": 4,
+    "onHand": 86,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2163,10 +2163,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 70,
-    "committed": 8,
-    "incoming": 60,
-    "onHand": 138,
+    "available": 128,
+    "committed": 4,
+    "incoming": 16,
+    "onHand": 148,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2177,10 +2177,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 117,
-    "committed": 13,
-    "incoming": 27,
-    "onHand": 157,
+    "available": 60,
+    "committed": 25,
+    "incoming": 13,
+    "onHand": 98,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2191,10 +2191,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 124,
-    "committed": 31,
-    "incoming": 48,
-    "onHand": 203,
+    "available": 73,
+    "committed": 8,
+    "incoming": 45,
+    "onHand": 126,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2205,10 +2205,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 58,
-    "committed": 8,
+    "available": 120,
+    "committed": 11,
     "incoming": 24,
-    "onHand": 90,
+    "onHand": 155,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2219,10 +2219,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 112,
-    "committed": 13,
-    "incoming": 0,
-    "onHand": 125,
+    "available": 71,
+    "committed": 15,
+    "incoming": 15,
+    "onHand": 101,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2233,10 +2233,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 46,
-    "committed": 18,
-    "incoming": 72,
-    "onHand": 136,
+    "available": 49,
+    "committed": 25,
+    "incoming": 11,
+    "onHand": 85,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2247,10 +2247,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 32,
-    "committed": 8,
-    "incoming": 66,
-    "onHand": 106,
+    "available": 98,
+    "committed": 21,
+    "incoming": 21,
+    "onHand": 140,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2261,10 +2261,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 93,
-    "committed": 13,
-    "incoming": 51,
-    "onHand": 157,
+    "available": 103,
+    "committed": 14,
+    "incoming": 5,
+    "onHand": 122,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2275,10 +2275,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 34,
-    "committed": 18,
-    "incoming": 36,
-    "onHand": 88,
+    "available": 79,
+    "committed": 17,
+    "incoming": 3,
+    "onHand": 99,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2289,10 +2289,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 95,
-    "committed": 23,
-    "incoming": 21,
-    "onHand": 139,
+    "available": 143,
+    "committed": 10,
+    "incoming": 11,
+    "onHand": 164,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2303,10 +2303,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 60,
-    "committed": 13,
-    "incoming": 84,
-    "onHand": 157,
+    "available": 68,
+    "committed": 18,
+    "incoming": 6,
+    "onHand": 92,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2317,10 +2317,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 128,
-    "committed": 18,
-    "incoming": 78,
-    "onHand": 224,
+    "available": 63,
+    "committed": 19,
+    "incoming": 24,
+    "onHand": 106,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2331,10 +2331,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 76,
-    "committed": 23,
-    "incoming": 72,
-    "onHand": 171,
+    "available": 32,
+    "committed": 16,
+    "incoming": 9,
+    "onHand": 57,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2345,10 +2345,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 144,
-    "committed": 28,
-    "incoming": 66,
-    "onHand": 238,
+    "available": 46,
+    "committed": 3,
+    "incoming": 7,
+    "onHand": 56,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2359,10 +2359,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 20,
-    "committed": 18,
-    "incoming": 6,
-    "onHand": 44,
+    "available": 10,
+    "committed": 14,
+    "incoming": 7,
+    "onHand": 31,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2373,10 +2373,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 24,
-    "committed": 23,
-    "incoming": 9,
-    "onHand": 56,
+    "available": 12,
+    "committed": 20,
+    "incoming": 5,
+    "onHand": 37,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2387,10 +2387,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 10,
-    "committed": 28,
-    "incoming": 12,
-    "onHand": 50,
+    "available": 14,
+    "committed": 20,
+    "incoming": 0,
+    "onHand": 34,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2401,10 +2401,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 14,
-    "committed": 5,
-    "incoming": 15,
-    "onHand": 34,
+    "available": 13,
+    "committed": 17,
+    "incoming": 8,
+    "onHand": 38,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2415,10 +2415,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 17,
-    "committed": 23,
-    "incoming": 12,
-    "onHand": 52,
+    "available": 31,
+    "committed": 14,
+    "incoming": 13,
+    "onHand": 58,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2429,10 +2429,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 8,
-    "committed": 28,
-    "incoming": 0,
-    "onHand": 36,
+    "available": 34,
+    "committed": 14,
+    "incoming": 16,
+    "onHand": 64,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2443,10 +2443,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 17,
-    "committed": 5,
-    "incoming": 6,
-    "onHand": 28,
+    "available": 21,
+    "committed": 10,
+    "incoming": 17,
+    "onHand": 48,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2457,10 +2457,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 8,
-    "committed": 10,
-    "incoming": 12,
-    "onHand": 30,
+    "available": 38,
+    "committed": 14,
+    "incoming": 3,
+    "onHand": 55,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2471,10 +2471,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 144,
-    "committed": 28,
-    "incoming": 42,
-    "onHand": 214,
+    "available": 80,
+    "committed": 18,
+    "incoming": 14,
+    "onHand": 112,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2485,10 +2485,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 113,
-    "committed": 5,
-    "incoming": 63,
-    "onHand": 181,
+    "available": 65,
+    "committed": 17,
+    "incoming": 26,
+    "onHand": 108,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2499,10 +2499,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 82,
-    "committed": 10,
-    "incoming": 84,
-    "onHand": 176,
+    "available": 57,
+    "committed": 2,
+    "incoming": 9,
+    "onHand": 68,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2513,10 +2513,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 51,
-    "committed": 15,
-    "incoming": 9,
-    "onHand": 75,
+    "available": 54,
+    "committed": 20,
+    "incoming": 3,
+    "onHand": 77,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2527,10 +2527,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 52,
-    "committed": 5,
-    "incoming": 60,
-    "onHand": 117,
+    "available": 36,
+    "committed": 10,
+    "incoming": 21,
+    "onHand": 67,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2541,10 +2541,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 28,
-    "committed": 10,
-    "incoming": 90,
-    "onHand": 128,
+    "available": 51,
+    "committed": 5,
+    "incoming": 11,
+    "onHand": 67,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2555,10 +2555,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 124,
-    "committed": 15,
-    "incoming": 24,
-    "onHand": 163,
+    "available": 62,
+    "committed": 24,
+    "incoming": 14,
+    "onHand": 100,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2569,10 +2569,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 100,
-    "committed": 20,
-    "incoming": 54,
-    "onHand": 174,
+    "available": 77,
+    "committed": 12,
+    "incoming": 22,
+    "onHand": 111,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2583,10 +2583,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 8,
-    "committed": 10,
-    "incoming": 12,
-    "onHand": 30,
+    "available": 34,
+    "committed": 6,
+    "incoming": 15,
+    "onHand": 55,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2597,10 +2597,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 14,
-    "committed": 15,
-    "incoming": 9,
-    "onHand": 38,
+    "available": 29,
+    "committed": 3,
+    "incoming": 21,
+    "onHand": 53,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2611,10 +2611,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 20,
-    "committed": 20,
-    "incoming": 6,
-    "onHand": 46,
+    "available": 39,
+    "committed": 11,
+    "incoming": 2,
+    "onHand": 52,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2625,10 +2625,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 8,
-    "committed": 25,
-    "incoming": 3,
-    "onHand": 36,
+    "available": 37,
+    "committed": 19,
+    "incoming": 0,
+    "onHand": 56,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2639,10 +2639,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 108,
-    "committed": 15,
-    "incoming": 0,
-    "onHand": 123,
+    "available": 84,
+    "committed": 14,
+    "incoming": 20,
+    "onHand": 118,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2653,10 +2653,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 98,
-    "committed": 20,
-    "incoming": 48,
-    "onHand": 166,
+    "available": 68,
+    "committed": 18,
+    "incoming": 0,
+    "onHand": 86,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2667,10 +2667,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 88,
-    "committed": 25,
-    "incoming": 0,
-    "onHand": 113,
+    "available": 53,
+    "committed": 19,
+    "incoming": 3,
+    "onHand": 75,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2681,10 +2681,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 78,
-    "committed": 30,
-    "incoming": 48,
-    "onHand": 156,
+    "available": 48,
+    "committed": 13,
+    "incoming": 26,
+    "onHand": 87,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2695,10 +2695,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 136,
-    "committed": 20,
-    "incoming": 18,
-    "onHand": 174,
+    "available": 32,
+    "committed": 13,
+    "incoming": 9,
+    "onHand": 54,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2709,10 +2709,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 133,
-    "committed": 25,
-    "incoming": 75,
-    "onHand": 233,
+    "available": 30,
+    "committed": 21,
+    "incoming": 13,
+    "onHand": 64,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2723,10 +2723,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 130,
-    "committed": 30,
-    "incoming": 36,
-    "onHand": 196,
+    "available": 52,
+    "committed": 20,
+    "incoming": 20,
+    "onHand": 92,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2737,10 +2737,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 127,
-    "committed": 7,
-    "incoming": 93,
-    "onHand": 227,
+    "available": 33,
+    "committed": 20,
+    "incoming": 15,
+    "onHand": 68,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2751,10 +2751,10 @@
     "locationId": "warehouse-eu-waw",
     "locationName": "EU-WAW",
     "region": "Europe",
-    "available": 44,
-    "committed": 25,
-    "incoming": 36,
-    "onHand": 105,
+    "available": 27,
+    "committed": 21,
+    "incoming": 2,
+    "onHand": 50,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2765,10 +2765,10 @@
     "locationId": "warehouse-me-dxb",
     "locationName": "ME-DXB",
     "region": "Middle East",
-    "available": 48,
-    "committed": 30,
-    "incoming": 6,
-    "onHand": 84,
+    "available": 51,
+    "committed": 19,
+    "incoming": 15,
+    "onHand": 85,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2779,10 +2779,10 @@
     "locationId": "warehouse-us-nj",
     "locationName": "US-NJ",
     "region": "United States",
-    "available": 52,
-    "committed": 7,
-    "incoming": 72,
-    "onHand": 131,
+    "available": 48,
+    "committed": 18,
+    "incoming": 12,
+    "onHand": 78,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   },
   {
@@ -2793,10 +2793,10 @@
     "locationId": "warehouse-cn-sz",
     "locationName": "CN-SZ",
     "region": "China / Asia",
-    "available": 56,
-    "committed": 12,
-    "incoming": 42,
-    "onHand": 110,
+    "available": 32,
+    "committed": 15,
+    "incoming": 12,
+    "onHand": 59,
     "updatedAt": "2026-06-14T00:00:00.000Z"
   }
 ]
