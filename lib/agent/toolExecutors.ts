@@ -184,7 +184,7 @@ async function executeGetSalesData(args: GetSalesDataArgs) {
   const topSellers = calculate_top_sellers(
     ordersResult.orders,
     products,
-    args.limit ?? 10,
+    args.limit ?? 50,
   );
 
   const sortedRows = [...topSellers.rows];
