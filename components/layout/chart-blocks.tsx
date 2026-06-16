@@ -155,17 +155,12 @@ function RangeBarChart({ chart }: { chart: BarChartBlock }) {
 
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
-      <div className="flex items-baseline justify-between gap-4">
-        <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
-        {chart.xAxisLabel ? (
-          <span className="shrink-0 text-xs text-slate-400">{chart.xAxisLabel}</span>
-        ) : null}
-      </div>
-      <div className="mt-4 h-[360px] w-full">
+      <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
+      <div className="mt-4 h-[400px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={showBrush ? chart.bars : visibleBars}
-            margin={{ top: 8, right: 8, bottom: 8, left: 24 }}
+            margin={{ top: 8, right: 8, bottom: 24, left: 24 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#f0ece4" />
             <XAxis
@@ -173,9 +168,14 @@ function RangeBarChart({ chart }: { chart: BarChartBlock }) {
               tick={{ fontSize: 11, fill: "#64748b" }}
               angle={-35}
               textAnchor="end"
-              height={100}
+              height={120}
               interval={0}
               tickFormatter={(value: string) => truncateLabel(value, 22)}
+              label={
+                chart.xAxisLabel
+                  ? { value: chart.xAxisLabel, position: "insideBottom", offset: 0, fontSize: 12, fill: "#94a3b8" }
+                  : undefined
+              }
             />
             <YAxis
               tick={{ fontSize: 11, fill: "#64748b" }}
