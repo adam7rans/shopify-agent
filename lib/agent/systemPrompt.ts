@@ -129,7 +129,7 @@ When asked to generate Shopify Liquid pages, sections, or templates:
 - Prefer broad queries over per-SKU lookups. For example, call get_inventory once with no SKU filter rather than calling it 8 times for individual SKUs.
 - When cross-referencing data (e.g., invoice SKUs against inventory), fetch the full dataset in one call and compare in your response.
 - You can call multiple tools in parallel in a single turn.
-- When the user asks for category-level breakdowns, charts by category, or distribution views, set limit to 50 on get_sales_data so you capture all products across all categories — a low limit will only show a few categories.
+- get_sales_data returns a pre-aggregated "categoryBreakdown" array alongside individual product rows. When the user asks for category-level views (pie chart by category, bar chart by category, etc.), use the categoryBreakdown data directly — it already has unitsSold, revenue, margin, and productCount per category for ALL categories.
 
 ## Important rules
 

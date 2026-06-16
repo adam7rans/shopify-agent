@@ -191,6 +191,28 @@ async function executeGetSalesData(args: GetSalesDataArgs) {
   if (args.sort_by === "revenue") sortedRows.sort((a, b) => b.revenue - a.revenue);
   if (args.sort_by === "margin") sortedRows.sort((a, b) => b.margin - a.margin);
 
+  const categoryMap = new Map<string, { units: number; revenue: number; margin: number; products: number }>();
+  for (const r of sortedRows) {
+    const existing = categoryMap.get(r.category);
+    if (existing) {
+      existing.units += r.unitsSold;
+      existing.revenue += r.revenue;
+      existing.margin += r.margin;
+      existing.products += 1;
+    } else {
+      categoryMap.set(r.category, { units: r.unitsSold, revenue: r.revenue, margin: r.margin, products: 1 });
+    }
+  }
+  const categoryBreakdown = Array.from(categoryMap.entries())
+    .map(([category, data]) => ({
+      category,
+      unitsSold: data.units,
+      revenue: Number(data.revenue.toFixed(2)),
+      margin: Number(data.margin.toFixed(2)),
+      productCount: data.products,
+    }))
+    .sort((a, b) => b.unitsSold - a.unitsSold);
+
   return {
     window: window.label,
     ordersAnalyzed: ordersResult.orders.length,
@@ -198,6 +220,7 @@ async function executeGetSalesData(args: GetSalesDataArgs) {
     totalUnitsSold: topSellers.totalUnitsSold,
     topCategory: topSellers.topCategory,
     count: sortedRows.length,
+    categoryBreakdown,
     rows: sortedRows.map((r) => ({
       product: r.product,
       sku: r.sku,
