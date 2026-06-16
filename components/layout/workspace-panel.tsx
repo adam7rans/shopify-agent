@@ -481,44 +481,6 @@ function renderAssistantResponse(result: AgentUiResponse, mode: ShellMode, onUse
 
   return (
     <div className="space-y-5">
-      <div className="w-fit max-w-full rounded-[28px] border border-white/70 bg-white/88 p-6 shadow-panel backdrop-blur">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="max-w-[58ch]">
-            <h2 className="max-w-[20ch] text-3xl font-semibold tracking-tight text-ink">
-              {result.answer.title}
-            </h2>
-            <p className="mt-4 max-w-[58ch] text-base leading-8 text-slate-700">
-              {result.answer.body}
-            </p>
-          </div>
-          {mode === "diagnostics" && result.answer.badge ? (
-            <div className="rounded-full border border-plum/20 bg-plum/10 px-3 py-1 text-sm font-medium text-plum">
-              {result.answer.badge}
-            </div>
-          ) : null}
-        </div>
-      </div>
-
-      {result.suggestedPrompts && result.suggestedPrompts.length > 0 ? (
-        <div className="rounded-[24px] border border-sand/80 bg-shell/70 p-5">
-          <p className="text-sm uppercase tracking-[0.18em] text-slate-500">
-            Try one of these prompts next
-          </p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            {result.suggestedPrompts.map((prompt) => (
-              <button
-                key={prompt}
-                type="button"
-                onClick={() => onUsePrompt(prompt)}
-                className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 transition hover:border-slate-400"
-              >
-                {prompt}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
       {primaryCards.length > 0 ? (
         <div className="space-y-4">{primaryCards.map((card) => <div key={`${card.type}-${"sku" in card ? card.sku : "title" in card ? card.title : card.type}`}>{renderCard(card)}</div>)}</div>
       ) : null}
