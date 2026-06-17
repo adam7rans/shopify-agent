@@ -14,19 +14,19 @@ function liquidToPreviewHtml(liquid: string): string {
   html = html.replace(/\{%[-\s]*comment\s*[-]?%\}[\s\S]*?\{%[-\s]*endcomment\s*[-]?%\}/g, "");
 
   html = html.replace(
-    /\{%[-\s]*for\s+product\s+in\s+collection\.products\s*[-]?%\}([\s\S]*?)\{%[-\s]*endfor\s*[-]?%\}/g,
+    /\{%[-\s]*for\s+product\s+in\s+\S+\.products\s*[-]?%\}([\s\S]*?)\{%[-\s]*endfor\s*[-]?%\}/g,
     (_match, body: string) => {
       const sampleProducts = [
-        { title: "Hi-Chew Green Apple", price: "$3.49", image: "/products/hi-chew-green-apple-fruit-chews.png", url: "#" },
-        { title: "Kasugai Peach Gummy", price: "$4.29", image: "/products/kasugai-peach-gummy.png", url: "#" },
-        { title: "Hi-Chew Strawberry", price: "$3.49", image: "/products/hi-chew-strawberry-fruit-chews.png", url: "#" },
-        { title: "UHA Kororo Peach Jelly", price: "$3.99", image: "/products/uha-kororo-peach-jelly-bites.png", url: "#" },
+        { title: "Hi-Chew Green Apple", price: "3.49", image: "/products/hi-chew-green-apple-fruit-chews.png", url: "#" },
+        { title: "Kasugai Peach Gummy", price: "4.29", image: "/products/kasugai-peach-gummy.png", url: "#" },
+        { title: "Hi-Chew Strawberry", price: "3.49", image: "/products/hi-chew-strawberry-fruit-chews.png", url: "#" },
+        { title: "UHA Kororo Peach Jelly", price: "3.99", image: "/products/uha-kororo-peach-jelly-bites.png", url: "#" },
       ];
       return sampleProducts
         .map((p) => {
           let rendered = body;
           rendered = rendered.replace(/\{\{\s*product\.title\s*\}\}/g, p.title);
-          rendered = rendered.replace(/\{\{\s*product\.price\s*\|[^}]*\}\}/g, p.price);
+          rendered = rendered.replace(/\$?\{\{\s*product\.price\s*\|[^}]*\}\}/g, `$${p.price}`);
           rendered = rendered.replace(/\{\{\s*product\.featured_image\s*\|\s*img_url:\s*'[^']*'\s*\}\}/g, p.image);
           rendered = rendered.replace(/\{\{\s*product\.url\s*\}\}/g, p.url);
           rendered = rendered.replace(/\{\{\s*product\.description\s*(?:\|[^}]*)?\}\}/g, "Premium Japanese gummy candy");
@@ -36,8 +36,8 @@ function liquidToPreviewHtml(liquid: string): string {
     },
   );
 
-  html = html.replace(/\{\{\s*collection\.title\s*\}\}/g, "Japanese Gummies");
-  html = html.replace(/\{\{\s*collection\.description\s*\}\}/g, "Discover our curated selection of premium Japanese gummy candies.");
+  html = html.replace(/\{\{\s*(?:collection\.title|collections\[[^\]]*\]\.title)\s*\}\}/g, "Japanese Gummies");
+  html = html.replace(/\{\{\s*(?:collection\.description|collections\[[^\]]*\]\.description)\s*\}\}/g, "Discover our curated selection of premium Japanese gummy candies.");
 
   html = html.replace(/\{%[\s\S]*?%\}/g, "");
   html = html.replace(/\{\{[\s\S]*?\}\}/g, "");
@@ -150,7 +150,23 @@ export function LiquidCodeBlock({ content, filename }: LiquidCodeBlockProps) {
         <div className="bg-white p-6">
           <div className="mx-auto max-w-[800px] rounded-xl border border-slate-200 bg-white shadow-sm">
             <iframe
-              srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e}img{max-width:100%;height:auto;border-radius:8px}</style></head><body>${previewHtml}</body></html>`}
+              srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;padding:24px}
+a{text-decoration:none;color:inherit}
+h1,h2,h3{font-weight:600}
+h1{font-size:1.5rem;margin-bottom:6px}
+h2{font-size:0.85rem;margin-top:8px}
+p{font-size:0.8rem;color:#64748b;margin-top:2px}
+img{width:100%!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:8px}
+[class*="grid"],[class*="product-grid"],[class*="products-grid"]{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-top:16px}
+[class*="product-card"],[class*="card"]{border:1px solid #e8e4dd;border-radius:12px;overflow:hidden;padding:10px}
+[class*="product-card"] a,[class*="card"] a{display:flex;flex-direction:column;gap:0}
+[class*="product-image"],[class*="card"] img{aspect-ratio:1/1!important;width:100%!important;object-fit:cover!important;border-radius:8px;background:#f8f6f2}
+[class*="price"],[class*="product-price"]{font-size:0.8rem;font-weight:600;color:#1a1a2e;margin-top:2px}
+[class*="description"]{font-size:0.7rem;color:#94a3b8;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+[class*="collection-title"]{font-size:1.5rem}
+</style></head><body>${previewHtml}</body></html>`}
               className="h-[480px] w-full rounded-xl border-0"
               sandbox="allow-same-origin"
               title="Liquid template preview"
