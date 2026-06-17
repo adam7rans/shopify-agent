@@ -4,6 +4,8 @@ export interface AgentToolTraceEntry {
   outputSummary: string;
 }
 
+type TimeGrain = "day" | "week" | "month";
+
 export interface AgentAnswerBlock {
   title: string;
   body: string;
@@ -87,11 +89,47 @@ export interface PieChartSegment {
   category?: string;
 }
 
+export type ChartRangePreset = "7d" | "30d" | "90d" | "6m" | "12m";
+
+export interface SalesChartRefreshQuery {
+  source: "sales_data";
+  chartKind: "sales_trend" | "sales_by_category" | "revenue_by_category";
+  title: string;
+  xAxisLabel?: string;
+  yAxisLabel?: string;
+  valueLabel?: string;
+  includeRevenueSeries?: boolean;
+  category?: string;
+  country?: string;
+  sku?: string;
+  timeQuery?: string;
+  originalTimeQuery?: string;
+  originalLabel?: string;
+  startDate?: string;
+  endDate?: string;
+  grain?: "auto" | TimeGrain;
+}
+
+export interface ChartTimeCustomOption {
+  label: string;
+  timeQuery: string;
+}
+
+export interface ChartTimeControls {
+  kind: "sales";
+  currentLabel: string;
+  currentPreset?: ChartRangePreset;
+  presets: ChartRangePreset[];
+  query: SalesChartRefreshQuery;
+  customOption?: ChartTimeCustomOption;
+}
+
 export interface PieChartBlock {
   type: "pie_chart";
   title: string;
   segments: PieChartSegment[];
   valueLabel?: string;
+  timeControls?: ChartTimeControls;
 }
 
 export interface BarChartBar {
@@ -107,6 +145,7 @@ export interface BarChartBlock {
   xAxisLabel?: string;
   yAxisLabel?: string;
   valueLabel?: string;
+  timeControls?: ChartTimeControls;
 }
 
 export interface LineChartDataPoint {
@@ -126,6 +165,7 @@ export interface LineChartBlock {
   xAxisLabel?: string;
   yAxisLabel?: string;
   enableBrush?: boolean;
+  timeControls?: ChartTimeControls;
 }
 
 export type AgentChartBlock = PieChartBlock | BarChartBlock | LineChartBlock;

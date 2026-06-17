@@ -1,4 +1,5 @@
 export type TimeGrain = "day" | "week" | "month";
+export type RelativeTimeUnit = "day" | "week" | "month";
 
 export interface ResolvedTimeWindow {
   startDate: string;
@@ -274,4 +275,22 @@ export function resolveExplicitTimeWindow(
     referenceDate,
     grain && grain !== "auto" ? grain : undefined,
   );
+}
+
+export function resolveRelativeTimeWindow(
+  value: number,
+  unit: RelativeTimeUnit,
+  referenceDate: Date,
+) {
+  const safeValue = Math.max(1, Math.floor(value));
+
+  if (unit === "day") {
+    return resolveTimeWindowFromPrompt(`past ${safeValue} days`, referenceDate);
+  }
+
+  if (unit === "week") {
+    return resolveTimeWindowFromPrompt(`past ${safeValue} weeks`, referenceDate);
+  }
+
+  return resolveTimeWindowFromPrompt(`past ${safeValue} months`, referenceDate);
 }

@@ -413,9 +413,9 @@ function renderDiagnosticsSummary(diagnostics: DiagnosticsSummaryBlock) {
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {diagnostics.sources.map((source) => (
+        {diagnostics.sources.map((source, index) => (
           <span
-            key={source}
+            key={`${source}-${index}`}
             className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs uppercase tracking-[0.16em] text-slate-500"
           >
             {source}
@@ -425,8 +425,8 @@ function renderDiagnosticsSummary(diagnostics: DiagnosticsSummaryBlock) {
 
       {diagnostics.counts.length > 0 ? (
         <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          {diagnostics.counts.map((count) => (
-            <div key={count.label} className="rounded-2xl border border-white/90 bg-white p-4">
+          {diagnostics.counts.map((count, index) => (
+            <div key={`${count.label}-${index}`} className="rounded-2xl border border-white/90 bg-white p-4">
               <p className="text-xs uppercase tracking-[0.16em] text-slate-500">{count.label}</p>
               <p className="mt-2 text-2xl font-semibold text-ink">{count.value}</p>
             </div>
@@ -436,8 +436,8 @@ function renderDiagnosticsSummary(diagnostics: DiagnosticsSummaryBlock) {
 
       {diagnostics.notes && diagnostics.notes.length > 0 ? (
         <ul className="mt-4 space-y-2 text-sm leading-6 text-slate-600">
-          {diagnostics.notes.map((note) => (
-            <li key={note}>• {note}</li>
+          {diagnostics.notes.map((note, index) => (
+            <li key={`${note}-${index}`}>• {note}</li>
           ))}
         </ul>
       ) : null}

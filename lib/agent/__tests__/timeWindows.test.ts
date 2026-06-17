@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveTimeWindowFromPrompt } from "../timeWindows";
+import { resolveRelativeTimeWindow, resolveTimeWindowFromPrompt } from "../timeWindows";
 
 const referenceDate = new Date("2026-06-17T12:00:00.000Z");
 
@@ -32,6 +32,12 @@ describe("resolveTimeWindowFromPrompt", () => {
   it("resolves past 12 months", () => {
     const resolved = resolveTimeWindowFromPrompt("show me a graph of past 12 months of total sales", referenceDate);
     expect(resolved.startDate.slice(0, 10)).toBe("2025-07-01");
+    expect(resolved.grain).toBe("month");
+  });
+
+  it("resolves a relative six-month window directly", () => {
+    const resolved = resolveRelativeTimeWindow(6, "month", referenceDate);
+    expect(resolved.startDate.slice(0, 10)).toBe("2026-01-01");
     expect(resolved.grain).toBe("month");
   });
 });

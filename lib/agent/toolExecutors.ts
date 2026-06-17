@@ -147,7 +147,7 @@ async function executeGetInventory(args: GetInventoryArgs) {
   };
 }
 
-interface GetSalesDataArgs {
+export interface GetSalesDataArgs {
   time_query?: string;
   date_range?: string;
   start_date?: string;
@@ -155,6 +155,7 @@ interface GetSalesDataArgs {
   grain?: "auto" | TimeGrain;
   category?: string;
   country?: string;
+  sku?: string;
   sort_by?: "units" | "revenue" | "margin";
   limit?: number;
 }
@@ -321,7 +322,7 @@ function buildSalesTimeSeries(
   return series.sort((a, b) => a.periodStart.localeCompare(b.periodStart));
 }
 
-async function executeGetSalesData(
+export async function executeGetSalesData(
   args: GetSalesDataArgs,
   userPrompt?: string,
 ) {
@@ -355,12 +356,19 @@ async function executeGetSalesData(
       looseMatch(p.countryOfOrigin, args.country!),
     );
   }
+  if (args.sku) {
+    products = products.filter((p) =>
+      p.variants.some((variant) => looseMatch(variant.sku, args.sku!)) ||
+      looseMatch(p.title, args.sku!) ||
+      looseMatch(p.handle, args.sku!),
+    );
+  }
 
   const allowedSkus = new Set(
     products.map((product) => product.variants[0]?.sku).filter(Boolean),
   );
   const filteredOrders =
-    args.category || args.country
+    args.category || args.country || args.sku
       ? filterOrdersBySkus(ordersResult.orders, allowedSkus)
       : ordersResult.orders;
 

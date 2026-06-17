@@ -1,5 +1,6 @@
 import { runAgentLoop } from "@/lib/agent/agentLoop";
 import { hasAgentConfig } from "@/lib/agent/config";
+import { enhanceAgentResponse } from "@/lib/charts/enhanceAgentResponse";
 import type { ActivityLogEntry, ActivityLogStreamEvent } from "@/types/activityLog";
 
 export const runtime = "nodejs";
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
         }
 
         const result = await runAgentLoop(prompt, onLog);
-        sendEvent({ type: "result", data: result });
+        sendEvent({ type: "result", data: enhanceAgentResponse(result) });
       } catch (err) {
         const message = err instanceof Error ? err.message : "Agent loop failed";
         sendEvent({

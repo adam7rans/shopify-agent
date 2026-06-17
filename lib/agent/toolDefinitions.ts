@@ -121,6 +121,10 @@ export const agentTools: Tool[] = [
             description:
               'Filter sales to products from a specific country, e.g. "Japan", "South Korea"',
           },
+          sku: {
+            type: "string",
+            description: "Filter sales to a specific SKU or product",
+          },
           sort_by: {
             type: "string",
             enum: ["units", "revenue", "margin"],

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   PieChart,
   Pie,
@@ -21,8 +21,14 @@ import type {
   AgentChartBlock,
   PieChartBlock,
   BarChartBlock,
+  ChartRangePreset,
+  ChartTimeControls,
   LineChartBlock,
 } from "@/types/agentUi";
+
+function normalizeTimeQuery(value?: string) {
+  return value?.trim().toLowerCase();
+}
 
 interface ChartSummary {
   label: string;
@@ -40,19 +46,42 @@ function parseChartXValue(value: string) {
   return null;
 }
 
-function formatChartTick(value: string, totalPoints: number) {
+type DisplayTimeGrain = "day" | "week" | "month";
+
+function inferDisplayTimeGrain(values: string[], fallback?: DisplayTimeGrain): DisplayTimeGrain {
+  if (fallback) return fallback;
+  if (values.length <= 1) return "day";
+
+  const parsed = values
+    .map((value) => parseChartXValue(value))
+    .filter((value): value is number => value !== null)
+    .sort((left, right) => left - right);
+
+  if (parsed.length <= 1) return "day";
+
+  const diffsInDays: number[] = [];
+  for (let index = 1; index < parsed.length; index += 1) {
+    diffsInDays.push(Math.round((parsed[index] - parsed[index - 1]) / (24 * 60 * 60 * 1000)));
+  }
+
+  const averageDiff =
+    diffsInDays.reduce((sum, diff) => sum + diff, 0) / diffsInDays.length;
+
+  if (averageDiff >= 26) return "month";
+  if (averageDiff >= 6) return "week";
+  return "day";
+}
+
+function formatChartTick(value: string, grain: DisplayTimeGrain) {
   const parsed = parseChartXValue(value);
   if (parsed === null) return value;
 
   const date = new Date(parsed);
-  const isMonthOnly =
-    date.getUTCDate() === 1 &&
-    !/\b\d{1,2}\b/.test(value.replace(/^\d{4}-\d{2}-\d{2}$/, ""));
 
-  if (isMonthOnly || totalPoints <= 8) {
+  if (grain === "month") {
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
-      ...(totalPoints <= 8 ? { year: "numeric" } : {}),
+      year: "numeric",
       timeZone: "UTC",
     }).format(date);
   }
@@ -60,6 +89,7 @@ function formatChartTick(value: string, totalPoints: number) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
+    year: "numeric",
     timeZone: "UTC",
   }).format(date);
 }
@@ -138,32 +168,112 @@ function renderChartSummary(summary?: ChartSummary) {
   );
 }
 
-function deriveLineChartSummary(chart: LineChartBlock, fallbackSummary?: ChartSummary) {
+function renderTimeControls(
+  controls: ChartTimeControls | undefined,
+  loadingSelection: string | null,
+  onSelectPreset: (preset: ChartRangePreset) => void,
+  onSelectCustom: (timeQuery: string) => void,
+) {
+  if (!controls) return null;
+
+  const isCustomActive =
+    controls.customOption &&
+    normalizeTimeQuery(controls.query.timeQuery) ===
+      normalizeTimeQuery(controls.customOption.timeQuery);
+
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-3">
+      <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
+        Showing: <span className="text-slate-700">{controls.currentLabel}</span>
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {controls.customOption ? (
+          <button
+            type="button"
+            onClick={() => onSelectCustom(controls.customOption!.timeQuery)}
+            disabled={Boolean(loadingSelection)}
+            className={`rounded-full border px-2.5 py-1 text-xs font-medium transition ${
+              isCustomActive
+                ? "border-[#d5b26f] bg-[#f6ecd5] text-[#8a6414]"
+                : "border-slate-200 bg-white text-slate-500 hover:border-[#dcc79b] hover:text-[#8a6414]"
+            } ${loadingSelection === controls.customOption.timeQuery ? "opacity-70" : ""}`}
+          >
+            {loadingSelection === controls.customOption.timeQuery
+              ? "Updating…"
+              : controls.customOption.label}
+          </button>
+        ) : null}
+        {controls.presets.map((preset) => {
+          const isActive = controls.currentPreset === preset;
+          const isLoading = loadingSelection === preset;
+          return (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => onSelectPreset(preset)}
+              disabled={Boolean(loadingSelection)}
+              className={`rounded-full border px-2.5 py-1 text-xs font-medium transition ${
+                isActive
+                  ? "border-[#d5b26f] bg-[#f6ecd5] text-[#8a6414]"
+                  : "border-slate-200 bg-white text-slate-500 hover:border-[#dcc79b] hover:text-[#8a6414]"
+              } ${isLoading ? "opacity-70" : ""}`}
+            >
+              {isLoading ? "Updating…" : preset}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function describeTimeRange(grain: DisplayTimeGrain) {
+  if (grain === "month") return "per month";
+  if (grain === "week") return "per week";
+  return "per day";
+}
+
+function deriveLineChartSummary(
+  chart: LineChartBlock,
+  controls?: ChartTimeControls,
+  fallbackSummary?: ChartSummary,
+) {
   const unitsSeries = chart.series.find((series) => /unit/i.test(series.name));
   if (!unitsSeries) return fallbackSummary;
 
   const totalUnits = unitsSeries.dataPoints.reduce((sum, point) => sum + point.y, 0);
+  const values = unitsSeries.dataPoints.map((point) => point.y);
+  const minUnits = Math.min(...values);
+  const maxUnits = Math.max(...values);
+  const grain = inferDisplayTimeGrain(
+    unitsSeries.dataPoints.map((point) => point.x),
+    controls?.query.grain && controls.query.grain !== "auto"
+      ? (controls.query.grain as DisplayTimeGrain)
+      : undefined,
+  );
   const revenueSeries = chart.series.find((series) => /revenue/i.test(series.name));
   const totalRevenue = revenueSeries
     ? revenueSeries.dataPoints.reduce((sum, point) => sum + point.y, 0)
     : null;
+  const rangeLabel = controls?.currentLabel?.toLowerCase() ?? "this period";
 
   return {
     label: "Total units sold",
     value: `${totalUnits.toLocaleString()} units sold`,
     detail:
       totalRevenue !== null
-        ? `Total revenue over the same period was ${formatValue(totalRevenue, "revenue")}.`
-        : fallbackSummary?.detail,
+        ? `Over ${rangeLabel}, units sold ranged from ${minUnits.toLocaleString()} to ${maxUnits.toLocaleString()} ${describeTimeRange(grain)}. Total revenue over the same period was ${formatValue(totalRevenue, "revenue")}.`
+        : `Over ${rangeLabel}, units sold ranged from ${minUnits.toLocaleString()} to ${maxUnits.toLocaleString()} ${describeTimeRange(grain)}.`,
   } satisfies ChartSummary;
 }
 
-function renderPieChart(chart: PieChartBlock, summary?: ChartSummary) {
+function renderPieChart(chart: PieChartBlock, summary?: ChartSummary, controls?: React.ReactNode) {
   const total = chart.segments.reduce((sum, s) => sum + s.value, 0);
 
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
       <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
+      {controls}
       {renderChartSummary(summary)}
       <div className="mt-4 flex flex-col items-center gap-6 lg:flex-row">
         <div className="h-[320px] w-full max-w-[400px]">
@@ -218,7 +328,15 @@ function truncateLabel(label: string, max: number): string {
   return label.length > max ? `${label.slice(0, max)}…` : label;
 }
 
-function FilterableBarChart({ chart, summary }: { chart: BarChartBlock; summary?: ChartSummary }) {
+function FilterableBarChart({
+  chart,
+  summary,
+  controls,
+}: {
+  chart: BarChartBlock;
+  summary?: ChartSummary;
+  controls?: React.ReactNode;
+}) {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
 
   const visibleBars = useMemo(
@@ -240,6 +358,7 @@ function FilterableBarChart({ chart, summary }: { chart: BarChartBlock; summary?
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
       <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
+      {controls}
       {renderChartSummary(summary)}
       {showFilter && (
         <div className="mt-3 flex flex-wrap gap-1.5">
@@ -312,7 +431,15 @@ function FilterableBarChart({ chart, summary }: { chart: BarChartBlock; summary?
   );
 }
 
-function RangeLineChart({ chart, summary }: { chart: LineChartBlock; summary?: ChartSummary }) {
+function RangeLineChart({
+  chart,
+  summary,
+  controls,
+}: {
+  chart: LineChartBlock;
+  summary?: ChartSummary;
+  controls?: React.ReactNode;
+}) {
   const merged = useMemo(() => {
     const xSet = new Set<string>();
     for (const s of chart.series) {
@@ -338,13 +465,25 @@ function RangeLineChart({ chart, summary }: { chart: LineChartBlock; summary?: C
     });
   }, [chart.series]);
 
-  const lineSummary = deriveLineChartSummary(chart, summary);
+  const inferredGrain = useMemo(
+    () =>
+      inferDisplayTimeGrain(
+        merged.map((point) => point.x as string),
+        chart.timeControls?.query.grain && chart.timeControls.query.grain !== "auto"
+          ? (chart.timeControls.query.grain as DisplayTimeGrain)
+          : undefined,
+      ),
+    [chart.timeControls?.query.grain, merged],
+  );
+
+  const lineSummary = deriveLineChartSummary(chart, chart.timeControls, summary);
 
   const showBrush = chart.enableBrush === true && merged.length > 60;
 
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
       <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
+      {controls}
       {renderChartSummary(lineSummary)}
       <div className="mt-4 h-[360px] w-full">
         <ResponsiveContainer width="100%" height="100%">
@@ -361,7 +500,7 @@ function RangeLineChart({ chart, summary }: { chart: LineChartBlock; summary?: C
             <XAxis
               dataKey="x"
               tick={{ fontSize: 11, fill: "#64748b" }}
-              tickFormatter={(value: string) => formatChartTick(value, merged.length)}
+              tickFormatter={(value: string) => formatChartTick(value, inferredGrain)}
               angle={merged.length > 10 ? -25 : 0}
               textAnchor={merged.length > 10 ? "end" : "middle"}
               height={merged.length > 10 ? 72 : 48}
@@ -417,8 +556,78 @@ function RangeLineChart({ chart, summary }: { chart: LineChartBlock; summary?: C
   );
 }
 
+function InteractiveChartCard({
+  chart: initialChart,
+  summary,
+}: {
+  chart: AgentChartBlock;
+  summary?: ChartSummary;
+}) {
+  const [chart, setChart] = useState(initialChart);
+  const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
+
+  useEffect(() => {
+    setChart(initialChart);
+    setLoadingSelection(null);
+  }, [initialChart]);
+
+  async function refreshChart(body: { preset?: ChartRangePreset; timeQuery?: string }, loadingKey: string) {
+    setLoadingSelection(loadingKey);
+    try {
+      const response = await fetch("/api/chart-refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...body,
+          query: chart.timeControls?.query,
+        }),
+      });
+
+      const payload = (await response.json()) as { chart?: AgentChartBlock; error?: string };
+      if (!response.ok || !payload.chart) {
+        throw new Error(payload.error ?? "Chart refresh failed.");
+      }
+
+      setChart(payload.chart);
+    } catch (error) {
+      console.error("Chart refresh failed:", error);
+    } finally {
+      setLoadingSelection(null);
+    }
+  }
+
+  async function handleSelectPreset(preset: ChartRangePreset) {
+    if (!chart.timeControls || chart.timeControls.currentPreset === preset) return;
+    await refreshChart({ preset }, preset);
+  }
+
+  async function handleSelectCustom(timeQuery: string) {
+    if (
+      !chart.timeControls ||
+      normalizeTimeQuery(chart.timeControls.query.timeQuery) === normalizeTimeQuery(timeQuery)
+    ) {
+      return;
+    }
+
+    await refreshChart({ timeQuery }, timeQuery);
+  }
+
+  const controls = renderTimeControls(
+    chart.timeControls,
+    loadingSelection,
+    handleSelectPreset,
+    handleSelectCustom,
+  );
+  const effectiveSummary =
+    chart.timeControls && chart.type !== "line_chart" ? undefined : summary;
+
+  if (chart.type === "pie_chart") return renderPieChart(chart, effectiveSummary, controls);
+  if (chart.type === "bar_chart") {
+    return <FilterableBarChart chart={chart} summary={effectiveSummary} controls={controls} />;
+  }
+  return <RangeLineChart chart={chart} summary={effectiveSummary} controls={controls} />;
+}
+
 export function renderChart(chart: AgentChartBlock, summary?: ChartSummary) {
-  if (chart.type === "pie_chart") return renderPieChart(chart, summary);
-  if (chart.type === "bar_chart") return <FilterableBarChart chart={chart} summary={summary} />;
-  return <RangeLineChart chart={chart} summary={summary} />;
+  return <InteractiveChartCard chart={chart} summary={summary} />;
 }

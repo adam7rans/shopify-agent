@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { runAgentLoop } from "@/lib/agent/agentLoop";
 import { hasAgentConfig } from "@/lib/agent/config";
+import { enhanceAgentResponse } from "@/lib/charts/enhanceAgentResponse";
 import type { AgentUiResponse } from "@/types/agentUi";
 
 const SUGGESTED_PROMPTS = [
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
 
   try {
     const agentResponse = await runAgentLoop(prompt);
-    return NextResponse.json(agentResponse);
+    return NextResponse.json(enhanceAgentResponse(agentResponse));
   } catch (error) {
     console.error("Agent route failed:", error);
     return NextResponse.json(

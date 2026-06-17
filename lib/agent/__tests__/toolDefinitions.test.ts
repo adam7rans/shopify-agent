@@ -76,6 +76,7 @@ describe("agentTools", () => {
     expect(props).toHaveProperty("time_query");
     expect(props).toHaveProperty("start_date");
     expect(props).toHaveProperty("end_date");
+    expect(props).toHaveProperty("sku");
     expect(props.grain.enum).toEqual(["auto", "day", "week", "month"]);
   });
 });

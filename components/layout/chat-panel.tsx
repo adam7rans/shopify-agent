@@ -80,6 +80,7 @@ export function ChatPanel({
 
       <form
         className="rounded-[30px] border border-white/80 bg-white/95 px-5 py-4 shadow-panel"
+        suppressHydrationWarning
         onSubmit={(event) => {
           event.preventDefault();
           onRunPrompt();
@@ -92,6 +93,7 @@ export function ChatPanel({
           <textarea
             ref={textareaRef}
             id="agent-prompt"
+            suppressHydrationWarning
             value={prompt}
             onChange={(event) => onPromptChange(event.target.value)}
             onKeyDown={(event) => {
@@ -109,6 +111,7 @@ export function ChatPanel({
           <button
             type="submit"
             disabled={isLoading}
+            suppressHydrationWarning
             className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-white transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:bg-ink/40"
             aria-label={isLoading ? "Kandwii is thinking" : "Send prompt"}
           >
