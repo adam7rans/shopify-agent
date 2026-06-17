@@ -74,10 +74,14 @@ export function calculateTopSellersFromOrders(
     }));
 
   const topCategoryEntry = Array.from(categoryTotals.entries()).sort((a, b) => b[1] - a[1])[0];
+  const totalUnitsSold = Array.from(totalsBySku.values()).reduce(
+    (sum, row) => sum + row.unitsSold,
+    0,
+  );
 
   return {
     rows,
-    totalUnitsSold: rows.reduce((sum, row) => sum + row.unitsSold, 0),
+    totalUnitsSold,
     topCategory: topCategoryEntry?.[0] ?? "Unknown",
     topCategoryUnitsSold: topCategoryEntry?.[1] ?? 0,
   };

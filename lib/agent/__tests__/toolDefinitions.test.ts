@@ -70,9 +70,12 @@ describe("agentTools", () => {
     expect(props).toHaveProperty("limit");
   });
 
-  it("get_sales_data has valid date_range enum", () => {
+  it("get_sales_data supports flexible time fields", () => {
     const tool = getFunctionTools().find((t) => t.function.name === "get_sales_data");
     const props = (tool!.function.parameters as Record<string, unknown>).properties as Record<string, { enum?: string[] }>;
-    expect(props.date_range.enum).toEqual(["7d", "30d", "60d", "90d", "6mo"]);
+    expect(props).toHaveProperty("time_query");
+    expect(props).toHaveProperty("start_date");
+    expect(props).toHaveProperty("end_date");
+    expect(props.grain.enum).toEqual(["auto", "day", "week", "month"]);
   });
 });

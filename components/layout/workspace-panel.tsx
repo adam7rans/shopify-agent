@@ -22,7 +22,6 @@ import type {
 interface WorkspacePanelProps {
   turns: ConversationTurn[];
   mode: ShellMode;
-  onUsePrompt: (prompt: string) => void;
   onRegisterTurnRef?: (id: string, element: HTMLElement | null) => void;
   onRegisterResponseRef?: (id: string, element: HTMLElement | null) => void;
 }
@@ -469,12 +468,26 @@ function renderToolTrace(trace: AgentToolTraceEntry[]) {
   );
 }
 
-function renderAssistantResponse(result: AgentUiResponse, mode: ShellMode, onUsePrompt: (prompt: string) => void) {
+function renderAssistantResponse(
+  result: AgentUiResponse,
+  mode: ShellMode,
+) {
+  const inventoryTables = result.tables.filter(
+    (table) => table.type === "inventory_table",
+  );
+  const isTableFirstInventoryComparison =
+    result.kind === "general" &&
+    inventoryTables.length >= 2 &&
+    result.charts?.length !== 1;
+
   const shouldHideInventoryHighlightCards =
-    result.kind === "inventory_overview" &&
-    result.tables.some(
-      (table) => table.type === "inventory_table" && /low stock/i.test(table.title),
-    );
+    (result.kind === "inventory_overview" &&
+      result.tables.some(
+        (table) => table.type === "inventory_table" && /low stock/i.test(table.title),
+      )) ||
+    isTableFirstInventoryComparison;
+
+  const shouldHideComparisonInsightCards = isTableFirstInventoryComparison;
 
   const primaryCards = shouldHideInventoryHighlightCards
     ? result.primaryCards.filter((card) => card.type !== "inventory_highlight")
@@ -484,10 +497,26 @@ function renderAssistantResponse(result: AgentUiResponse, mode: ShellMode, onUse
     ? result.secondaryCards.filter((card) => card.type !== "inventory_highlight")
     : result.secondaryCards;
 
+  const filteredPrimaryCards = shouldHideComparisonInsightCards
+    ? primaryCards.filter((card) => card.type !== "insight")
+    : primaryCards;
+  const chartSummarySource =
+    result.charts && result.charts.length === 1 && filteredPrimaryCards.length === 1 && filteredPrimaryCards[0].type === "insight"
+      ? filteredPrimaryCards[0]
+      : null;
+  const shouldInlineChartSummary = Boolean(chartSummarySource) && result.tables.length === 0;
+  const visiblePrimaryCards = shouldInlineChartSummary ? [] : filteredPrimaryCards;
+
   return (
     <div className="space-y-5">
-      {primaryCards.length > 0 ? (
-        <div className="space-y-4">{primaryCards.map((card) => <div key={`${card.type}-${"sku" in card ? card.sku : "title" in card ? card.title : card.type}`}>{renderCard(card)}</div>)}</div>
+      {visiblePrimaryCards.length > 0 ? (
+        <div className="space-y-4">
+          {visiblePrimaryCards.map((card) => (
+            <div key={`${card.type}-${"sku" in card ? card.sku : "title" in card ? card.title : card.type}`}>
+              {renderCard(card)}
+            </div>
+          ))}
+        </div>
       ) : null}
 
       {secondaryCards.length > 0 ? (
@@ -509,7 +538,18 @@ function renderAssistantResponse(result: AgentUiResponse, mode: ShellMode, onUse
       {result.charts && result.charts.length > 0 ? (
         <div className="space-y-4">
           {result.charts.map((chart) => (
-            <div key={`${chart.type}-${chart.title}`}>{renderChart(chart)}</div>
+            <div key={`${chart.type}-${chart.title}`}>
+              {renderChart(
+                chart,
+                shouldInlineChartSummary && chartSummarySource
+                  ? {
+                      label: chartSummarySource.title,
+                      value: chartSummarySource.metric,
+                      detail: chartSummarySource.explanation,
+                    }
+                  : undefined,
+              )}
+            </div>
           ))}
         </div>
       ) : null}
@@ -577,7 +617,6 @@ function renderErrorState(error: string) {
 export function WorkspacePanel({
   turns,
   mode,
-  onUsePrompt,
   onRegisterTurnRef,
   onRegisterResponseRef,
 }: WorkspacePanelProps) {
@@ -607,7 +646,7 @@ export function WorkspacePanel({
                 : turn.error
                   ? renderErrorState(turn.error)
                   : turn.result
-                    ? renderAssistantResponse(turn.result, mode, onUsePrompt)
+                    ? renderAssistantResponse(turn.result, mode)
                     : null}
             </div>
           </div>

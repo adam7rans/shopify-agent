@@ -15,35 +15,35 @@ import type { ActivityLogStreamEvent } from "@/types/activityLog";
 
 const STARTER_PROMPT_GROUPS: StarterPromptGroup[] = [
   {
-    id: "sales",
-    label: "Sales",
-    description: "Use Kandwii to surface top products and recent sales trends.",
+    id: "daily",
+    label: "Daily",
+    description: "Start the day with inventory, reorder, and fulfillment checks.",
     prompts: [
-      "Which candy is performing best?",
-      "What are our best-selling candies recently?",
-      "Show the top 10 sellers over the past six months.",
-    ],
-    accent: "sales",
-  },
-  {
-    id: "inventory",
-    label: "Inventory",
-    description: "Inspect live stock levels and quickly spot low-stock SKUs.",
-    prompts: [
-      "What does our inventory look like?",
-      "Which SKUs are low on stock?",
-      "Do we need to reorder sour candy?",
+      "What does our inventory look like right now?",
+      "Which SKUs are low on stock right now?",
+      "Where is fulfillment getting stuck?",
     ],
     accent: "inventory",
   },
   {
-    id: "operations",
-    label: "Operations",
-    description: "Check fulfillment health while keeping warehouse ops data visible.",
+    id: "weekly",
+    label: "Weekly",
+    description: "Review winners, filtered inventory slices, and weekly risks.",
     prompts: [
-      "Where is fulfillment getting stuck?",
-      "Show me warehouse issues globally.",
-      "What is this app for?",
+      "Which candy is performing best this week?",
+      "Compare Korean and Japanese gummy inventory side by side",
+      "Give me a bar chart of units sold by category",
+    ],
+    accent: "sales",
+  },
+  {
+    id: "monthly",
+    label: "Monthly",
+    description: "Look at broader sales trends and planning windows.",
+    prompts: [
+      "Show me a graph of past 3 months of total sales",
+      "Show revenue by category as a pie chart",
+      "Generate a Shopify Liquid collection page for Japanese gummies",
     ],
     accent: "operations",
   },
@@ -290,7 +290,6 @@ export function BestSellersShell({
               <WorkspacePanel
                 turns={turns}
                 mode={mode}
-                onUsePrompt={handleUsePrompt}
                 onRegisterTurnRef={registerTurnRef}
                 onRegisterResponseRef={registerResponseRef}
               />

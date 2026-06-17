@@ -37,7 +37,9 @@ function describeToolArgs(name: string, args: Record<string, unknown>): string {
   if (args.category) parts.push(`category: ${args.category}`);
   if (args.country) parts.push(`country: ${args.country}`);
   if (args.sku) parts.push(`SKU: ${args.sku}`);
-  if (args.date_range) parts.push(`range: ${args.date_range}`);
+  if (args.time_query) parts.push(`range: ${args.time_query}`);
+  else if (args.date_range) parts.push(`range: ${args.date_range}`);
+  if (args.start_date && args.end_date) parts.push(`${args.start_date} to ${args.end_date}`);
   if (args.region) parts.push(`region: ${args.region}`);
   if (args.severity) parts.push(`severity: ${args.severity}`);
   if (args.status) parts.push(`status: ${args.status}`);
@@ -140,7 +142,9 @@ export async function runAgentLoop(
 
             log(toolIcon, `${toolLabel}${argsDesc}`);
 
-            const result = await executeTool(toolCall.function.name, args);
+            const result = await executeTool(toolCall.function.name, args, {
+              userPrompt: prompt,
+            });
 
             const summary = summarizeToolResult(toolCall.function.name, result);
 

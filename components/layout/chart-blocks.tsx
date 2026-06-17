@@ -24,6 +24,46 @@ import type {
   LineChartBlock,
 } from "@/types/agentUi";
 
+interface ChartSummary {
+  label: string;
+  value: string;
+  detail?: string;
+}
+
+function parseChartXValue(value: string) {
+  const isoDate = Date.parse(value);
+  if (!Number.isNaN(isoDate)) return isoDate;
+
+  const monthYear = Date.parse(`${value} 1`);
+  if (!Number.isNaN(monthYear)) return monthYear;
+
+  return null;
+}
+
+function formatChartTick(value: string, totalPoints: number) {
+  const parsed = parseChartXValue(value);
+  if (parsed === null) return value;
+
+  const date = new Date(parsed);
+  const isMonthOnly =
+    date.getUTCDate() === 1 &&
+    !/\b\d{1,2}\b/.test(value.replace(/^\d{4}-\d{2}-\d{2}$/, ""));
+
+  if (isMonthOnly || totalPoints <= 8) {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      ...(totalPoints <= 8 ? { year: "numeric" } : {}),
+      timeZone: "UTC",
+    }).format(date);
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
 const CATEGORY_COLORS: Record<string, string> = {
   "Sour candy": "#e8a735",
   "Japanese gummies": "#d4577a",
@@ -84,12 +124,47 @@ function ChartTooltip({ active, payload, valueLabel }: CustomTooltipProps) {
   );
 }
 
-function renderPieChart(chart: PieChartBlock) {
+function renderChartSummary(summary?: ChartSummary) {
+  if (!summary) return null;
+
+  return (
+    <div className="mt-4 max-w-[28ch]">
+      <p className="text-xs uppercase tracking-[0.16em] text-slate-500">{summary.label}</p>
+      <p className="mt-2 text-3xl font-semibold text-ink">{summary.value}</p>
+      {summary.detail ? (
+        <p className="mt-2 text-sm leading-6 text-slate-600">{summary.detail}</p>
+      ) : null}
+    </div>
+  );
+}
+
+function deriveLineChartSummary(chart: LineChartBlock, fallbackSummary?: ChartSummary) {
+  const unitsSeries = chart.series.find((series) => /unit/i.test(series.name));
+  if (!unitsSeries) return fallbackSummary;
+
+  const totalUnits = unitsSeries.dataPoints.reduce((sum, point) => sum + point.y, 0);
+  const revenueSeries = chart.series.find((series) => /revenue/i.test(series.name));
+  const totalRevenue = revenueSeries
+    ? revenueSeries.dataPoints.reduce((sum, point) => sum + point.y, 0)
+    : null;
+
+  return {
+    label: "Total units sold",
+    value: `${totalUnits.toLocaleString()} units sold`,
+    detail:
+      totalRevenue !== null
+        ? `Total revenue over the same period was ${formatValue(totalRevenue, "revenue")}.`
+        : fallbackSummary?.detail,
+  } satisfies ChartSummary;
+}
+
+function renderPieChart(chart: PieChartBlock, summary?: ChartSummary) {
   const total = chart.segments.reduce((sum, s) => sum + s.value, 0);
 
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
       <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
+      {renderChartSummary(summary)}
       <div className="mt-4 flex flex-col items-center gap-6 lg:flex-row">
         <div className="h-[320px] w-full max-w-[400px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -143,7 +218,7 @@ function truncateLabel(label: string, max: number): string {
   return label.length > max ? `${label.slice(0, max)}…` : label;
 }
 
-function FilterableBarChart({ chart }: { chart: BarChartBlock }) {
+function FilterableBarChart({ chart, summary }: { chart: BarChartBlock; summary?: ChartSummary }) {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
 
   const visibleBars = useMemo(
@@ -165,6 +240,7 @@ function FilterableBarChart({ chart }: { chart: BarChartBlock }) {
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
       <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
+      {renderChartSummary(summary)}
       {showFilter && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {chart.bars.map((bar, i) => {
@@ -236,13 +312,22 @@ function FilterableBarChart({ chart }: { chart: BarChartBlock }) {
   );
 }
 
-function RangeLineChart({ chart }: { chart: LineChartBlock }) {
+function RangeLineChart({ chart, summary }: { chart: LineChartBlock; summary?: ChartSummary }) {
   const merged = useMemo(() => {
     const xSet = new Set<string>();
     for (const s of chart.series) {
       for (const dp of s.dataPoints) xSet.add(dp.x);
     }
-    const xValues = Array.from(xSet).sort();
+    const xValues = Array.from(xSet).sort((left, right) => {
+      const leftDate = parseChartXValue(left);
+      const rightDate = parseChartXValue(right);
+
+      if (leftDate !== null && rightDate !== null) {
+        return leftDate - rightDate;
+      }
+
+      return left.localeCompare(right);
+    });
     return xValues.map((x) => {
       const point: Record<string, string | number> = { x };
       for (const s of chart.series) {
@@ -253,11 +338,14 @@ function RangeLineChart({ chart }: { chart: LineChartBlock }) {
     });
   }, [chart.series]);
 
-  const showBrush = chart.enableBrush !== false && merged.length > 10;
+  const lineSummary = deriveLineChartSummary(chart, summary);
+
+  const showBrush = chart.enableBrush === true && merged.length > 60;
 
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
       <h3 className="text-base font-semibold text-ink">{chart.title}</h3>
+      {renderChartSummary(lineSummary)}
       <div className="mt-4 h-[360px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={merged} margin={{ top: 8, right: 24, bottom: 24, left: 24 }}>
@@ -273,6 +361,10 @@ function RangeLineChart({ chart }: { chart: LineChartBlock }) {
             <XAxis
               dataKey="x"
               tick={{ fontSize: 11, fill: "#64748b" }}
+              tickFormatter={(value: string) => formatChartTick(value, merged.length)}
+              angle={merged.length > 10 ? -25 : 0}
+              textAnchor={merged.length > 10 ? "end" : "middle"}
+              height={merged.length > 10 ? 72 : 48}
               label={
                 chart.xAxisLabel
                   ? { value: chart.xAxisLabel, position: "insideBottom", offset: -4, fontSize: 12, fill: "#94a3b8" }
@@ -325,8 +417,8 @@ function RangeLineChart({ chart }: { chart: LineChartBlock }) {
   );
 }
 
-export function renderChart(chart: AgentChartBlock) {
-  if (chart.type === "pie_chart") return renderPieChart(chart);
-  if (chart.type === "bar_chart") return <FilterableBarChart chart={chart} />;
-  return <RangeLineChart chart={chart} />;
+export function renderChart(chart: AgentChartBlock, summary?: ChartSummary) {
+  if (chart.type === "pie_chart") return renderPieChart(chart, summary);
+  if (chart.type === "bar_chart") return <FilterableBarChart chart={chart} summary={summary} />;
+  return <RangeLineChart chart={chart} summary={summary} />;
 }

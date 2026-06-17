@@ -5,27 +5,29 @@ export const dynamic = "force-dynamic";
 
 const promptGroups = [
   {
-    title: "Sales",
+    title: "Daily",
     items: [
-      "Which candy is performing best?",
-      "What are our best-selling candies recently?",
-      "Show the top 10 sellers over the past six months.",
-    ],
-  },
-  {
-    title: "Inventory",
-    items: [
-      "What does our inventory look like?",
-      "Which SKUs are low on stock?",
-      "Do we need to reorder sour candy?",
-    ],
-  },
-  {
-    title: "Operations",
-    items: [
+      "What does our inventory look like right now?",
+      "Which SKUs are low on stock right now?",
       "Where is fulfillment getting stuck?",
-      "Show me warehouse issues globally.",
-      "What is this app for?",
+    ],
+  },
+  {
+    title: "Weekly",
+    items: [
+      "Which candy is performing best this week?",
+      "Which candy is performing best last week?",
+      "Compare Korean and Japanese gummy inventory side by side",
+      "Give me a bar chart of units sold by category",
+    ],
+  },
+  {
+    title: "Monthly",
+    items: [
+      "Show me a graph of past 1 month of total sales",
+      "Show me a graph of past 3 months of total sales",
+      "Show me a graph of past 6 months of total sales",
+      "Show revenue by category as a pie chart",
     ],
   },
 ];
@@ -54,10 +56,11 @@ export default function InfoPage() {
               </h1>
               <p className="mt-5 text-base leading-8 text-slate-600">
                 It helps a store owner understand what is selling, what inventory is
-                at risk, and where fulfillment is getting stuck. The app uses live
-                Shopify products, inventory, and orders when available, while keeping
-                external operations systems like distributors and warehouse issues
-                mocked for demo clarity.
+                at risk, and where fulfillment is getting stuck across a normal
+                day, week, and month. The app uses live Shopify products,
+                inventory, and orders when available, while keeping external
+                operations systems like distributors and warehouse issues mocked
+                for demo clarity.
               </p>
             </div>
 

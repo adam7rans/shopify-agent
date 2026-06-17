@@ -4,8 +4,12 @@ import {
   get_shopify_products,
   calculate_top_sellers,
   resolveAnalysisReferenceDate,
-  getRollingWindow,
 } from "@/lib/tools/bestSellers";
+import {
+  resolveExplicitTimeWindow,
+  resolveTimeWindowFromPrompt,
+  type TimeGrain,
+} from "@/lib/agent/timeWindows";
 import {
   summarizeInventory,
   get_inventory_products,
@@ -144,29 +148,200 @@ async function executeGetInventory(args: GetInventoryArgs) {
 }
 
 interface GetSalesDataArgs {
-  date_range?: "7d" | "30d" | "60d" | "90d" | "6mo";
+  time_query?: string;
+  date_range?: string;
+  start_date?: string;
+  end_date?: string;
+  grain?: "auto" | TimeGrain;
   category?: string;
   country?: string;
   sort_by?: "units" | "revenue" | "margin";
   limit?: number;
 }
 
-async function executeGetSalesData(args: GetSalesDataArgs) {
+function filterOrdersBySkus(orders: Awaited<ReturnType<typeof get_recent_orders_with_fallback>>["orders"], allowedSkus: Set<string>) {
+  return orders
+    .map((order) => {
+      const filteredLineItems = order.lineItems.filter((lineItem) =>
+        allowedSkus.has(lineItem.sku),
+      );
+      const subtotalPrice = Number(
+        filteredLineItems.reduce((sum, lineItem) => sum + lineItem.lineRevenue, 0).toFixed(2),
+      );
+
+      return {
+        ...order,
+        lineItems: filteredLineItems,
+        subtotalPrice,
+        totalPrice: subtotalPrice,
+      };
+    })
+    .filter((order) => order.lineItems.length > 0);
+}
+
+function buildSalesTimeSeries(
+  orders: Awaited<ReturnType<typeof get_recent_orders_with_fallback>>["orders"],
+  timeWindow: { startDate: string; endDate: string; grain: TimeGrain },
+) {
+  const formatter =
+    timeWindow.grain === "month"
+      ? new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          year: "numeric",
+          timeZone: "UTC",
+        })
+      : new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          timeZone: "UTC",
+        });
+
+  const buckets = new Map<
+    string,
+    { periodStart: string; periodLabel: string; unitsSold: number; revenue: number; orders: number }
+  >();
+
+  for (const order of orders) {
+    const createdAt = new Date(order.createdAt);
+    const bucketDate =
+      timeWindow.grain === "month"
+        ? new Date(Date.UTC(createdAt.getUTCFullYear(), createdAt.getUTCMonth(), 1))
+        : timeWindow.grain === "week"
+          ? (() => {
+              const start = new Date(
+                Date.UTC(
+                  createdAt.getUTCFullYear(),
+                  createdAt.getUTCMonth(),
+                  createdAt.getUTCDate(),
+                  0,
+                  0,
+                  0,
+                  0,
+                ),
+              );
+              const day = start.getUTCDay();
+              const offset = day === 0 ? -6 : 1 - day;
+              start.setUTCDate(start.getUTCDate() + offset);
+              return start;
+            })()
+        : new Date(
+            Date.UTC(
+              createdAt.getUTCFullYear(),
+              createdAt.getUTCMonth(),
+              createdAt.getUTCDate(),
+            ),
+          );
+    const key = bucketDate.toISOString();
+    const existing = buckets.get(key);
+    const unitsSold = order.lineItems.reduce((sum, lineItem) => sum + lineItem.quantity, 0);
+    const revenue = order.lineItems.reduce((sum, lineItem) => sum + lineItem.lineRevenue, 0);
+
+    if (existing) {
+      existing.unitsSold += unitsSold;
+      existing.revenue = Number((existing.revenue + revenue).toFixed(2));
+      existing.orders += 1;
+    } else {
+      buckets.set(key, {
+        periodStart: key,
+        periodLabel: formatter.format(bucketDate),
+        unitsSold,
+        revenue: Number(revenue.toFixed(2)),
+        orders: 1,
+      });
+    }
+  }
+
+  const series: Array<{
+    periodStart: string;
+    periodLabel: string;
+    unitsSold: number;
+    revenue: number;
+    orders: number;
+  }> = [];
+
+  const cursor = new Date(timeWindow.startDate);
+  const end = new Date(timeWindow.endDate);
+
+  while (cursor <= end) {
+    const bucketStart =
+      timeWindow.grain === "month"
+        ? new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth(), 1))
+        : timeWindow.grain === "week"
+          ? (() => {
+              const start = new Date(
+                Date.UTC(
+                  cursor.getUTCFullYear(),
+                  cursor.getUTCMonth(),
+                  cursor.getUTCDate(),
+                  0,
+                  0,
+                  0,
+                  0,
+                ),
+              );
+              const day = start.getUTCDay();
+              const offset = day === 0 ? -6 : 1 - day;
+              start.setUTCDate(start.getUTCDate() + offset);
+              return start;
+            })()
+          : new Date(
+              Date.UTC(
+                cursor.getUTCFullYear(),
+                cursor.getUTCMonth(),
+                cursor.getUTCDate(),
+                0,
+                0,
+                0,
+                0,
+              ),
+            );
+    const key = bucketStart.toISOString();
+    const existing = buckets.get(key);
+
+    if (!series.some((entry) => entry.periodStart === key)) {
+      series.push({
+        periodStart: key,
+        periodLabel: formatter.format(bucketStart),
+        unitsSold: existing?.unitsSold ?? 0,
+        revenue: existing?.revenue ?? 0,
+        orders: existing?.orders ?? 0,
+      });
+    }
+
+    if (timeWindow.grain === "month") {
+      cursor.setUTCMonth(cursor.getUTCMonth() + 1, 1);
+    } else if (timeWindow.grain === "week") {
+      cursor.setUTCDate(cursor.getUTCDate() + 7);
+    } else {
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
+    }
+  }
+
+  return series.sort((a, b) => a.periodStart.localeCompare(b.periodStart));
+}
+
+async function executeGetSalesData(
+  args: GetSalesDataArgs,
+  userPrompt?: string,
+) {
   const referenceDate = await resolveAnalysisReferenceDate();
-  const daysMap: Record<string, number> = {
-    "7d": 7,
-    "30d": 30,
-    "60d": 60,
-    "90d": 90,
-    "6mo": 180,
-  };
-  const days = daysMap[args.date_range ?? "30d"] ?? 30;
-  const window = getRollingWindow(referenceDate, days);
+  const timeQuery = args.time_query ?? args.date_range ?? userPrompt ?? "";
+  const window =
+    args.start_date && args.end_date
+      ? resolveExplicitTimeWindow(
+          args.start_date,
+          args.end_date,
+          referenceDate,
+          args.grain,
+        )
+      : resolveTimeWindowFromPrompt(timeQuery, referenceDate);
+  const orderFetchLimit = window.dayCount > 180 ? 2400 : window.dayCount > 90 ? 1200 : 400;
 
   const ordersResult = await get_recent_orders_with_fallback({
     startDate: window.startDate,
     endDate: window.endDate,
-    limit: 200,
+    limit: orderFetchLimit,
   });
 
   const productsResponse = await get_shopify_products();
@@ -181,8 +356,16 @@ async function executeGetSalesData(args: GetSalesDataArgs) {
     );
   }
 
+  const allowedSkus = new Set(
+    products.map((product) => product.variants[0]?.sku).filter(Boolean),
+  );
+  const filteredOrders =
+    args.category || args.country
+      ? filterOrdersBySkus(ordersResult.orders, allowedSkus)
+      : ordersResult.orders;
+
   const topSellers = calculate_top_sellers(
-    ordersResult.orders,
+    filteredOrders,
     products,
     args.limit ?? 50,
   );
@@ -212,15 +395,18 @@ async function executeGetSalesData(args: GetSalesDataArgs) {
       productCount: data.products,
     }))
     .sort((a, b) => b.unitsSold - a.unitsSold);
+  const timeSeries = buildSalesTimeSeries(filteredOrders, window);
 
   return {
     window: window.label,
-    ordersAnalyzed: ordersResult.orders.length,
+    grain: window.grain,
+    ordersAnalyzed: filteredOrders.length,
     orderSource: ordersResult.source,
     totalUnitsSold: topSellers.totalUnitsSold,
     topCategory: topSellers.topCategory,
     count: sortedRows.length,
     categoryBreakdown,
+    timeSeries,
     rows: sortedRows.map((r) => ({
       product: r.product,
       sku: r.sku,
@@ -240,7 +426,7 @@ interface CheckReorderRiskArgs {
 
 async function executeCheckReorderRisk(args: CheckReorderRiskArgs) {
   const referenceDate = await resolveAnalysisReferenceDate();
-  const window = getRollingWindow(referenceDate, 30);
+  const window = resolveTimeWindowFromPrompt("past 30 days", referenceDate);
 
   const productsResponse = await get_shopify_products();
   let products = productsResponse.products;
@@ -395,6 +581,7 @@ async function executeGetDistributorAvailability(args: GetDistributorAvailabilit
 export async function executeTool(
   name: string,
   args: Record<string, unknown>,
+  context?: { userPrompt?: string },
 ): Promise<unknown> {
   switch (name) {
     case "search_products":
@@ -402,7 +589,7 @@ export async function executeTool(
     case "get_inventory":
       return executeGetInventory(args as GetInventoryArgs);
     case "get_sales_data":
-      return executeGetSalesData(args as GetSalesDataArgs);
+      return executeGetSalesData(args as GetSalesDataArgs, context?.userPrompt);
     case "check_reorder_risk":
       return executeCheckReorderRisk(args as CheckReorderRiskArgs);
     case "get_warehouse_health":

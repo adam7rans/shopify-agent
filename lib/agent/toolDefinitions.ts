@@ -88,10 +88,29 @@ export const agentTools: Tool[] = [
       parameters: {
         type: "object",
         properties: {
+          time_query: {
+            type: "string",
+            description:
+              "Natural-language time phrase copied from the user, e.g. 'this week', 'last week', '2 weeks ago', 'past 3 months', or 'past 12 months'.",
+          },
           date_range: {
             type: "string",
-            enum: ["7d", "30d", "60d", "90d", "6mo"],
-            description: "Time window for sales data (default: 30d)",
+            description:
+              "Deprecated alias for time_query. Use only if an older prompt example still references date_range.",
+          },
+          start_date: {
+            type: "string",
+            description: "Optional explicit start date in YYYY-MM-DD format",
+          },
+          end_date: {
+            type: "string",
+            description: "Optional explicit end date in YYYY-MM-DD format",
+          },
+          grain: {
+            type: "string",
+            enum: ["auto", "day", "week", "month"],
+            description:
+              "Optional aggregation grain for the returned time series. Use auto unless the user explicitly asks for a specific resolution.",
           },
           category: {
             type: "string",
