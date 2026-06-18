@@ -6,8 +6,9 @@ import type { ActivityLogEntry, ActivityLogStreamEvent } from "@/types/activityL
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as { prompt?: string };
+  const body = (await request.json()) as { prompt?: string; sessionId?: string };
   const prompt = body.prompt?.trim() ?? "";
+  const sessionId = body.sessionId;
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
           return;
         }
 
-        const result = await runAgentLoop(prompt, onLog);
+        const result = await runAgentLoop(prompt, onLog, sessionId);
         sendEvent({ type: "result", data: enhanceAgentResponse(result) });
       } catch (err) {
         const message = err instanceof Error ? err.message : "Agent loop failed";

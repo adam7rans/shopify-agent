@@ -3,6 +3,11 @@ import { agentTools } from "@/lib/agent/toolDefinitions";
 import { executeTool } from "@/lib/agent/toolExecutors";
 import { getSystemPrompt } from "@/lib/agent/systemPrompt";
 import { validateAndNormalizeResponse } from "@/lib/agent/responseValidator";
+import {
+  buildCacheKey,
+  getCachedResult,
+  setCachedResult,
+} from "@/lib/agent/toolCache";
 import type { AgentUiResponse, AgentToolTraceEntry, AgentTableBlock } from "@/types/agentUi";
 import type { ActivityLogEntry } from "@/types/activityLog";
 
@@ -67,7 +72,18 @@ function getModel() {
 export async function runAgentLoop(
   prompt: string,
   onLog?: LogCallback,
+  sessionId?: string,
 ): Promise<AgentUiResponse> {
+  const responseKey = sessionId ? `__response:${prompt}` : null;
+  if (sessionId && responseKey) {
+    const cached = getCachedResult(sessionId, responseKey);
+    if (cached) {
+      const ageSec = Math.round(cached.ageMs / 1000);
+      onLog?.({ icon: "⚡", message: `Returning cached response (${ageSec}s old)`, elapsed: 0 });
+      return cached.result as AgentUiResponse;
+    }
+  }
+
   const client = getOpenAiClient();
   const model = getModel();
   const toolTrace: AgentToolTraceEntry[] = [];
@@ -142,11 +158,27 @@ export async function runAgentLoop(
             const toolLabel = TOOL_LABELS[toolCall.function.name] ?? toolCall.function.name;
             const argsDesc = describeToolArgs(toolCall.function.name, args);
 
-            log(toolIcon, `${toolLabel}${argsDesc}`);
+            const cacheKey = sessionId
+              ? buildCacheKey(toolCall.function.name, args)
+              : null;
+            const cached = sessionId && cacheKey
+              ? getCachedResult(sessionId, cacheKey)
+              : null;
 
-            const result = await executeTool(toolCall.function.name, args, {
-              userPrompt: prompt,
-            });
+            let result: unknown;
+            if (cached) {
+              result = cached.result;
+              const ageSec = Math.round(cached.ageMs / 1000);
+              log("⚡", `${toolLabel} — cached (${ageSec}s old)${argsDesc}`);
+            } else {
+              log(toolIcon, `${toolLabel}${argsDesc}`);
+              result = await executeTool(toolCall.function.name, args, {
+                userPrompt: prompt,
+              });
+              if (sessionId && cacheKey) {
+                setCachedResult(sessionId, cacheKey, result);
+              }
+            }
 
             const callIndex = toolCallCounts.get(toolCall.function.name) ?? 0;
             toolCallCounts.set(toolCall.function.name, callIndex + 1);
@@ -196,6 +228,9 @@ export async function runAgentLoop(
         },
       ];
       log("✅", `Done — ${iteration + 1} iteration(s), ${toolTrace.length} tool calls`, `Completed in ${elapsed().toFixed(1)}s`);
+      if (sessionId && responseKey) {
+        setCachedResult(sessionId, responseKey, parsed);
+      }
       return parsed;
     }
 

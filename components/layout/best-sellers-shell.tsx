@@ -1,6 +1,9 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 import { ChatPanel } from "@/components/layout/chat-panel";
 import { ActivityLogPanel } from "@/components/layout/activity-log-panel";
 import type {
@@ -11,7 +14,7 @@ import type {
 import { SidebarDock } from "@/components/layout/sidebar-dock";
 import { WorkspacePanel } from "@/components/layout/workspace-panel";
 import type { AgentUiResponse } from "@/types/agentUi";
-import type { ActivityLogStreamEvent } from "@/types/activityLog";
+import type { ActivityLogEntry, ActivityLogStreamEvent } from "@/types/activityLog";
 
 const STARTER_PROMPT_GROUPS: StarterPromptGroup[] = [
   {
@@ -52,6 +55,7 @@ const STARTER_PROMPT_GROUPS: StarterPromptGroup[] = [
 interface BestSellersShellProps {
   storeModeLabel: string;
   opsModeLabel: string;
+  conversationId?: string;
 }
 
 function createTurnId() {
@@ -65,15 +69,66 @@ function createTurnId() {
 export function BestSellersShell({
   storeModeLabel,
   opsModeLabel,
+  conversationId: conversationIdProp,
 }: BestSellersShellProps) {
+  const sessionId = useMemo(() => createTurnId(), []);
   const [mode, setMode] = useState<ShellMode>("user");
   const [prompt, setPrompt] = useState("");
   const [turns, setTurns] = useState<ConversationTurn[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [visibleTurnId, setVisibleTurnId] = useState<string | null>(null);
+  const [convexId, setConvexId] = useState<Id<"conversations"> | null>(
+    conversationIdProp ? (conversationIdProp as Id<"conversations">) : null,
+  );
+  const hasLoadedRef = useRef(false);
   const scrollTargetRef = useRef<string | null>(null);
   const turnRefs = useRef<Map<string, HTMLElement>>(new Map());
   const responseRefs = useRef<Map<string, HTMLElement>>(new Map());
+
+  const createConversation = useMutation(api.conversations.create);
+  const addMessage = useMutation(api.conversations.addMessage);
+  const savedMessages = useQuery(
+    api.conversations.getMessages,
+    convexId ? { conversationId: convexId } : "skip",
+  );
+
+  useEffect(() => {
+    if (hasLoadedRef.current || !savedMessages || savedMessages.length === 0) return;
+    hasLoadedRef.current = true;
+
+    const restored: ConversationTurn[] = [];
+    let currentTurn: Partial<ConversationTurn> | null = null;
+
+    for (const msg of savedMessages) {
+      if (msg.role === "user") {
+        if (currentTurn) {
+          restored.push(currentTurn as ConversationTurn);
+        }
+        currentTurn = {
+          id: createTurnId(),
+          prompt: msg.prompt ?? "",
+          result: null,
+          error: null,
+          isLoading: false,
+          activityLog: [],
+        };
+      } else if (msg.role === "assistant" && currentTurn) {
+        currentTurn.result = msg.response
+          ? (JSON.parse(msg.response) as AgentUiResponse)
+          : null;
+        currentTurn.activityLog = msg.activityLog
+          ? (JSON.parse(msg.activityLog) as ActivityLogEntry[])
+          : [];
+        restored.push(currentTurn as ConversationTurn);
+        currentTurn = null;
+      }
+    }
+    if (currentTurn) {
+      restored.push(currentTurn as ConversationTurn);
+    }
+
+    setTurns(restored);
+  }, [savedMessages]);
 
   const scrollToTarget = useCallback(() => {
     const id = scrollTargetRef.current;
@@ -135,6 +190,23 @@ export function BestSellersShell({
 
     const turnId = createTurnId();
 
+    let activeConvexId = convexId;
+    if (!activeConvexId) {
+      const title = trimmedPrompt.length > 60
+        ? trimmedPrompt.slice(0, 57) + "..."
+        : trimmedPrompt;
+      activeConvexId = await createConversation({ title });
+      setConvexId(activeConvexId);
+      hasLoadedRef.current = true;
+      window.history.replaceState(null, "", `/c/${activeConvexId}`);
+    }
+
+    await addMessage({
+      conversationId: activeConvexId,
+      role: "user",
+      prompt: trimmedPrompt,
+    });
+
     setIsSubmitting(true);
     setTurns((currentTurns) => [
       ...currentTurns,
@@ -151,11 +223,14 @@ export function BestSellersShell({
     setVisibleTurnId(turnId);
     scrollTargetRef.current = turnId;
 
+    let finalResult: AgentUiResponse | null = null;
+    let finalLogs: ActivityLogEntry[] = [];
+
     try {
       const response = await fetch("/api/agent/stream", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: trimmedPrompt }),
+        body: JSON.stringify({ prompt: trimmedPrompt, sessionId }),
       });
 
       if (!response.ok || !response.body) {
@@ -200,6 +275,7 @@ export function BestSellersShell({
             const event = JSON.parse(dataLine.slice(6)) as ActivityLogStreamEvent;
 
             if (event.type === "log" && event.entry) {
+              finalLogs = [...finalLogs, event.entry];
               setTurns((currentTurns) =>
                 currentTurns.map((turn) =>
                   turn.id === turnId
@@ -210,6 +286,7 @@ export function BestSellersShell({
             }
 
             if (event.type === "result" && event.data) {
+              finalResult = event.data as AgentUiResponse;
               setTurns((currentTurns) =>
                 currentTurns.map((turn) =>
                   turn.id === turnId
@@ -257,6 +334,14 @@ export function BestSellersShell({
       scrollTargetRef.current = turnId; requestAnimationFrame(scrollToTarget);
     } finally {
       setIsSubmitting(false);
+      if (activeConvexId && finalResult) {
+        void addMessage({
+          conversationId: activeConvexId,
+          role: "assistant",
+          response: JSON.stringify(finalResult),
+          activityLog: JSON.stringify(finalLogs),
+        });
+      }
     }
   }
 

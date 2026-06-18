@@ -18,6 +18,7 @@
     "seed:shopify-orders": "tsx scripts/seed-shopify-orders.ts"
   },
   "dependencies": {
+    "convex": "^1.41.0",
     "next": "^16.2.9",
     "openai": "^6.42.0",
     "pdf-parse": "^2.4.5",

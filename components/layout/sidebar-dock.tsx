@@ -2,12 +2,25 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import type { ShellMode } from "@/components/layout/shellTypes";
 
 interface SidebarDockProps {
   mode?: ShellMode;
   onModeChange?: (mode: ShellMode) => void;
   currentRoute: "home" | "info";
+}
+
+function formatRelativeTime(timestamp: number): string {
+  const diff = Date.now() - timestamp;
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
 
 function Glyph() {
@@ -24,12 +37,19 @@ export function SidebarDock({
   currentRoute,
 }: SidebarDockProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [recentsOpen, setRecentsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const recentsRef = useRef<HTMLDivElement | null>(null);
+
+  const recentConversations = useQuery(api.conversations.list, { limit: 10 });
 
   useEffect(() => {
     function handlePointerDown(event: MouseEvent) {
       if (!menuRef.current?.contains(event.target as Node)) {
         setIsOpen(false);
+      }
+      if (!recentsRef.current?.contains(event.target as Node)) {
+        setRecentsOpen(false);
       }
     }
 
@@ -41,6 +61,61 @@ export function SidebarDock({
     <aside className="fixed left-4 top-[2.5vh] z-30 flex h-[95vh] w-[72px] flex-col justify-between rounded-[28px] border border-white/70 bg-white/75 p-3 shadow-panel backdrop-blur md:left-6">
       <div className="flex flex-col items-center gap-3">
         <Glyph />
+
+        <div ref={recentsRef} className="relative">
+          <button
+            type="button"
+            onClick={() => setRecentsOpen((c) => !c)}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 transition hover:bg-shell hover:text-slate-600"
+            aria-label="Recent chats"
+            title="Recents"
+          >
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+            </svg>
+          </button>
+
+          {recentsOpen && (
+            <div className="absolute left-14 top-0 z-20 w-72 rounded-[20px] border border-white/80 bg-white/95 p-3 shadow-panel backdrop-blur">
+              <div className="flex items-center justify-between px-2 pb-2">
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                  Recent chats
+                </p>
+                <Link
+                  href="/"
+                  onClick={() => setRecentsOpen(false)}
+                  className="rounded-lg px-2 py-1 text-xs font-medium text-plum hover:bg-plum/10"
+                >
+                  + New
+                </Link>
+              </div>
+              <div className="max-h-[320px] space-y-0.5 overflow-y-auto">
+                {recentConversations && recentConversations.length > 0 ? (
+                  recentConversations.map((conv) => (
+                    <Link
+                      key={conv._id}
+                      href={`/c/${conv._id}`}
+                      onClick={() => setRecentsOpen(false)}
+                      className="block rounded-xl px-3 py-2.5 transition hover:bg-shell"
+                    >
+                      <p className="truncate text-sm font-medium text-ink">
+                        {conv.title}
+                      </p>
+                      <p className="mt-0.5 text-[11px] text-slate-400">
+                        {formatRelativeTime(conv.updatedAt)}
+                      </p>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="px-3 py-4 text-center text-xs text-slate-400">
+                    No conversations yet
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
         <span className="rotate-180 text-[10px] font-medium uppercase tracking-[0.32em] text-slate-400 [writing-mode:vertical-rl]">
           Kandwii
         </span>
