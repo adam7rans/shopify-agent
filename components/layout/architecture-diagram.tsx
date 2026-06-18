@@ -129,8 +129,8 @@ export function ArchitectureDiagram() {
       {/* Arrow: Tools → Mock Ops (dashed, orthogonal) */}
       <path d="M400,478 L636,478 L636,454 L657,454" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ah)" />
 
-      {/* ── Arrow: Frontend Convex Client → Convex Cloud DB (drawn last so it renders on top of tier backgrounds) ── */}
-      <path d="M645,130 L645,485 L770,485 L770,490" fill="none" stroke="#7c3aed" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ah-plum)" />
+      {/* ── Arrow: Frontend Convex Client → Convex Cloud DB (routed right of External Services block) ── */}
+      <path d="M645,130 L645,168 L912,168 L912,514 L882,514" fill="none" stroke="#7c3aed" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ah-plum)" />
 
       {/* ── LEGEND ── */}
       <rect x="20" y="556" width="880" height="50" rx="12" fill="#fff" stroke="#e8e4dd" strokeWidth="1" />
