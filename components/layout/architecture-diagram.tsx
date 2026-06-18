@@ -55,8 +55,8 @@ export function ArchitectureDiagram() {
       <line x1="115" y1="146" x2="115" y2="188" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
       <text x="128" y="172" fontSize="9" fill="#94a3b8" fontFamily="system-ui">SSE stream</text>
 
-      {/* ── Arrow: Frontend → Convex ── */}
-      <line x1="645" y1="146" x2="645" y2="542" stroke="#7c3aed" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ah-plum)" />
+      {/* ── Arrow: Frontend Convex Client → Convex Cloud DB ── */}
+      <path d="M645,130 L645,485 L770,485 L770,490" fill="none" stroke="#7c3aed" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ah-plum)" />
 
       {/* ── API TIER ── */}
       <rect x="20" y="192" width="880" height="100" rx="16" fill="#f0fdf4" stroke="#bbf7d0" strokeWidth="1" />
@@ -127,13 +127,10 @@ export function ArchitectureDiagram() {
       <text x="770" y="512" textAnchor="middle" fontSize="12" fill="#7c3aed" fontFamily="system-ui" fontWeight="600">Convex Cloud DB</text>
       <text x="770" y="526" textAnchor="middle" fontSize="10" fill="#7c3aed" fontFamily="system-ui">Conversations + messages</text>
 
-      {/* Arrow: Tools → Shopify */}
-      <line x1="400" y1="472" x2="420" y2="472" stroke="#94a3b8" strokeWidth="1" />
-      <line x1="420" y1="472" x2="420" y2="520" stroke="#94a3b8" strokeWidth="1" />
-      <line x1="420" y1="520" x2="620" y2="394" stroke="#94a3b8" strokeWidth="0" />
-
-      <line x1="400" y1="460" x2="657" y2="394" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
-      <line x1="400" y1="480" x2="657" y2="454" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ah)" />
+      {/* Arrow: Tools → Shopify (orthogonal route along bottom of agent loop) */}
+      <path d="M400,466 L628,466 L628,394 L657,394" fill="none" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
+      {/* Arrow: Tools → Mock Ops (dashed, orthogonal) */}
+      <path d="M400,478 L636,478 L636,454 L657,454" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ah)" />
 
       {/* ── LEGEND ── */}
       <rect x="20" y="556" width="880" height="50" rx="12" fill="#fff" stroke="#e8e4dd" strokeWidth="1" />
