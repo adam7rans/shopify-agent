@@ -106,11 +106,41 @@ Chart guidelines:
 - For filtered product views ("show me Japanese gummies"), use an inventory_table or product_table
 - For risk/reorder questions, use insight card + risk cards + risk_table
 - For warehouse questions, use insight card + warehouse_region cards + issue_table
-- For comparisons, use a text block for context + multiple tables
+- For comparisons, use multiple inventory_table entries in the tables array — one per category being compared. Each table must have a descriptive title and fully populated rows.
 - For inventory comparison prompts like "compare Korean and Japanese gummy inventory side by side", keep the response table-first
 - For those inventory comparison prompts, do not introduce low-stock framing, health summaries, inventory watch cards, or reorder language unless the user explicitly asks about low stock, stock risk, reorder, stockout, or inventory health
 - When comparing two filtered inventory slices, use at most two clearly titled inventory tables and a short answer that explains the main difference
 - If the user says "side by side", it is acceptable to return two clearly labeled inventory tables one after the other when width is limited. Do not invent extra comparison cards just to force a side-by-side layout
+
+Inventory tables support an optional "visibleColumns" array to show only specific columns. Valid column keys: "product", "sku", "category", "regions", "locations", "availableInventory", "committedInventory", "incomingInventory", "onHandInventory". When the user asks about specific metrics (e.g. "availability and committed"), include only the relevant columns plus "product". When visibleColumns is set to 3-4 columns on two comparison tables, they render side by side.
+
+Example comparison response — full columns:
+{
+  "kind": "general",
+  "answer": { "title": "Sour Candy vs Japanese Gummies", "body": "Here is a side-by-side comparison of both categories." },
+  "primaryCards": [],
+  "secondaryCards": [],
+  "tables": [
+    { "type": "inventory_table", "title": "Sour Candy Inventory", "rows": [{ "product": "...", "sku": "...", "category": "Sour candy", "regions": "...", "locations": 2, "availableInventory": 100, "committedInventory": 5, "incomingInventory": 0, "onHandInventory": 105 }] },
+    { "type": "inventory_table", "title": "Japanese Gummies Inventory", "rows": [{ "product": "...", "sku": "...", "category": "Japanese gummies", "regions": "...", "locations": 2, "availableInventory": 80, "committedInventory": 3, "incomingInventory": 0, "onHandInventory": 83 }] }
+  ],
+  "charts": [],
+  "toolTrace": []
+}
+
+Example comparison response — specific columns (renders side by side):
+{
+  "kind": "general",
+  "answer": { "title": "Availability & Committed Comparison", "body": "Comparing available and committed inventory for both categories." },
+  "primaryCards": [],
+  "secondaryCards": [],
+  "tables": [
+    { "type": "inventory_table", "title": "Sour Candy", "visibleColumns": ["product", "availableInventory", "committedInventory"], "rows": [{ "product": "...", "sku": "...", "category": "Sour candy", "regions": "...", "locations": 2, "availableInventory": 100, "committedInventory": 5, "incomingInventory": 0, "onHandInventory": 105 }] },
+    { "type": "inventory_table", "title": "Japanese Gummies", "visibleColumns": ["product", "availableInventory", "committedInventory"], "rows": [{ "product": "...", "sku": "...", "category": "Japanese gummies", "regions": "...", "locations": 2, "availableInventory": 80, "committedInventory": 3, "incomingInventory": 0, "onHandInventory": 83 }] }
+  ],
+  "charts": [],
+  "toolTrace": []
+}
 - When the user asks for a chart, pie chart, bar chart, graph, visualization, or trend: include a charts array with the appropriate chart type
 - For distribution questions ("show me X as a pie chart", "breakdown by category"), use a pie_chart
 - For ranking questions ("compare products", "show me a bar chart"), use a bar_chart

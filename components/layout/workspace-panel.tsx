@@ -1,6 +1,7 @@
 import type { ConversationTurn, ShellMode } from "@/components/layout/shellTypes";
 import { renderChart } from "@/components/layout/chart-blocks";
 import { LiquidCodeBlock } from "@/components/layout/liquid-code-block";
+import { SortableTable } from "@/components/layout/sortable-table";
 import type {
   AgentCardBlock,
   AgentTableBlock,
@@ -12,8 +13,11 @@ import type {
   InventoryHighlightCardBlock,
   InventoryRiskCardBlock,
   InventoryTableBlock,
+  InventoryTableRow,
+  ProductPerformanceRow,
   ProductPerformanceTableBlock,
   ReorderDraftCardBlock,
+  StockRiskRow,
   StockRiskTableBlock,
   TextCardBlock,
   WarehouseRegionCardBlock,
@@ -217,135 +221,85 @@ function tableHeaderChip(label: string) {
 }
 
 function renderProductTable(table: ProductPerformanceTableBlock) {
+  const chips = (
+    <>
+      {table.dateWindowLabel ? tableHeaderChip(`Window: ${table.dateWindowLabel}`) : null}
+      {typeof table.ordersIncluded === "number" ? tableHeaderChip(`Orders: ${table.ordersIncluded}`) : null}
+      {table.sourceLabel ? tableHeaderChip(table.sourceLabel) : null}
+    </>
+  );
+  const hasChips = !!(table.dateWindowLabel || table.ordersIncluded || table.sourceLabel);
+
   return (
-    <div className="overflow-hidden rounded-[26px] border border-slate-200 bg-white/98 shadow-panel">
-      <div className="border-b border-slate-200 px-6 py-4">
-        <h3 className="text-base font-semibold text-ink">{table.title}</h3>
-        {table.dateWindowLabel || table.ordersIncluded || table.sourceLabel ? (
-          <div className="mt-3 flex flex-wrap gap-2 text-xs">
-            {table.dateWindowLabel ? tableHeaderChip(`Window: ${table.dateWindowLabel}`) : null}
-            {typeof table.ordersIncluded === "number"
-              ? tableHeaderChip(`Orders: ${table.ordersIncluded}`)
-              : null}
-            {table.sourceLabel ? tableHeaderChip(table.sourceLabel) : null}
-          </div>
-        ) : null}
-      </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse text-left text-sm">
-          <thead className="bg-shell text-slate-600">
-            <tr>
-              <th className="px-4 py-3 font-medium md:px-6">Product</th>
-              <th className="px-4 py-3 font-medium">SKU</th>
-              <th className="px-4 py-3 font-medium">Category</th>
-              <th className="px-4 py-3 font-medium">Units sold</th>
-              <th className="px-4 py-3 font-medium">Revenue</th>
-              <th className="px-4 py-3 font-medium">Margin</th>
-            </tr>
-          </thead>
-          <tbody>
-            {table.rows.map((row) => (
-              <tr key={row.sku} className="border-t border-slate-100 text-slate-700">
-                <td className="px-4 py-3 font-medium text-ink md:px-6">{row.product}</td>
-                <td className="px-4 py-3">{row.sku}</td>
-                <td className="px-4 py-3">{row.category}</td>
-                <td className="px-4 py-3">{row.unitsSold}</td>
-                <td className="px-4 py-3">${row.revenue.toFixed(2)}</td>
-                <td className="px-4 py-3">${row.margin.toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <SortableTable<ProductPerformanceRow>
+      title={table.title}
+      headerChips={hasChips ? chips : undefined}
+      columns={[
+        { key: "product", label: "Product", sortable: true, primary: true },
+        { key: "sku", label: "SKU", sortable: false },
+        { key: "category", label: "Category", sortable: true },
+        { key: "unitsSold", label: "Units sold", sortable: true },
+        { key: "revenue", label: "Revenue", sortable: true, format: (v) => `$${(v as number).toFixed(2)}` },
+        { key: "margin", label: "Margin", sortable: true, format: (v) => `$${(v as number).toFixed(2)}` },
+      ]}
+      rows={table.rows}
+      rowKey={(row) => row.sku}
+    />
   );
 }
 
 function renderRiskTable(table: StockRiskTableBlock) {
   return (
-    <div className="overflow-hidden rounded-[26px] border border-slate-200 bg-white/98 shadow-panel">
-      <div className="border-b border-slate-200 px-6 py-4">
-        <h3 className="text-base font-semibold text-ink">{table.title}</h3>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse text-left text-sm">
-          <thead className="bg-shell text-slate-600">
-            <tr>
-              <th className="px-4 py-3 font-medium md:px-6">Product</th>
-              <th className="px-4 py-3 font-medium">SKU</th>
-              <th className="px-4 py-3 font-medium">Available</th>
-              <th className="px-4 py-3 font-medium">30d units</th>
-              <th className="px-4 py-3 font-medium">Velocity</th>
-              <th className="px-4 py-3 font-medium">Stockout days</th>
-              <th className="px-4 py-3 font-medium">Lead time</th>
-              <th className="px-4 py-3 font-medium">Reorder cases</th>
-            </tr>
-          </thead>
-          <tbody>
-            {table.rows.map((row) => (
-              <tr key={row.sku} className="border-t border-slate-100 text-slate-700">
-                <td className="px-4 py-3 font-medium text-ink md:px-6">{row.product}</td>
-                <td className="px-4 py-3">{row.sku}</td>
-                <td className="px-4 py-3">{row.availableInventory}</td>
-                <td className="px-4 py-3">{row.recentUnitsSold}</td>
-                <td className="px-4 py-3">{row.dailySalesVelocity.toFixed(2)}</td>
-                <td className="px-4 py-3">{row.daysUntilStockout.toFixed(1)}</td>
-                <td className="px-4 py-3">{row.leadTimeDays}</td>
-                <td className="px-4 py-3">{row.recommendedCases}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <SortableTable<StockRiskRow>
+      title={table.title}
+      columns={[
+        { key: "product", label: "Product", sortable: true, primary: true },
+        { key: "sku", label: "SKU", sortable: false },
+        { key: "availableInventory", label: "Available", sortable: true },
+        { key: "recentUnitsSold", label: "30d units", sortable: true },
+        { key: "dailySalesVelocity", label: "Velocity", sortable: true, format: (v) => (v as number).toFixed(2) },
+        { key: "daysUntilStockout", label: "Stockout days", sortable: true, format: (v) => (v as number).toFixed(1) },
+        { key: "leadTimeDays", label: "Lead time", sortable: true },
+        { key: "recommendedCases", label: "Reorder cases", sortable: true },
+      ]}
+      rows={table.rows}
+      rowKey={(row) => row.sku}
+    />
   );
 }
 
+const ALL_INVENTORY_COLUMNS: { key: keyof InventoryTableRow; label: string; sortable: boolean; primary?: boolean }[] = [
+  { key: "product", label: "Product", sortable: true, primary: true },
+  { key: "sku", label: "SKU", sortable: false },
+  { key: "category", label: "Category", sortable: true },
+  { key: "regions", label: "Regions", sortable: true },
+  { key: "locations", label: "Locations", sortable: true },
+  { key: "availableInventory", label: "Available", sortable: true },
+  { key: "committedInventory", label: "Committed", sortable: true },
+  { key: "incomingInventory", label: "Incoming", sortable: true },
+  { key: "onHandInventory", label: "On hand", sortable: true },
+];
+
 function renderInventoryTable(table: InventoryTableBlock) {
+  const visible = table.visibleColumns && table.visibleColumns.length > 0
+    ? ALL_INVENTORY_COLUMNS.filter((col) => table.visibleColumns!.includes(col.key))
+    : ALL_INVENTORY_COLUMNS;
+
   return (
-    <div className="overflow-hidden rounded-[26px] border border-slate-200 bg-white/98 shadow-panel">
-      <div className="border-b border-slate-200 px-6 py-4">
-        <h3 className="text-base font-semibold text-ink">{table.title}</h3>
-        {table.sourceLabel ? (
-          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+    <SortableTable<InventoryTableRow>
+      title={table.title}
+      headerChips={
+        table.sourceLabel ? (
+          <>
             {tableHeaderChip(table.sourceLabel)}
             {tableHeaderChip(`Rows: ${table.rows.length}`)}
-          </div>
-        ) : null}
-      </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse text-left text-sm">
-          <thead className="bg-shell text-slate-600">
-            <tr>
-              <th className="px-4 py-3 font-medium md:px-6">Product</th>
-              <th className="px-4 py-3 font-medium">SKU</th>
-              <th className="px-4 py-3 font-medium">Category</th>
-              <th className="px-4 py-3 font-medium">Regions</th>
-              <th className="px-4 py-3 font-medium">Locations</th>
-              <th className="px-4 py-3 font-medium">Available</th>
-              <th className="px-4 py-3 font-medium">Committed</th>
-              <th className="px-4 py-3 font-medium">Incoming</th>
-              <th className="px-4 py-3 font-medium">On hand</th>
-            </tr>
-          </thead>
-          <tbody>
-            {table.rows.map((row) => (
-              <tr key={row.sku} className="border-t border-slate-100 text-slate-700">
-                <td className="px-4 py-3 font-medium text-ink md:px-6">{row.product}</td>
-                <td className="px-4 py-3">{row.sku}</td>
-                <td className="px-4 py-3">{row.category}</td>
-                <td className="px-4 py-3">{row.regions}</td>
-                <td className="px-4 py-3">{row.locations}</td>
-                <td className="px-4 py-3">{row.availableInventory}</td>
-                <td className="px-4 py-3">{row.committedInventory}</td>
-                <td className="px-4 py-3">{row.incomingInventory}</td>
-                <td className="px-4 py-3">{row.onHandInventory}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          </>
+        ) : undefined
+      }
+      columns={visible}
+      rows={table.rows}
+      rowKey={(row) => row.sku}
+    />
   );
 }
 
@@ -528,11 +482,30 @@ function renderAssistantResponse(
       ) : null}
 
       {result.tables.length > 0 ? (
-        <div className="space-y-4">
-          {result.tables.map((table) => (
-            <div key={`${table.type}-${table.title}`}>{renderTable(table)}</div>
-          ))}
-        </div>
+        (() => {
+          const invTables = result.tables.filter((t): t is InventoryTableBlock => t.type === "inventory_table");
+          const isCompact = invTables.length === 2 &&
+            invTables.every((t) => t.visibleColumns && t.visibleColumns.length > 0 && t.visibleColumns.length <= 4) &&
+            result.tables.length === 2;
+
+          if (isCompact) {
+            return (
+              <div className="grid gap-4 md:grid-cols-2">
+                {result.tables.map((table) => (
+                  <div key={`${table.type}-${table.title}`}>{renderTable(table)}</div>
+                ))}
+              </div>
+            );
+          }
+
+          return (
+            <div className="space-y-4">
+              {result.tables.map((table) => (
+                <div key={`${table.type}-${table.title}`}>{renderTable(table)}</div>
+              ))}
+            </div>
+          );
+        })()
       ) : null}
 
       {result.charts && result.charts.length > 0 ? (

@@ -231,6 +231,7 @@ export interface InventoryTableBlock {
   title: string;
   sourceLabel?: string;
   rows: InventoryTableRow[];
+  visibleColumns?: (keyof InventoryTableRow)[];
 }
 
 export interface FulfillmentIssueRow {
