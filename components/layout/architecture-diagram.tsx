@@ -55,9 +55,6 @@ export function ArchitectureDiagram() {
       <line x1="115" y1="146" x2="115" y2="188" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
       <text x="128" y="172" fontSize="9" fill="#94a3b8" fontFamily="system-ui">SSE stream</text>
 
-      {/* ── Arrow: Frontend Convex Client → Convex Cloud DB ── */}
-      <path d="M645,130 L645,485 L770,485 L770,490" fill="none" stroke="#7c3aed" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ah-plum)" />
-
       {/* ── API TIER ── */}
       <rect x="20" y="192" width="880" height="100" rx="16" fill="#f0fdf4" stroke="#bbf7d0" strokeWidth="1" />
       <text x="40" y="216" fontSize="10" fill="#16a34a" fontFamily="system-ui" fontWeight="600" letterSpacing="0.12em">API LAYER — NEXT.JS ROUTE HANDLER</text>
@@ -131,6 +128,9 @@ export function ArchitectureDiagram() {
       <path d="M400,466 L628,466 L628,394 L657,394" fill="none" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
       {/* Arrow: Tools → Mock Ops (dashed, orthogonal) */}
       <path d="M400,478 L636,478 L636,454 L657,454" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ah)" />
+
+      {/* ── Arrow: Frontend Convex Client → Convex Cloud DB (drawn last so it renders on top of tier backgrounds) ── */}
+      <path d="M645,130 L645,485 L770,485 L770,490" fill="none" stroke="#7c3aed" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ah-plum)" />
 
       {/* ── LEGEND ── */}
       <rect x="20" y="556" width="880" height="50" rx="12" fill="#fff" stroke="#e8e4dd" strokeWidth="1" />
