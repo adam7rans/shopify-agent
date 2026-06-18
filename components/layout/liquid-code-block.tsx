@@ -108,7 +108,7 @@ function liquidToPreviewHtml(liquid: string, externalProducts?: LiquidPreviewPro
 }
 
 export function LiquidCodeBlock({ content, filename, previewProducts, collectionTitle }: LiquidCodeBlockProps) {
-  const [tab, setTab] = useState<"code" | "preview">("code");
+  const [tab, setTab] = useState<"code" | "preview">("preview");
   const [deploying, setDeploying] = useState(false);
   const [deployStatus, setDeployStatus] = useState<"idle" | "success" | "error">("idle");
 
@@ -143,17 +143,6 @@ export function LiquidCodeBlock({ content, filename, previewProducts, collection
         <div className="flex items-center gap-1">
           <button
             type="button"
-            onClick={() => setTab("code")}
-            className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition ${
-              tab === "code"
-                ? "bg-white text-ink shadow-sm"
-                : "text-slate-500 hover:text-slate-700"
-            }`}
-          >
-            Code
-          </button>
-          <button
-            type="button"
             onClick={() => setTab("preview")}
             className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition ${
               tab === "preview"
@@ -162,6 +151,17 @@ export function LiquidCodeBlock({ content, filename, previewProducts, collection
             }`}
           >
             Preview
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("code")}
+            className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition ${
+              tab === "code"
+                ? "bg-white text-ink shadow-sm"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            Code
           </button>
           {filename && (
             <span className="ml-3 font-mono text-[11px] text-slate-400">{filename}</span>
@@ -205,7 +205,7 @@ export function LiquidCodeBlock({ content, filename, previewProducts, collection
       </div>
 
       {tab === "code" ? (
-        <pre className="overflow-x-auto bg-[#1e1e2e] p-5 text-sm leading-6 text-[#cdd6f4]">
+        <pre className="overflow-x-auto bg-[#faf9f7] p-5 text-sm leading-6 text-[#1a1a2e]">
           <code>{content}</code>
         </pre>
       ) : (
