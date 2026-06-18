@@ -137,19 +137,40 @@ function formatValue(value: number, label?: string): string {
 interface CustomTooltipProps {
   active?: boolean;
   payload?: Array<{ name: string; value: number; payload: Record<string, unknown> }>;
+  label?: string;
   valueLabel?: string;
+  grain?: "day" | "week" | "month";
 }
 
-function ChartTooltip({ active, payload, valueLabel }: CustomTooltipProps) {
+function formatTooltipDateRange(dateStr: string, grain?: string): string | null {
+  const d = new Date(dateStr);
+  if (Number.isNaN(d.getTime())) return null;
+  const fmt = (dt: Date) =>
+    dt.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+  if (grain === "week") {
+    const end = new Date(d);
+    end.setUTCDate(end.getUTCDate() + 6);
+    return `${fmt(d)} – ${fmt(end)}`;
+  }
+  if (grain === "month") {
+    return d.toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+  }
+  return fmt(d);
+}
+
+function ChartTooltip({ active, payload, label, valueLabel, grain }: CustomTooltipProps) {
   if (!active || !payload?.length) return null;
   const item = payload[0];
+  const dateRange = label ? formatTooltipDateRange(label, grain) : null;
   return (
     <div className="rounded-xl border border-slate-200 bg-white/95 px-4 py-3 shadow-lg backdrop-blur">
-      <p className="text-sm font-medium text-ink">{item.name}</p>
-      <p className="mt-1 text-lg font-semibold text-ink">
+      <p className="text-lg font-semibold text-ink">
         {formatValue(item.value, valueLabel)}
         {valueLabel && !["revenue", "cost", "margin"].includes(valueLabel) ? ` ${valueLabel}` : ""}
       </p>
+      {dateRange ? (
+        <p className="mt-0.5 text-xs text-slate-400">{dateRange}</p>
+      ) : null}
     </div>
   );
 }
@@ -520,7 +541,7 @@ function RangeLineChart({
                   : undefined
               }
             />
-            <Tooltip content={<ChartTooltip valueLabel={chart.yAxisLabel} />} />
+            <Tooltip content={<ChartTooltip valueLabel={chart.yAxisLabel} grain={inferredGrain} />} />
             {chart.series.length > 1 ? (
               <Legend
                 iconType="circle"
