@@ -606,8 +606,13 @@ export async function executeTool(
       return executeGetDistributorAvailability(
         args as GetDistributorAvailabilityArgs,
       );
-    case "list_documents":
-      return { documents: await listAvailableDocuments() };
+    case "list_documents": {
+      const docs = await listAvailableDocuments();
+      return {
+        count: docs.length,
+        documents: docs,
+      };
+    }
     case "parse_document":
       return parseDocument(args.filename as string);
     default:

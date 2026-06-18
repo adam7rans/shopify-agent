@@ -215,7 +215,7 @@ export const agentTools: Tool[] = [
     function: {
       name: "list_documents",
       description:
-        "List available supplier documents (invoices, purchase orders) that can be parsed. Returns filenames of PDF documents.",
+        "List supplier documents in the inbox (invoices, delivery receipts). Returns metadata for each document: supplier name, invoice number, date received, total amount, status (pending_review, reviewed, flagged), and any notes about issues like partial shipments or damage.",
       parameters: {
         type: "object",
         properties: {},
@@ -228,14 +228,14 @@ export const agentTools: Tool[] = [
     function: {
       name: "parse_document",
       description:
-        "Parse a supplier PDF document (invoice or purchase order) and extract its text content including SKUs, quantities, costs, and supplier details. Use list_documents first to see available files.",
+        "Parse a supplier document image using AI vision to extract structured data: supplier info, line items with quantities/prices, totals, and any damage or backorder notes. Also cross-references extracted items against current Shopify inventory to show projected stock levels after receiving the shipment. Call list_documents first to see available files.",
       parameters: {
         type: "object",
         properties: {
           filename: {
             type: "string",
             description:
-              "The filename of the PDF to parse, e.g. 'tokyo-treats-invoice-2024.pdf'",
+              "The filename to parse, e.g. 'invoice-1-sweet-distribution.png'",
           },
         },
         required: ["filename"],

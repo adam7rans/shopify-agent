@@ -22,8 +22,8 @@ const TOOL_ICONS: Record<string, string> = {
   check_reorder_risk: "⚠️",
   get_warehouse_health: "🏭",
   get_distributor_availability: "🚚",
-  list_documents: "📄",
-  parse_document: "📄",
+  list_documents: "📋",
+  parse_document: "🔬",
 };
 
 const TOOL_LABELS: Record<string, string> = {
@@ -33,8 +33,8 @@ const TOOL_LABELS: Record<string, string> = {
   check_reorder_risk: "Calculating reorder risk",
   get_warehouse_health: "Checking warehouse health",
   get_distributor_availability: "Querying distributor availability",
-  list_documents: "Listing available documents",
-  parse_document: "Parsing PDF document",
+  list_documents: "Checking document inbox",
+  parse_document: "Parsing document with AI vision",
 };
 
 function describeToolArgs(name: string, args: Record<string, unknown>): string {
