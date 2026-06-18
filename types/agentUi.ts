@@ -218,6 +218,7 @@ export interface ProductPerformanceTableBlock {
   ordersIncluded?: number;
   sourceLabel?: string;
   rows: ProductPerformanceRow[];
+  dataFrom?: string;
 }
 
 export interface StockRiskTableBlock {
@@ -232,6 +233,7 @@ export interface InventoryTableBlock {
   sourceLabel?: string;
   rows: InventoryTableRow[];
   visibleColumns?: (keyof InventoryTableRow)[];
+  dataFrom?: string;
 }
 
 export interface FulfillmentIssueRow {

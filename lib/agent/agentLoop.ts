@@ -3,7 +3,7 @@ import { agentTools } from "@/lib/agent/toolDefinitions";
 import { executeTool } from "@/lib/agent/toolExecutors";
 import { getSystemPrompt } from "@/lib/agent/systemPrompt";
 import { validateAndNormalizeResponse } from "@/lib/agent/responseValidator";
-import type { AgentUiResponse, AgentToolTraceEntry } from "@/types/agentUi";
+import type { AgentUiResponse, AgentToolTraceEntry, AgentTableBlock } from "@/types/agentUi";
 import type { ActivityLogEntry } from "@/types/activityLog";
 
 const MAX_ITERATIONS = 12;
@@ -71,6 +71,8 @@ export async function runAgentLoop(
   const client = getOpenAiClient();
   const model = getModel();
   const toolTrace: AgentToolTraceEntry[] = [];
+  const storedToolResults = new Map<string, unknown>();
+  const toolCallCounts = new Map<string, number>();
   const startTime = Date.now();
 
   function elapsed() {
@@ -146,6 +148,13 @@ export async function runAgentLoop(
               userPrompt: prompt,
             });
 
+            const callIndex = toolCallCounts.get(toolCall.function.name) ?? 0;
+            toolCallCounts.set(toolCall.function.name, callIndex + 1);
+            const refKey = callIndex === 0
+              ? toolCall.function.name
+              : `${toolCall.function.name}:${callIndex}`;
+            storedToolResults.set(refKey, result);
+
             const summary = summarizeToolResult(toolCall.function.name, result);
 
             toolTrace.push({
@@ -159,7 +168,9 @@ export async function runAgentLoop(
             return {
               role: "tool" as const,
               tool_call_id: toolCall.id,
-              content: JSON.stringify(result),
+              content: JSON.stringify(
+                truncateToolResultForLLM(toolCall.function.name, result, refKey),
+              ),
             };
           }),
       );
@@ -175,6 +186,7 @@ export async function runAgentLoop(
     const parsed = parseAgentResponse(content);
 
     if (parsed) {
+      resolveDataFromRefs(parsed, storedToolResults);
       parsed.toolTrace = [
         ...toolTrace,
         {
@@ -252,6 +264,113 @@ function buildEmergencyResponse(
       "Where is fulfillment getting stuck?",
     ],
   };
+}
+
+const SAMPLE_ROW_COUNT = 3;
+const ROW_TRUNCATION_THRESHOLD = 10;
+
+function truncateToolResultForLLM(
+  toolName: string,
+  result: unknown,
+  refKey: string,
+): unknown {
+  if (typeof result !== "object" || result === null) return result;
+  const obj = result as Record<string, unknown>;
+
+  if (!Array.isArray(obj.rows) || obj.rows.length <= ROW_TRUNCATION_THRESHOLD) {
+    return result;
+  }
+
+  if (toolName === "get_inventory") {
+    const rows = obj.rows as Record<string, unknown>[];
+    const categories = new Set(rows.map((r) => r.category));
+    const lowCount = rows.filter((r) => r.status === "low").length;
+    return {
+      ...obj,
+      rows: `[truncated — ${rows.length} rows stored server-side]`,
+      _dataRef: refKey,
+      _summary: {
+        totalRows: rows.length,
+        categories: [...categories],
+        lowStockCount: lowCount,
+        sampleRows: rows.slice(0, SAMPLE_ROW_COUNT),
+      },
+      _instruction: `Use "dataFrom": "${refKey}" with "rows": [] in your inventory_table. The system will inject all ${rows.length} rows automatically.`,
+    };
+  }
+
+  if (toolName === "get_sales_data") {
+    const rows = obj.rows as Record<string, unknown>[];
+    return {
+      ...obj,
+      rows: `[truncated — ${rows.length} rows stored server-side]`,
+      _dataRef: refKey,
+      _summary: {
+        totalRows: rows.length,
+        sampleRows: rows.slice(0, SAMPLE_ROW_COUNT),
+      },
+      _instruction: `Use "dataFrom": "${refKey}" with "rows": [] in your product_table. The system will inject all ${rows.length} rows automatically.`,
+    };
+  }
+
+  return result;
+}
+
+function resolveDataFromRefs(
+  response: AgentUiResponse,
+  storedResults: Map<string, unknown>,
+) {
+  const refCounts = new Map<string, number>();
+
+  for (const table of response.tables) {
+    const dataFrom = (table as AgentTableBlock & { dataFrom?: string }).dataFrom;
+    if (!dataFrom) continue;
+    if (table.rows && table.rows.length > 0) continue;
+
+    let refKey = dataFrom;
+    if (storedResults.has(refKey)) {
+      // exact match
+    } else {
+      const baseName = refKey.replace(/:\d+$/, "");
+      const idx = refCounts.get(baseName) ?? 0;
+      refCounts.set(baseName, idx + 1);
+      refKey = idx === 0 ? baseName : `${baseName}:${idx}`;
+    }
+
+    const toolResult = storedResults.get(refKey);
+    if (!toolResult || typeof toolResult !== "object") continue;
+
+    const raw = toolResult as Record<string, unknown>;
+    const rows = raw.rows;
+    if (!Array.isArray(rows)) continue;
+
+    if (table.type === "inventory_table") {
+      table.rows = rows.map((r: Record<string, unknown>) => ({
+        product: String(r.product ?? ""),
+        sku: String(r.sku ?? ""),
+        category: String(r.category ?? ""),
+        regions: String(r.regions ?? ""),
+        locations: Number(r.locations ?? 1),
+        availableInventory: Number(r.available ?? r.availableInventory ?? 0),
+        committedInventory: Number(r.committed ?? r.committedInventory ?? 0),
+        incomingInventory: Number(r.incoming ?? r.incomingInventory ?? 0),
+        onHandInventory: Number(r.onHand ?? r.onHandInventory ?? 0),
+      }));
+    } else if (table.type === "product_table") {
+      table.rows = rows.map((r: Record<string, unknown>) => ({
+        product: String(r.product ?? ""),
+        sku: String(r.sku ?? ""),
+        category: String(r.category ?? ""),
+        unitsSold: Number(r.unitsSold ?? 0),
+        revenue: Number(r.revenue ?? 0),
+        margin: Number(r.margin ?? 0),
+      }));
+    }
+
+    if (!refCounts.has(dataFrom.replace(/:\d+$/, ""))) {
+      refCounts.set(dataFrom.replace(/:\d+$/, ""), 1);
+    }
+  }
 }
 
 function summarizeToolResult(toolName: string, result: unknown): string {

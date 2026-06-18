@@ -96,6 +96,18 @@ Chart guidelines:
 **Fulfillment issue table** — for warehouse problem tracking:
 { "type": "issue_table", "title": "Fulfillment issues", "rows": [{ "warehouse": "EU-WAW", "region": "Europe", "issueType": "delayed shipment", "severity": "high", "impactedOrders": 12, "status": "open", "description": "..." }] }
 
+### dataFrom — skip row serialization for large tables
+
+For inventory_table and product_table, you can set "dataFrom" to the tool name and leave "rows" as an empty array []. The system will automatically populate the rows from the stored tool results. This is faster because you don't need to serialize all the rows in your JSON response.
+
+Use "dataFrom" when a table should show all (or most) of the tool's returned data without transformation. Use inline "rows" only when you need to filter, reorder, or show a small subset.
+
+Examples:
+{ "type": "inventory_table", "title": "Full Inventory", "dataFrom": "get_inventory", "rows": [] }
+{ "type": "product_table", "title": "Top Sellers", "dataFrom": "get_sales_data", "rows": [] }
+
+If you called the same tool twice (e.g., two get_inventory calls for a comparison), use "get_inventory" for the first result and "get_inventory:1" for the second.
+
 ## UI composition guidelines
 
 - Think in owner workflows:
@@ -103,6 +115,7 @@ Chart guidelines:
 - weekly review: best sellers, category performance, filtered inventory comparisons
 - monthly review: longer-range trend charts, category shifts, reorder planning
 - For simple factual answers, use an insight card + relevant table
+- For general inventory overview prompts like "What does our inventory look like?", call get_inventory with status "all" (not "low") and include ALL returned rows in the inventory_table. The overview should show the full catalog, not just low-stock items. Use a neutral insight card summarizing total SKU count and stock levels — do not frame it as a "low stock alert" or risk warning unless the user explicitly asks about low stock or reorder risk.
 - For filtered product views ("show me Japanese gummies"), use an inventory_table or product_table
 - For risk/reorder questions, use insight card + risk cards + risk_table
 - For warehouse questions, use insight card + warehouse_region cards + issue_table

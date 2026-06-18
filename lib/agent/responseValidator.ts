@@ -43,6 +43,7 @@ function isValidCard(card: unknown): card is AgentCardBlock {
 function isValidTable(table: unknown): table is AgentTableBlock {
   if (!isRecord(table)) return false;
   if (typeof table.type !== "string" || !VALID_TABLE_TYPES.has(table.type)) return false;
+  if (typeof table.dataFrom === "string" && table.dataFrom.length > 0) return true;
   if (!Array.isArray(table.rows)) return false;
   return true;
 }
@@ -80,7 +81,13 @@ export function validateAndNormalizeResponse(
     : [];
 
   const tables = Array.isArray(raw.tables)
-    ? raw.tables.filter(isValidTable)
+    ? raw.tables.filter(isValidTable).map((t) => {
+        const table = t as AgentTableBlock & { dataFrom?: string };
+        if (table.dataFrom && !Array.isArray(table.rows)) {
+          (table as unknown as Record<string, unknown>).rows = [];
+        }
+        return table;
+      })
     : [];
 
   const charts = Array.isArray(raw.charts)
