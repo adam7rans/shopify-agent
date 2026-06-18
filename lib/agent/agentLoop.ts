@@ -277,11 +277,14 @@ function truncateToolResultForLLM(
   if (typeof result !== "object" || result === null) return result;
   const obj = result as Record<string, unknown>;
 
-  if (!Array.isArray(obj.rows) || obj.rows.length <= ROW_TRUNCATION_THRESHOLD) {
+  const hasLargeRows = Array.isArray(obj.rows) && obj.rows.length > ROW_TRUNCATION_THRESHOLD;
+  const hasLargeTimeSeries = Array.isArray(obj.timeSeries) && obj.timeSeries.length > 5;
+
+  if (!hasLargeRows && !hasLargeTimeSeries) {
     return result;
   }
 
-  if (toolName === "get_inventory") {
+  if (toolName === "get_inventory" && hasLargeRows) {
     const rows = obj.rows as Record<string, unknown>[];
     const categories = new Set(rows.map((r) => r.category));
     const lowCount = rows.filter((r) => r.status === "low").length;
@@ -301,15 +304,20 @@ function truncateToolResultForLLM(
 
   if (toolName === "get_sales_data") {
     const rows = obj.rows as Record<string, unknown>[];
+    const timeSeries = Array.isArray(obj.timeSeries) ? obj.timeSeries as Record<string, unknown>[] : [];
     return {
       ...obj,
       rows: `[truncated — ${rows.length} rows stored server-side]`,
+      timeSeries: timeSeries.length > 5
+        ? `[truncated — ${timeSeries.length} data points stored server-side, first: ${JSON.stringify(timeSeries[0])}, last: ${JSON.stringify(timeSeries[timeSeries.length - 1])}]`
+        : timeSeries,
       _dataRef: refKey,
       _summary: {
         totalRows: rows.length,
         sampleRows: rows.slice(0, SAMPLE_ROW_COUNT),
+        timeSeriesPoints: timeSeries.length,
       },
-      _instruction: `Use "dataFrom": "${refKey}" with "rows": [] in your product_table. The system will inject all ${rows.length} rows automatically.`,
+      _instruction: `Use "dataFrom": "${refKey}" with "rows": [] in your product_table. The system will inject all ${rows.length} rows automatically. For charts, use the categoryBreakdown and summary fields directly — do not serialize rows or timeSeries.`,
     };
   }
 

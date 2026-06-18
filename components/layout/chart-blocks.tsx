@@ -269,6 +269,8 @@ function deriveLineChartSummary(
 
 function renderPieChart(chart: PieChartBlock, summary?: ChartSummary, controls?: React.ReactNode) {
   const total = chart.segments.reduce((sum, s) => sum + s.value, 0);
+  const sortedDesc = [...chart.segments].sort((a, b) => b.value - a.value);
+  const colorMap = new Map(sortedDesc.map((s, i) => [s.label, getColor(i, s.category)]));
 
   return (
     <div className="rounded-[26px] border border-slate-200 bg-white/98 p-6 shadow-panel">
@@ -280,7 +282,7 @@ function renderPieChart(chart: PieChartBlock, summary?: ChartSummary, controls?:
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={chart.segments}
+                data={sortedDesc}
                 dataKey="value"
                 nameKey="label"
                 cx="50%"
@@ -291,8 +293,8 @@ function renderPieChart(chart: PieChartBlock, summary?: ChartSummary, controls?:
                 strokeWidth={2}
                 stroke="#fff"
               >
-                {chart.segments.map((segment, i) => (
-                  <Cell key={segment.label} fill={getColor(i, segment.category)} />
+                {sortedDesc.map((segment) => (
+                  <Cell key={segment.label} fill={colorMap.get(segment.label)!} />
                 ))}
               </Pie>
               <Tooltip content={<ChartTooltip valueLabel={chart.valueLabel} />} />
@@ -300,13 +302,13 @@ function renderPieChart(chart: PieChartBlock, summary?: ChartSummary, controls?:
           </ResponsiveContainer>
         </div>
         <div className="w-full max-w-[340px] space-y-2">
-          {chart.segments.map((segment, i) => {
+          {sortedDesc.map((segment) => {
             const pct = total > 0 ? ((segment.value / total) * 100).toFixed(1) : "0";
             return (
               <div key={segment.label} className="flex items-center gap-3">
                 <div
                   className="h-3 w-3 shrink-0 rounded-full"
-                  style={{ backgroundColor: getColor(i, segment.category) }}
+                  style={{ backgroundColor: colorMap.get(segment.label)! }}
                 />
                 <span className="min-w-0 flex-1 truncate text-sm text-slate-700">
                   {segment.label}

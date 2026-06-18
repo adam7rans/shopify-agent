@@ -265,12 +265,15 @@ export function BestSellersShell({
     void runPromptWithStream(nextPrompt);
   }
 
-  const activeLogs =
+  const activeTurn =
     visibleTurnId
-      ? turns.find((t) => t.id === visibleTurnId)?.activityLog ?? []
+      ? turns.find((t) => t.id === visibleTurnId)
       : turns.length > 0
-        ? turns[turns.length - 1].activityLog
-        : [];
+        ? turns[turns.length - 1]
+        : undefined;
+
+  const activeLogs = activeTurn?.activityLog ?? [];
+  const activePrompt = activeTurn?.prompt ?? "";
 
   const showLogPanel = mode === "diagnostics" && turns.length > 0;
 
@@ -343,7 +346,7 @@ export function BestSellersShell({
         )}
       </section>
 
-      <ActivityLogPanel logs={activeLogs} visible={showLogPanel} />
+      <ActivityLogPanel logs={activeLogs} visible={showLogPanel} prompt={activePrompt} />
     </div>
   );
 }

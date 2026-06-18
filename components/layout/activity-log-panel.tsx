@@ -4,9 +4,10 @@ import type { ActivityLogEntry } from "@/types/activityLog";
 interface ActivityLogPanelProps {
   logs: ActivityLogEntry[];
   visible: boolean;
+  prompt?: string;
 }
 
-export function ActivityLogPanel({ logs, visible }: ActivityLogPanelProps) {
+export function ActivityLogPanel({ logs, visible, prompt }: ActivityLogPanelProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevLengthRef = useRef(0);
 
@@ -43,6 +44,12 @@ export function ActivityLogPanel({ logs, visible }: ActivityLogPanelProps) {
             </p>
           ) : (
             <div className="space-y-1">
+              {prompt ? (
+                <div className="mb-3 rounded-xl bg-plum/8 px-3 py-2.5">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-plum/50">Prompt</p>
+                  <p className="mt-1 text-[12px] font-medium leading-[18px] text-ink">{prompt}</p>
+                </div>
+              ) : null}
               {logs.map((entry, i) => (
                 <div
                   key={i}
