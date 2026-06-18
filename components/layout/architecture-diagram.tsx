@@ -124,10 +124,10 @@ export function ArchitectureDiagram() {
       <text x="770" y="512" textAnchor="middle" fontSize="12" fill="#7c3aed" fontFamily="system-ui" fontWeight="600">Convex Cloud DB</text>
       <text x="770" y="526" textAnchor="middle" fontSize="10" fill="#7c3aed" fontFamily="system-ui">Conversations + messages</text>
 
-      {/* Arrow: Tools → Shopify (orthogonal route along bottom of agent loop) */}
-      <path d="M400,466 L628,466 L628,394 L657,394" fill="none" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
-      {/* Arrow: Tools → Mock Ops (dashed, orthogonal) */}
-      <path d="M400,478 L636,478 L636,454 L657,454" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ah)" />
+      {/* Arrow: Tools → Shopify (routed below Response Validator) */}
+      <path d="M400,466 L410,466 L410,510 L628,510 L628,394 L657,394" fill="none" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
+      {/* Arrow: Tools → Mock Ops (dashed, routed below Response Validator) */}
+      <path d="M400,478 L410,478 L410,520 L636,520 L636,454 L657,454" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ah)" />
 
       {/* ── Arrow: Frontend Convex Client → Convex Cloud DB (routed right of External Services block) ── */}
       <path d="M645,130 L645,168 L912,168 L912,514 L882,514" fill="none" stroke="#7c3aed" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ah-plum)" />
