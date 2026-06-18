@@ -176,7 +176,7 @@ function renderTextCard(card: TextCardBlock) {
 
 function renderCodeCard(card: CodeCardBlock) {
   if (card.language?.toLowerCase() === "liquid") {
-    return <LiquidCodeBlock content={card.content} filename={card.filename} />;
+    return <LiquidCodeBlock content={card.content} filename={card.filename} previewProducts={card.previewProducts} collectionTitle={card.collectionTitle} />;
   }
 
   return (
@@ -367,7 +367,7 @@ function renderDiagnosticsSummary(diagnostics: DiagnosticsSummaryBlock) {
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {diagnostics.sources.map((source, index) => (
+        {(diagnostics.sources ?? []).map((source, index) => (
           <span
             key={`${source}-${index}`}
             className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs uppercase tracking-[0.16em] text-slate-500"
@@ -377,9 +377,9 @@ function renderDiagnosticsSummary(diagnostics: DiagnosticsSummaryBlock) {
         ))}
       </div>
 
-      {diagnostics.counts.length > 0 ? (
+      {(diagnostics.counts ?? []).length > 0 ? (
         <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          {diagnostics.counts.map((count, index) => (
+          {(diagnostics.counts ?? []).map((count, index) => (
             <div key={`${count.label}-${index}`} className="rounded-2xl border border-white/90 bg-white p-4">
               <p className="text-xs uppercase tracking-[0.16em] text-slate-500">{count.label}</p>
               <p className="mt-2 text-2xl font-semibold text-ink">{count.value}</p>

@@ -379,6 +379,34 @@ function resolveDataFromRefs(
       refCounts.set(dataFrom.replace(/:\d+$/, ""), 1);
     }
   }
+
+  const searchResult = storedResults.get("search_products");
+  if (searchResult && typeof searchResult === "object") {
+    const raw = searchResult as Record<string, unknown>;
+    if (Array.isArray(raw.products)) {
+      const products = raw.products as Record<string, unknown>[];
+      const previewProducts = products.map((p) => ({
+        title: String(p.title ?? ""),
+        price: String(p.price ?? "0"),
+        image: `/products/${String(p.handle ?? "placeholder")}.png`,
+        handle: String(p.handle ?? ""),
+        description: String(p.description ?? ""),
+      }));
+
+      const collectionTitle = products.length > 0
+        ? String(products[0].category ?? "")
+        : undefined;
+
+      for (const cards of [response.primaryCards, response.secondaryCards]) {
+        for (const card of cards) {
+          if (card.type === "code" && card.language?.toLowerCase() === "liquid") {
+            card.previewProducts = previewProducts;
+            if (collectionTitle) card.collectionTitle = collectionTitle;
+          }
+        }
+      }
+    }
+  }
 }
 
 function summarizeToolResult(toolName: string, result: unknown): string {

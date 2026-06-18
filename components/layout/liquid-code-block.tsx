@@ -1,43 +1,105 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import type { LiquidPreviewProduct } from "@/types/agentUi";
 
 interface LiquidCodeBlockProps {
   content: string;
   filename?: string;
+  previewProducts?: LiquidPreviewProduct[];
+  collectionTitle?: string;
 }
 
-function liquidToPreviewHtml(liquid: string): string {
-  let html = liquid;
+interface SampleProduct {
+  title: string;
+  price: string;
+  image: string;
+  url: string;
+  description: string;
+}
 
+function parseCollectionInfo(liquid: string): { title: string; description: string } {
+  const handleMatch = liquid.match(/collections\['([^']+)'\]/);
+  if (handleMatch) {
+    const title = handleMatch[1]
+      .replace(/[-_]/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+    return { title, description: `Discover our curated selection of ${title.toLowerCase()}.` };
+  }
+  const h1Match = liquid.match(/<h1[^>]*>([^<{]+)<\/h1>/i);
+  if (h1Match) {
+    return { title: h1Match[1].trim(), description: "" };
+  }
+  return { title: "Collection", description: "Browse our collection." };
+}
+
+function buildPreviewHtml(products: SampleProduct[], title: string, description: string): string {
+  const cards = products
+    .map(
+      (p) => `<div class="product-card">
+  <a href="#">
+    <img class="product-image" src="${p.image}" alt="${p.title}" />
+    <h2>${p.title}</h2>
+    <span class="product-price">$${p.price}</span>
+    <p class="description">${p.description}</p>
+  </a>
+</div>`,
+    )
+    .join("\n");
+
+  return `<h1 class="collection-title">${title}</h1>
+${description ? `<p>${description}</p>` : ""}
+<div class="product-grid">${cards}</div>`;
+}
+
+function liquidToPreviewHtml(liquid: string, externalProducts?: LiquidPreviewProduct[], externalTitle?: string): string {
+  const parsed = parseCollectionInfo(liquid);
+  const title = externalTitle || parsed.title;
+  const description = externalTitle
+    ? `Discover our curated selection of ${externalTitle.toLowerCase()}.`
+    : parsed.description;
+
+  if (externalProducts && externalProducts.length > 0) {
+    const products = externalProducts.map((p) => ({
+      title: p.title,
+      price: p.price,
+      image: p.image,
+      url: "#",
+      description: p.description ?? "",
+    }));
+    return buildPreviewHtml(products, title, description);
+  }
+
+  let html = liquid;
   html = html.replace(/\{%[-\s]*layout\s+'[^']*'\s*[-]?%\}/g, "");
   html = html.replace(/\{%[-\s]*comment\s*[-]?%\}[\s\S]*?\{%[-\s]*endcomment\s*[-]?%\}/g, "");
+
+  const fallbackProducts: SampleProduct[] = [
+    { title: "Sample Product 1", price: "4.99", image: "/products/placeholder.png", url: "#", description: "Sample product" },
+    { title: "Sample Product 2", price: "5.99", image: "/products/placeholder.png", url: "#", description: "Sample product" },
+  ];
 
   html = html.replace(
     /\{%[-\s]*for\s+product\s+in\s+\S+\.products\s*[-]?%\}([\s\S]*?)\{%[-\s]*endfor\s*[-]?%\}/g,
     (_match, body: string) => {
-      const sampleProducts = [
-        { title: "Hi-Chew Green Apple", price: "3.49", image: "/products/hi-chew-green-apple-fruit-chews.png", url: "#" },
-        { title: "Kasugai Peach Gummy", price: "4.29", image: "/products/kasugai-peach-gummy.png", url: "#" },
-        { title: "Hi-Chew Strawberry", price: "3.49", image: "/products/hi-chew-strawberry-fruit-chews.png", url: "#" },
-        { title: "UHA Kororo Peach Jelly", price: "3.99", image: "/products/uha-kororo-peach-jelly-bites.png", url: "#" },
-      ];
-      return sampleProducts
+      return fallbackProducts
         .map((p) => {
           let rendered = body;
           rendered = rendered.replace(/\{\{\s*product\.title\s*\}\}/g, p.title);
-          rendered = rendered.replace(/\$?\{\{\s*product\.price\s*\|[^}]*\}\}/g, `$${p.price}`);
-          rendered = rendered.replace(/\{\{\s*product\.featured_image\s*\|\s*img_url:\s*'[^']*'\s*\}\}/g, p.image);
+          rendered = rendered.replace(/\$?\{\{\s*product\.price[^}]*\}\}/g, `$${p.price}`);
+          rendered = rendered.replace(/\{\{\s*product\.featured_image[^}]*\}\}/g, p.image);
+          rendered = rendered.replace(/\{\{\s*product\.images\s*\[\s*0\s*\][^}]*\}\}/g, p.image);
+          rendered = rendered.replace(/\{\{\s*product\.image[^}]*\}\}/g, p.image);
           rendered = rendered.replace(/\{\{\s*product\.url\s*\}\}/g, p.url);
-          rendered = rendered.replace(/\{\{\s*product\.description\s*(?:\|[^}]*)?\}\}/g, "Premium Japanese gummy candy");
+          rendered = rendered.replace(/\{\{\s*product\.description[^}]*\}\}/g, p.description);
           return rendered;
         })
         .join("\n");
     },
   );
 
-  html = html.replace(/\{\{\s*(?:collection\.title|collections\[[^\]]*\]\.title)\s*\}\}/g, "Japanese Gummies");
-  html = html.replace(/\{\{\s*(?:collection\.description|collections\[[^\]]*\]\.description)\s*\}\}/g, "Discover our curated selection of premium Japanese gummy candies.");
+  html = html.replace(/\{\{\s*(?:collection\.title|collections\[[^\]]*\]\.title)\s*\}\}/g, title);
+  html = html.replace(/\{\{\s*(?:collection\.description|collections\[[^\]]*\]\.description)\s*\}\}/g, description);
 
   html = html.replace(/\{%[\s\S]*?%\}/g, "");
   html = html.replace(/\{\{[\s\S]*?\}\}/g, "");
@@ -45,12 +107,12 @@ function liquidToPreviewHtml(liquid: string): string {
   return html;
 }
 
-export function LiquidCodeBlock({ content, filename }: LiquidCodeBlockProps) {
+export function LiquidCodeBlock({ content, filename, previewProducts, collectionTitle }: LiquidCodeBlockProps) {
   const [tab, setTab] = useState<"code" | "preview">("code");
   const [deploying, setDeploying] = useState(false);
   const [deployStatus, setDeployStatus] = useState<"idle" | "success" | "error">("idle");
 
-  const previewHtml = useMemo(() => liquidToPreviewHtml(content), [content]);
+  const previewHtml = useMemo(() => liquidToPreviewHtml(content, previewProducts, collectionTitle), [content, previewProducts, collectionTitle]);
 
   const handleDeploy = useCallback(async () => {
     setDeploying(true);
@@ -152,7 +214,7 @@ export function LiquidCodeBlock({ content, filename }: LiquidCodeBlockProps) {
             <iframe
               srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;padding:24px}
+body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;padding:24px;overflow:hidden}
 a{text-decoration:none;color:inherit}
 h1,h2,h3{font-weight:600}
 h1{font-size:1.5rem;margin-bottom:6px}
@@ -166,10 +228,21 @@ img{width:100%!important;aspect-ratio:1/1!important;object-fit:cover!important;b
 [class*="price"],[class*="product-price"]{font-size:0.8rem;font-weight:600;color:#1a1a2e;margin-top:2px}
 [class*="description"]{font-size:0.7rem;color:#94a3b8;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 [class*="collection-title"]{font-size:1.5rem}
-</style></head><body>${previewHtml}</body></html>`}
-              className="h-[480px] w-full rounded-xl border-0"
-              sandbox="allow-same-origin"
+</style></head><body>${previewHtml}<script>function resize(){var h=document.body.scrollHeight;parent.postMessage({type:'iframe-height',height:h},'*')}window.addEventListener('load',resize);new MutationObserver(resize).observe(document.body,{childList:true,subtree:true});document.querySelectorAll('img').forEach(function(i){i.addEventListener('load',resize);i.addEventListener('error',resize)})</script></body></html>`}
+              className="w-full rounded-xl border-0"
+              style={{ minHeight: 200 }}
+              sandbox="allow-same-origin allow-scripts"
               title="Liquid template preview"
+              onLoad={(e) => {
+                const iframe = e.currentTarget;
+                const handler = (evt: MessageEvent) => {
+                  if (evt.data?.type === 'iframe-height' && typeof evt.data.height === 'number') {
+                    iframe.style.height = evt.data.height + 'px';
+                  }
+                };
+                window.addEventListener('message', handler);
+                return () => window.removeEventListener('message', handler);
+              }}
             />
           </div>
         </div>

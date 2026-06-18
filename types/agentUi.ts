@@ -76,11 +76,21 @@ export interface TextCardBlock {
   content: string;
 }
 
+export interface LiquidPreviewProduct {
+  title: string;
+  price: string;
+  image: string;
+  handle: string;
+  description?: string;
+}
+
 export interface CodeCardBlock {
   type: "code";
   language: string;
   content: string;
   filename?: string;
+  previewProducts?: LiquidPreviewProduct[];
+  collectionTitle?: string;
 }
 
 export interface PieChartSegment {
