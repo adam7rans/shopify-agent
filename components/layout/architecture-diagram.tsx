@@ -67,6 +67,8 @@ export function ArchitectureDiagram() {
       <text x="360" y="254" textAnchor="middle" fontSize="12" fill="#1a1a2e" fontFamily="system-ui" fontWeight="600">enhanceAgentResponse</text>
       <text x="360" y="268" textAnchor="middle" fontSize="10" fill="#64748b" fontFamily="system-ui">Chart data injection</text>
 
+      {/* ── Arrow: /api/agent/stream → enhanceAgentResponse ── */}
+      <line x1="242" y1="254" x2="258" y2="254" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#ah)" />
       {/* ── Arrow: API → Agent Loop ── */}
       <line x1="140" y1="292" x2="140" y2="328" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
 
@@ -107,6 +109,10 @@ export function ArchitectureDiagram() {
       <line x1="210" y1="398" x2="227" y2="398" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#ah)" />
       <line x1="210" y1="472" x2="227" y2="472" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#ah)" />
       <line x1="315" y1="426" x2="315" y2="441" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#ah)" />
+      {/* System Prompt → OpenAI (feeds context into LLM call) */}
+      <line x1="418" y1="398" x2="402" y2="398" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#ah)" />
+      {/* OpenAI → Response Validator (final answer goes to validation) */}
+      <path d="M385,426 L385,437 L510,437 L510,442" fill="none" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#ah)" />
 
       {/* ── EXTERNAL SERVICES ── */}
       <rect x="640" y="332" width="260" height="200" rx="16" fill="#faf8f5" stroke="#e8e4dd" strokeWidth="1" />
