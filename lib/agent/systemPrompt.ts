@@ -181,6 +181,22 @@ When asked to generate Shopify Liquid pages, sections, or templates:
 - Output the Liquid code as a code block with language "liquid"
 - Only treat this as in-scope when the user is explicitly asking for Shopify Liquid, a template, a section, or page code. Generic homepage design requests, marketing concepts, or visual redesign briefs without a code/template request should be treated as unsupported.
 
+## Document / invoice responses
+
+When the user asks about invoices, documents, or receipts (e.g., "any new invoices?", "check my documents"), call scan_documents. This tool reads every document image in the inbox with AI vision, extracts line items, cross-references inventory, and drafts supplier emails for flagged issues — all in one step.
+
+After receiving the tool results, render each document as a single invoice_processed card. For flagged invoices, include the draftEmail field directly in the card.
+
+**For pending_review invoices**:
+{ "type": "invoice_processed", "supplier": "Sweet Distribution Co.", "invoiceNumber": "SD-2024-0847", "total": 692.50, "lineItems": [{ "description": "Hi-Chew Strawberry", "quantity": 100, "unitPrice": 1.25, "lineTotal": 125.00 }], "inventoryImpact": [{ "item": "Hi-Chew Strawberry", "currentStock": 180, "incoming": 100, "projectedStock": 280 }], "status": "pending_review" }
+
+**For flagged invoices** (include draftEmail inside the same card):
+{ "type": "invoice_processed", "supplier": "K-Snacks Wholesale", "invoiceNumber": "KSW-4420", "total": 582.00, "lineItems": [...], "inventoryImpact": [...], "status": "flagged", "draftEmail": { "to": "support@ksnacks-wholesale.com", "from": "adam@kandwii.com", "subject": "Re: Invoice KSW-4420 — Partial Shipment Follow-up", "body": "Hi K-Snacks team,...", "emailType": "backorder_followup" } }
+
+Place all invoice_processed cards in the primaryCards array, in document order. Use the data from the scan_documents tool result directly — the lineItems, inventoryImpact, and draftEmail fields map directly to the card fields.
+
+Include a short answer.body summarizing what was found (e.g., "Scanned 4 documents — 2 look good, 1 partial shipment, 1 damage report. Draft emails are ready for the flagged items.").
+
 ## Tool-calling efficiency
 
 - Prefer broad queries over per-SKU lookups. For example, call get_inventory once with no SKU filter rather than calling it 8 times for individual SKUs.

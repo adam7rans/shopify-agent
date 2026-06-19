@@ -1,14 +1,19 @@
 import type { ConversationTurn, ShellMode } from "@/components/layout/shellTypes";
+import type { ActivityLogEntry } from "@/types/activityLog";
 import { renderChart } from "@/components/layout/chart-blocks";
+import { DocumentProcessingAnimation } from "@/components/layout/document-processing-animation";
+import { InvoiceCard } from "@/components/layout/invoice-card";
 import { LiquidCodeBlock } from "@/components/layout/liquid-code-block";
 import { SortableTable } from "@/components/layout/sortable-table";
 import type {
+  ActionButtonCardBlock,
   AgentCardBlock,
   AgentTableBlock,
   AgentToolTraceEntry,
   AgentUiResponse,
   CodeCardBlock,
   DiagnosticsSummaryBlock,
+  DraftEmailCardBlock,
   FulfillmentIssueTableBlock,
   InventoryHighlightCardBlock,
   InventoryRiskCardBlock,
@@ -28,6 +33,7 @@ interface WorkspacePanelProps {
   mode: ShellMode;
   onRegisterTurnRef?: (id: string, element: HTMLElement | null) => void;
   onRegisterResponseRef?: (id: string, element: HTMLElement | null) => void;
+  onSendPrompt?: (prompt: string) => void;
 }
 
 function renderInsightCard(card: Extract<AgentCardBlock, { type: "insight" }>) {
@@ -162,12 +168,22 @@ function renderWarehouseRegionCard(card: WarehouseRegionCardBlock) {
   );
 }
 
+function renderInlineMarkdown(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i} className="font-semibold text-ink">{part.slice(2, -2)}</strong>;
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
 function renderTextCard(card: TextCardBlock) {
   return (
-    <div className="rounded-[24px] border border-slate-200 bg-white/96 p-6 shadow-panel">
-      <div className="prose prose-slate max-w-none text-sm leading-7">
+    <div className="w-fit rounded-[24px] border border-slate-200 bg-white/96 p-6 shadow-panel">
+      <div className="prose prose-slate max-w-[55ch] text-sm leading-7">
         {card.content.split("\n\n").map((paragraph, index) => (
-          <p key={index} className="mb-3 last:mb-0">{paragraph}</p>
+          <p key={index} className="mb-3 last:mb-0">{renderInlineMarkdown(paragraph)}</p>
         ))}
       </div>
     </div>
@@ -202,14 +218,69 @@ function renderCodeCard(card: CodeCardBlock) {
   );
 }
 
-function renderCard(card: AgentCardBlock) {
+function renderActionButtonCard(card: ActionButtonCardBlock, onSendPrompt?: (prompt: string) => void) {
+  return (
+    <div className="flex justify-center pt-2">
+      <button
+        type="button"
+        onClick={() => onSendPrompt?.(card.prompt)}
+        className={`rounded-full px-6 py-3 text-sm font-semibold transition ${
+          card.variant === "primary"
+            ? "bg-ink text-white shadow-md hover:bg-ink/90"
+            : "border border-slate-300 bg-white text-ink hover:bg-slate-50"
+        }`}
+      >
+        {card.label}
+      </button>
+    </div>
+  );
+}
+
+function renderCard(card: AgentCardBlock, onSendPrompt?: (prompt: string) => void) {
   if (card.type === "insight") return renderInsightCard(card);
   if (card.type === "inventory_risk") return renderInventoryRiskCard(card);
   if (card.type === "inventory_highlight") return renderInventoryHighlightCard(card);
   if (card.type === "reorder_draft") return renderReorderDraftCard(card);
   if (card.type === "text") return renderTextCard(card);
   if (card.type === "code") return renderCodeCard(card);
+  if (card.type === "invoice_processed") return <InvoiceCard card={card} />;
+  if (card.type === "draft_email") return null;
+  if (card.type === "action_button") return renderActionButtonCard(card, onSendPrompt);
   return renderWarehouseRegionCard(card);
+}
+
+function renderPrimaryCards(cards: AgentCardBlock[], onSendPrompt?: (prompt: string) => void) {
+  const elements: ReturnType<typeof renderCard>[] = [];
+  const skipSet = new Set<number>();
+
+  for (let i = 0; i < cards.length; i++) {
+    if (skipSet.has(i)) continue;
+    const card = cards[i];
+
+    if (
+      card.type === "invoice_processed" &&
+      i + 1 < cards.length &&
+      cards[i + 1].type === "draft_email" &&
+      (cards[i + 1] as DraftEmailCardBlock).invoiceNumber === card.invoiceNumber
+    ) {
+      const email = cards[i + 1] as DraftEmailCardBlock;
+      skipSet.add(i + 1);
+      elements.push(
+        <div key={`invoice-${card.invoiceNumber}`}>
+          <InvoiceCard card={card} mergedEmail={email} />
+        </div>,
+      );
+    } else {
+      const key = `${card.type}-${"sku" in card ? card.sku : "supplier" in card ? card.supplier : "title" in card ? card.title : i}`;
+      elements.push(
+        <div key={key}>
+          {renderCard(card, onSendPrompt)}
+        </div>,
+      );
+    }
+  }
+
+  return elements;
 }
 
 function tableHeaderChip(label: string) {
@@ -425,6 +496,7 @@ function renderToolTrace(trace: AgentToolTraceEntry[]) {
 function renderAssistantResponse(
   result: AgentUiResponse,
   mode: ShellMode,
+  onSendPrompt?: (prompt: string) => void,
 ) {
   const inventoryTables = result.tables.filter(
     (table) => table.type === "inventory_table",
@@ -461,22 +533,21 @@ function renderAssistantResponse(
   const shouldInlineChartSummary = Boolean(chartSummarySource) && result.tables.length === 0;
   const visiblePrimaryCards = shouldInlineChartSummary ? [] : filteredPrimaryCards;
 
+  const allPrimary = visiblePrimaryCards;
+  const remainingSecondary = secondaryCards;
+
   return (
     <div className="space-y-5">
-      {visiblePrimaryCards.length > 0 ? (
+      {allPrimary.length > 0 ? (
         <div className="space-y-4">
-          {visiblePrimaryCards.map((card) => (
-            <div key={`${card.type}-${"sku" in card ? card.sku : "title" in card ? card.title : card.type}`}>
-              {renderCard(card)}
-            </div>
-          ))}
+          {renderPrimaryCards(allPrimary, onSendPrompt)}
         </div>
       ) : null}
 
-      {secondaryCards.length > 0 ? (
+      {remainingSecondary.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-          {secondaryCards.map((card) => (
-            <div key={`${card.type}-${"sku" in card ? card.sku : "title" in card ? card.title : card.type}`}>{renderCard(card)}</div>
+          {remainingSecondary.map((card, idx) => (
+            <div key={`${card.type}-${"sku" in card ? card.sku : "supplier" in card ? card.supplier : "title" in card ? card.title : idx}`}>{renderCard(card, onSendPrompt)}</div>
           ))}
         </div>
       ) : null}
@@ -558,7 +629,37 @@ function deriveLoadingMessage(prompt: string): { headline: string; detail: strin
   return { headline: "Looking into it", detail: "Querying store data and composing the response." };
 }
 
-function renderLoadingState(prompt: string) {
+function renderPromptBubble(prompt: string) {
+  const uploadMatch = prompt.match(/\[Uploaded file: (.+?)\]/);
+  const cleanPrompt = prompt.replace(/\n*\[Uploaded file: .+?\] Parse this document with parse_document\./, "").trim();
+
+  return (
+    <>
+      {uploadMatch && (
+        <div className="mb-2 flex items-center gap-2 rounded-xl bg-white/50 px-3 py-2">
+          <svg className="h-4 w-4 flex-shrink-0 text-plum/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          <span className="truncate text-sm font-medium text-plum/80">{uploadMatch[1]}</span>
+        </div>
+      )}
+      {cleanPrompt && <p className="text-base leading-7">{cleanPrompt}</p>}
+      {!cleanPrompt && uploadMatch && <p className="text-base leading-7">Parse this document</p>}
+    </>
+  );
+}
+
+function isDocumentPrompt(prompt: string): boolean {
+  const lower = prompt.toLowerCase();
+  return lower.includes("invoice") || lower.includes("document") || lower.includes("receipt");
+}
+
+function renderLoadingState(prompt: string, activityLog: ActivityLogEntry[]) {
+  if (isDocumentPrompt(prompt)) {
+    return <DocumentProcessingAnimation activityLog={activityLog} />;
+  }
+
   const { headline, detail } = deriveLoadingMessage(prompt);
 
   return (
@@ -592,6 +693,7 @@ export function WorkspacePanel({
   mode,
   onRegisterTurnRef,
   onRegisterResponseRef,
+  onSendPrompt,
 }: WorkspacePanelProps) {
   if (turns.length === 0) {
     return <section className="flex-1" />;
@@ -608,18 +710,18 @@ export function WorkspacePanel({
         >
           <div className="flex justify-end">
             <div className="max-w-[48ch] rounded-[28px] border border-[#e4d2b3] bg-[#efe4d0] px-5 py-4 text-ink shadow-panel">
-              <p className="text-base leading-7">{turn.prompt}</p>
+              {renderPromptBubble(turn.prompt)}
             </div>
           </div>
 
           <div className="max-w-full pr-0 xl:pr-12">
             <div ref={(element) => onRegisterResponseRef?.(turn.id, element)}>
               {turn.isLoading
-                ? renderLoadingState(turn.prompt)
+                ? renderLoadingState(turn.prompt, turn.activityLog)
                 : turn.error
                   ? renderErrorState(turn.error)
                   : turn.result
-                    ? renderAssistantResponse(turn.result, mode)
+                    ? renderAssistantResponse(turn.result, mode, onSendPrompt)
                     : null}
             </div>
           </div>

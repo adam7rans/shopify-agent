@@ -5,85 +5,191 @@ import { get_inventory_products, get_inventory_levels, summarizeInventory } from
 
 const DOCUMENTS_DIR = path.join(process.cwd(), "public", "mock-invoices");
 
-interface DocumentMeta {
-  filename: string;
-  supplier: string;
-  documentType: "invoice" | "delivery_receipt";
-  invoiceNumber: string;
-  dateReceived: string;
-  totalAmount: number;
-  status: "pending_review" | "reviewed" | "flagged";
-  hasImage: boolean;
-  notes?: string;
+const SUPPLIER_EMAILS: Record<string, string> = {
+  "Sweet Distribution Co.": "accounts@sweetdistribution.com",
+  "Pacific Snack Imports": "orders@pacificsnackimports.com",
+  "K-Snacks Wholesale": "support@ksnacks-wholesale.com",
+  "Tokyo Treats Direct": "claims@tokyotreatsdirect.jp",
+};
+
+function detectFlags(parsed: ParsedInvoice): { hasBackorder: boolean; hasDamage: boolean } {
+  const hasBackorder = parsed.lineItems.some(
+    (item) => item.backordered || (item.quantityShipped !== undefined && item.quantityShipped < item.quantity),
+  );
+  const hasDamage = parsed.lineItems.some(
+    (item) => item.condition?.toLowerCase().includes("damaged") || item.condition?.toLowerCase().includes("crush"),
+  ) || !!parsed.damageReport;
+  return { hasBackorder, hasDamage };
 }
 
-const DOCUMENT_METADATA: DocumentMeta[] = [
-  {
-    filename: "invoice-1-sweet-distribution.png",
-    supplier: "Sweet Distribution Co.",
-    documentType: "invoice",
-    invoiceNumber: "SD-2024-0847",
-    dateReceived: "2026-06-12",
-    totalAmount: 692.50,
-    status: "pending_review",
-    hasImage: true,
-  },
-  {
-    filename: "invoice-2-pacific-snack.png",
-    supplier: "Pacific Snack Imports",
-    documentType: "invoice",
-    invoiceNumber: "PSI-9031",
-    dateReceived: "2026-06-15",
-    totalAmount: 1049.00,
-    status: "pending_review",
-    hasImage: true,
-  },
-  {
-    filename: "invoice-3-k-snacks-partial.png",
-    supplier: "K-Snacks Wholesale",
-    documentType: "invoice",
-    invoiceNumber: "KSW-4420",
-    dateReceived: "2026-06-16",
-    totalAmount: 582.00,
-    status: "flagged",
-    hasImage: true,
-    notes: "Partial shipment — backordered items pending",
-  },
-  {
-    filename: "invoice-4-tokyo-treats-packing-slip.png",
-    supplier: "Tokyo Treats Direct",
-    documentType: "delivery_receipt",
-    invoiceNumber: "TTD-0612",
-    dateReceived: "2026-06-17",
-    totalAmount: 0,
-    status: "flagged",
-    hasImage: true,
-    notes: "Delivery receipt with damage report — 2 cases Kanro Pure Gummy crushed",
-  },
-];
+function generateDraftEmail(
+  parsed: ParsedInvoice,
+  flag: "backorder" | "damage",
+): { to: string; from: string; subject: string; body: string; emailType: "backorder_followup" | "damage_claim" } {
+  const supplier = parsed.supplier;
+  const to = SUPPLIER_EMAILS[supplier] ?? `info@${supplier.toLowerCase().replace(/[^a-z]+/g, "")}.com`;
+  const from = "adam@kandwii.com";
 
-export async function listAvailableDocuments() {
-  try {
-    const files = await readdir(DOCUMENTS_DIR);
-    const imageFiles = files.filter((f) => f.endsWith(".png"));
+  if (flag === "backorder") {
+    const missingItems = parsed.lineItems
+      .filter((item) => item.backordered || (item.quantityShipped !== undefined && item.quantityShipped < item.quantity))
+      .map((item) => {
+        const short = (item.quantity - (item.quantityShipped ?? item.quantity));
+        return `  - ${item.description}: ordered ${item.quantity}, received ${item.quantityShipped ?? "unknown"} (${short} short)`;
+      });
 
-    return imageFiles.map((filename) => {
-      const meta = DOCUMENT_METADATA.find((m) => m.filename === filename);
-      if (meta) return meta;
-      return {
-        filename,
-        supplier: "Unknown",
-        documentType: "invoice" as const,
-        invoiceNumber: "—",
-        dateReceived: "—",
-        totalAmount: 0,
-        status: "pending_review" as const,
-        hasImage: true,
-      };
-    });
-  } catch {
-    return [];
+    const itemList = missingItems.length > 0
+      ? missingItems.join("\n")
+      : parsed.lineItems.map((item) => `  - ${item.description}`).join("\n");
+
+    return {
+      to,
+      from,
+      subject: `Re: Invoice ${parsed.invoiceNumber} — Partial Shipment Follow-up`,
+      body: `Hi ${supplier.split(" ")[0]} team,\n\nWe received invoice ${parsed.invoiceNumber} on ${parsed.date}, but the shipment appears to be incomplete. The following items are short or backordered:\n\n${itemList}\n\nCould you provide an updated timeline for the remaining items? Please let us know if we should expect a separate shipment or if there are any supply issues we should be aware of.\n\nThanks,\nAdam\nKandwii Store`,
+      emailType: "backorder_followup",
+    };
   }
+
+  const damagedItems = parsed.lineItems
+    .filter((item) => item.condition?.toLowerCase().includes("damaged") || item.condition?.toLowerCase().includes("crush"))
+    .map((item) => `  - ${item.description}: ${item.quantity} units — ${item.condition ?? "damaged"}`);
+
+  const damageList = damagedItems.length > 0
+    ? damagedItems.join("\n")
+    : parsed.damageReport ?? "See attached photos for damage details.";
+
+  return {
+    to,
+    from,
+    subject: `Damage Claim — Delivery ${parsed.invoiceNumber}`,
+    body: `Hi ${supplier.split(" ")[0]} team,\n\nWe received delivery ${parsed.invoiceNumber} on ${parsed.date} and found the following items damaged during transit:\n\n${damageList}\n\nWe'd like to file a damage claim for replacement or credit. Photos of the damaged goods are available upon request.\n\nPlease advise on next steps.\n\nThanks,\nAdam\nKandwii Store`,
+    emailType: "damage_claim",
+  };
+}
+
+export interface ProcessedDocument {
+  supplier: string;
+  invoiceNumber: string;
+  total: number;
+  status: "pending_review" | "flagged";
+  lineItems: {
+    description: string;
+    quantity: number;
+    quantityShipped?: number;
+    unitPrice: number;
+    lineTotal: number;
+    condition?: string;
+    backordered?: boolean;
+  }[];
+  inventoryImpact: {
+    item: string;
+    sku?: string;
+    currentStock: number;
+    incoming: number;
+    projectedStock: number;
+  }[];
+  draftEmail?: {
+    to: string;
+    from: string;
+    subject: string;
+    body: string;
+    emailType: "backorder_followup" | "damage_claim";
+  };
+  flagReason?: string;
+}
+
+export async function scanDocuments(
+  onProgress?: (step: string, data?: Record<string, unknown>) => void,
+): Promise<{ documents: ProcessedDocument[] }> {
+  onProgress?.("Connecting to Gmail", { event: "gmail_connect" });
+  await new Promise((r) => setTimeout(r, 1000));
+
+  onProgress?.("Scanning supplier inbox for attachments", { event: "gmail_scan" });
+  await new Promise((r) => setTimeout(r, 1500));
+
+  let files: string[];
+  try {
+    const all = await readdir(DOCUMENTS_DIR);
+    files = all.filter((f) => f.endsWith(".png") || f.endsWith(".pdf"));
+  } catch {
+    return { documents: [] };
+  }
+
+  onProgress?.(`Found ${files.length} documents attached to supplier emails`, {
+    event: "scan_start",
+    totalFiles: files.length,
+    files: files.map((f) => ({
+      filename: f,
+      fileType: f.endsWith(".png") ? "image" : "pdf",
+    })),
+  });
+
+  const results: ProcessedDocument[] = [];
+
+  for (let i = 0; i < files.length; i++) {
+    const filename = files[i];
+    const fileType = filename.endsWith(".png") ? "image" : "pdf";
+
+    onProgress?.(`Parsing ${filename} with AI vision`, {
+      event: "parse_start",
+      index: i,
+      filename,
+      fileType,
+    });
+
+    const { parsed, inventoryCrossReference } = await parseDocument(filename);
+
+    const { hasBackorder, hasDamage } = detectFlags(parsed);
+    const isFlagged = hasBackorder || hasDamage;
+
+    const impact = inventoryCrossReference
+      .filter((ref) => ref.status === "matched" || ref.status === "partial_match")
+      .map((ref) => ({
+        item: ref.matchedProduct ?? ref.invoiceItem,
+        sku: ref.matchedSku ?? undefined,
+        currentStock: ref.currentStock ?? 0,
+        incoming: ref.incomingQuantity,
+        projectedStock: ref.projectedStock ?? ref.incomingQuantity,
+      }));
+
+    const doc: ProcessedDocument = {
+      supplier: parsed.supplier,
+      invoiceNumber: parsed.invoiceNumber,
+      total: parsed.totalDue,
+      status: isFlagged ? "flagged" : "pending_review",
+      lineItems: parsed.lineItems.map((li) => ({
+        description: li.description,
+        quantity: li.quantity,
+        quantityShipped: li.quantityShipped,
+        unitPrice: li.unitPrice,
+        lineTotal: li.lineTotal,
+        condition: li.condition,
+        backordered: li.backordered,
+      })),
+      inventoryImpact: impact,
+    };
+
+    if (hasBackorder) {
+      doc.flagReason = "Partial shipment — backordered items detected";
+      doc.draftEmail = generateDraftEmail(parsed, "backorder");
+    } else if (hasDamage) {
+      doc.flagReason = "Damaged items detected in shipment";
+      doc.draftEmail = generateDraftEmail(parsed, "damage");
+    }
+
+    results.push(doc);
+
+    onProgress?.(`Parsed ${parsed.supplier} — ${parsed.invoiceNumber}`, {
+      event: "parse_complete",
+      index: i,
+      filename,
+      fileType,
+      document: doc as unknown as Record<string, unknown>,
+    });
+  }
+
+  return { documents: results };
 }
 
 interface ParsedLineItem {
@@ -169,14 +275,29 @@ export async function parseDocument(filename: string): Promise<{
   filename: string;
   parsed: ParsedInvoice;
   inventoryCrossReference: InventoryCrossRef[];
-  meta: DocumentMeta | null;
 }> {
   const safeName = path.basename(filename);
 
-  const pngName = safeName.replace(/\.pdf$/, ".png");
-  const imagePath = path.join(DOCUMENTS_DIR, pngName);
-  const imageBuffer = await readFile(imagePath);
-  const base64Image = imageBuffer.toString("base64");
+  const filePath = path.join(DOCUMENTS_DIR, safeName);
+  const fileBuffer = await readFile(filePath);
+  const base64 = fileBuffer.toString("base64");
+  const isPdf = safeName.endsWith(".pdf");
+
+  const fileContent: OpenAI.Chat.Completions.ChatCompletionContentPart = isPdf
+    ? {
+        type: "file" as const,
+        file: {
+          filename: safeName,
+          file_data: `data:application/pdf;base64,${base64}`,
+        },
+      } as unknown as OpenAI.Chat.Completions.ChatCompletionContentPart
+    : {
+        type: "image_url",
+        image_url: {
+          url: `data:image/png;base64,${base64}`,
+          detail: "high" as const,
+        },
+      };
 
   const openai = new OpenAI();
   const visionResponse = await openai.chat.completions.create({
@@ -186,13 +307,7 @@ export async function parseDocument(filename: string): Promise<{
         role: "user",
         content: [
           { type: "text", text: EXTRACTION_PROMPT },
-          {
-            type: "image_url",
-            image_url: {
-              url: `data:image/png;base64,${base64Image}`,
-              detail: "high",
-            },
-          },
+          fileContent,
         ],
       },
     ],
@@ -206,15 +321,10 @@ export async function parseDocument(filename: string): Promise<{
 
   const crossRef = await crossReferenceInventory(parsed.lineItems);
 
-  const meta = DOCUMENT_METADATA.find(
-    (m) => m.filename === pngName || m.filename === safeName,
-  ) ?? null;
-
   return {
     filename: safeName,
     parsed,
     inventoryCrossReference: crossRef,
-    meta,
   };
 }
 

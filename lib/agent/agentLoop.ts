@@ -22,7 +22,7 @@ const TOOL_ICONS: Record<string, string> = {
   check_reorder_risk: "⚠️",
   get_warehouse_health: "🏭",
   get_distributor_availability: "🚚",
-  list_documents: "📋",
+  scan_documents: "📋",
   parse_document: "🔬",
 };
 
@@ -33,7 +33,7 @@ const TOOL_LABELS: Record<string, string> = {
   check_reorder_risk: "Calculating reorder risk",
   get_warehouse_health: "Checking warehouse health",
   get_distributor_availability: "Querying distributor availability",
-  list_documents: "Checking document inbox",
+  scan_documents: "Scanning and parsing all documents with AI vision",
   parse_document: "Parsing document with AI vision",
 };
 
@@ -95,8 +95,8 @@ export async function runAgentLoop(
     return (Date.now() - startTime) / 1000;
   }
 
-  function log(icon: string, message: string, detail?: string) {
-    onLog?.({ icon, message, detail, elapsed: elapsed() });
+  function log(icon: string, message: string, detail?: string, data?: Record<string, unknown>) {
+    onLog?.({ icon, message, detail, elapsed: elapsed(), data });
   }
 
   const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -174,6 +174,7 @@ export async function runAgentLoop(
               log(toolIcon, `${toolLabel}${argsDesc}`);
               result = await executeTool(toolCall.function.name, args, {
                 userPrompt: prompt,
+                onProgress: (step, data) => log("🔬", step, undefined, data),
               });
               if (sessionId && cacheKey) {
                 setCachedResult(sessionId, cacheKey, result);

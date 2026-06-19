@@ -76,6 +76,59 @@ export interface TextCardBlock {
   content: string;
 }
 
+export interface InvoiceLineItemRow {
+  description: string;
+  quantity: number;
+  quantityShipped?: number;
+  unitPrice: number;
+  lineTotal: number;
+  condition?: string;
+  backordered?: boolean;
+}
+
+export interface InventoryImpactRow {
+  item: string;
+  sku?: string;
+  currentStock: number;
+  incoming: number;
+  projectedStock: number;
+}
+
+export interface InvoiceProcessedCardBlock {
+  type: "invoice_processed";
+  supplier: string;
+  invoiceNumber: string;
+  total: number;
+  lineItems: InvoiceLineItemRow[];
+  inventoryImpact: InventoryImpactRow[];
+  status: "pending_review" | "approved" | "flagged";
+  draftEmail?: {
+    to: string;
+    from: string;
+    subject: string;
+    body: string;
+    emailType: "backorder_followup" | "damage_claim";
+  };
+}
+
+export interface DraftEmailCardBlock {
+  type: "draft_email";
+  supplier: string;
+  invoiceNumber: string;
+  to: string;
+  from: string;
+  subject: string;
+  body: string;
+  emailType: "backorder_followup" | "damage_claim";
+}
+
+export interface ActionButtonCardBlock {
+  type: "action_button";
+  label: string;
+  prompt: string;
+  variant: "primary" | "secondary";
+}
+
 export interface LiquidPreviewProduct {
   title: string;
   price: string;
@@ -187,7 +240,10 @@ export type AgentCardBlock =
   | ReorderDraftCardBlock
   | WarehouseRegionCardBlock
   | TextCardBlock
-  | CodeCardBlock;
+  | CodeCardBlock
+  | InvoiceProcessedCardBlock
+  | DraftEmailCardBlock
+  | ActionButtonCardBlock;
 
 export interface ProductPerformanceRow {
   product: string;

@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
-import { ChatPanel } from "@/components/layout/chat-panel";
+import { ChatPanel, type AttachedFile } from "@/components/layout/chat-panel";
 import { ActivityLogPanel } from "@/components/layout/activity-log-panel";
 import type {
   ConversationTurn,
@@ -23,7 +23,7 @@ const STARTER_PROMPT_GROUPS: StarterPromptGroup[] = [
     description: "Start the day with inventory, reorder, and fulfillment checks.",
     prompts: [
       "What does our inventory look like right now?",
-      "Which SKUs are low on stock right now?",
+      "Do we need to reorder sour candy?",
       "Where is fulfillment getting stuck?",
     ],
     accent: "inventory",
@@ -35,17 +35,17 @@ const STARTER_PROMPT_GROUPS: StarterPromptGroup[] = [
     prompts: [
       "Which candy is performing best this week?",
       "Compare Korean and Japanese gummy inventory side by side",
-      "Give me a bar chart of units sold by category",
+      "Show me a graph of past 3 months of total sales",
     ],
     accent: "sales",
   },
   {
-    id: "monthly",
-    label: "Monthly",
-    description: "Look at broader sales trends and planning windows.",
+    id: "documents",
+    label: "Documents",
+    description: "Check supplier invoices, delivery receipts, and email inbox.",
     prompts: [
-      "Show me a graph of past 3 months of total sales",
-      "Show revenue by category as a pie chart",
+      "Do I have any new invoices?",
+      "Give me a bar chart of units sold by category",
       "Generate a Shopify Liquid collection page for Japanese gummies",
     ],
     accent: "operations",
@@ -77,6 +77,7 @@ export function BestSellersShell({
   const [turns, setTurns] = useState<ConversationTurn[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [visibleTurnId, setVisibleTurnId] = useState<string | null>(null);
+  const [attachedFile, setAttachedFile] = useState<AttachedFile | null>(null);
   const [convexId, setConvexId] = useState<Id<"conversations"> | null>(
     conversationIdProp ? (conversationIdProp as Id<"conversations">) : null,
   );
@@ -185,7 +186,20 @@ export function BestSellersShell({
   }, [mode, turns.length]);
 
   async function runPromptWithStream(nextPrompt: string) {
-    const trimmedPrompt = nextPrompt.trim();
+    let trimmedPrompt = nextPrompt.trim();
+
+    if (attachedFile) {
+      const formData = new FormData();
+      formData.append("file", attachedFile.file);
+      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
+      const uploadData = (await uploadRes.json()) as { filename: string };
+      const parseInstruction = `[Uploaded file: ${uploadData.filename}] Parse this document with parse_document.`;
+      trimmedPrompt = trimmedPrompt
+        ? `${trimmedPrompt}\n\n${parseInstruction}`
+        : parseInstruction;
+      setAttachedFile(null);
+    }
+
     if (!trimmedPrompt) return;
 
     const turnId = createTurnId();
@@ -335,12 +349,24 @@ export function BestSellersShell({
     } finally {
       setIsSubmitting(false);
       if (activeConvexId && finalResult) {
-        void addMessage({
+        const logsForStorage = finalLogs.map(({ data, ...rest }) => rest);
+        const responseStr = JSON.stringify(finalResult);
+        const logStr = JSON.stringify(logsForStorage);
+        console.log("[Kandwii] Saving assistant message:", {
+          responseSize: responseStr.length,
+          logSize: logStr.length,
+          hasResult: !!finalResult,
+        });
+        addMessage({
           conversationId: activeConvexId,
           role: "assistant",
-          response: JSON.stringify(finalResult),
-          activityLog: JSON.stringify(finalLogs),
+          response: responseStr,
+          activityLog: logStr,
+        }).catch((err) => {
+          console.error("[Kandwii] Failed to save assistant message:", err);
         });
+      } else {
+        console.warn("[Kandwii] Skipping save:", { activeConvexId, hasResult: !!finalResult });
       }
     }
   }
@@ -380,6 +406,7 @@ export function BestSellersShell({
                 mode={mode}
                 onRegisterTurnRef={registerTurnRef}
                 onRegisterResponseRef={registerResponseRef}
+                onSendPrompt={handleUsePrompt}
               />
             </div>
             {mode === "diagnostics" ? (
@@ -410,6 +437,8 @@ export function BestSellersShell({
                   starterGroups={STARTER_PROMPT_GROUPS}
                   isLoading={isSubmitting}
                   hasTurns={hasTurns}
+                  attachedFile={attachedFile}
+                  onAttachFile={setAttachedFile}
                 />
               </div>
             </div>

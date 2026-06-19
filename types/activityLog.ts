@@ -3,6 +3,7 @@ export interface ActivityLogEntry {
   message: string;
   detail?: string;
   elapsed: number;
+  data?: Record<string, unknown>;
 }
 
 export interface ActivityLogStreamEvent {

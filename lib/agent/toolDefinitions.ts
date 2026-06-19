@@ -213,9 +213,9 @@ export const agentTools: Tool[] = [
   {
     type: "function",
     function: {
-      name: "list_documents",
+      name: "scan_documents",
       description:
-        "List supplier documents in the inbox (invoices, delivery receipts). Returns metadata for each document: supplier name, invoice number, date received, total amount, status (pending_review, reviewed, flagged), and any notes about issues like partial shipments or damage.",
+        "Scan all supplier documents in the inbox (invoices, delivery receipts). Reads each document image with AI vision to extract supplier info, line items, quantities, prices, and totals. Cross-references extracted items against current Shopify inventory to show projected stock levels. Automatically flags issues (partial shipments, damaged goods) and drafts supplier emails for flagged documents. Returns fully parsed results ready for the owner to review.",
       parameters: {
         type: "object",
         properties: {},
@@ -228,7 +228,7 @@ export const agentTools: Tool[] = [
     function: {
       name: "parse_document",
       description:
-        "Parse a supplier document image using AI vision to extract structured data: supplier info, line items with quantities/prices, totals, and any damage or backorder notes. Also cross-references extracted items against current Shopify inventory to show projected stock levels after receiving the shipment. Call list_documents first to see available files.",
+        "Parse a single supplier document image using AI vision to extract structured data: supplier info, line items with quantities/prices, totals, and any damage or backorder notes. Also cross-references extracted items against current Shopify inventory to show projected stock levels after receiving the shipment. Use scan_documents instead when you want to process all documents at once.",
       parameters: {
         type: "object",
         properties: {

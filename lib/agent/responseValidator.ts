@@ -17,6 +17,9 @@ const VALID_CARD_TYPES = new Set([
   "warehouse_region",
   "text",
   "code",
+  "invoice_processed",
+  "draft_email",
+  "action_button",
 ]);
 
 const VALID_TABLE_TYPES = new Set([

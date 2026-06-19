@@ -27,7 +27,7 @@ import {
   get_mock_fulfillment_issues,
 } from "@/lib/tools/warehouseHealth";
 import {
-  listAvailableDocuments,
+  scanDocuments,
   parseDocument,
 } from "@/lib/tools/documentParser";
 
@@ -45,17 +45,21 @@ interface SearchProductsArgs {
   limit?: number;
 }
 
-async function executeSearchProducts(args: SearchProductsArgs) {
+async function executeSearchProducts(args: SearchProductsArgs, onProgress?: (step: string) => void) {
+  onProgress?.("Fetching product catalog from Shopify");
   const response = await get_shopify_products();
   let products = response.products;
+  onProgress?.(`Loaded ${products.length} products from catalog`);
 
   if (args.category) {
     products = products.filter((p) => looseMatch(p.category, args.category!));
+    onProgress?.(`Filtered to ${products.length} products in category "${args.category}"`);
   }
   if (args.country) {
     products = products.filter((p) =>
       looseMatch(p.countryOfOrigin, args.country!),
     );
+    onProgress?.(`Filtered to ${products.length} products from ${args.country}`);
   }
   if (args.tags && args.tags.length > 0) {
     products = products.filter((p) =>
@@ -63,6 +67,7 @@ async function executeSearchProducts(args: SearchProductsArgs) {
         p.tags.some((pt) => looseMatch(pt, tag)),
       ),
     );
+    onProgress?.(`Filtered to ${products.length} products matching tags: ${args.tags.join(", ")}`);
   }
 
   if (args.sort_by === "price_asc") products.sort((a, b) => a.price - b.price);
@@ -102,8 +107,10 @@ interface GetInventoryArgs {
   limit?: number;
 }
 
-async function executeGetInventory(args: GetInventoryArgs) {
+async function executeGetInventory(args: GetInventoryArgs, onProgress?: (step: string) => void) {
+  onProgress?.("Fetching product catalog from Shopify");
   const productsResponse = await get_inventory_products();
+  onProgress?.("Fetching inventory levels across all warehouse locations");
   const inventoryResponse = await get_inventory_levels();
 
   const promptSpec: InventoryPromptSpec = {
@@ -112,6 +119,7 @@ async function executeGetInventory(args: GetInventoryArgs) {
     countryOfOrigin: args.country,
   };
 
+  onProgress?.("Aggregating inventory by SKU across locations");
   let rows = summarizeInventory(
     inventoryResponse.inventory,
     productsResponse.products,
@@ -129,9 +137,12 @@ async function executeGetInventory(args: GetInventoryArgs) {
   const limit = args.limit ?? 50;
   rows = rows.slice(0, limit);
 
+  const lowCount = rows.filter((r) => r.status === "low").length;
+  onProgress?.(`Summarized ${rows.length} SKUs — ${lowCount} low-stock`);
+
   return {
     count: rows.length,
-    lowStockCount: rows.filter((r) => r.status === "low").length,
+    lowStockCount: lowCount,
     rows: rows.map((r) => ({
       product: r.product,
       sku: r.sku,
@@ -325,6 +336,7 @@ function buildSalesTimeSeries(
 export async function executeGetSalesData(
   args: GetSalesDataArgs,
   userPrompt?: string,
+  onProgress?: (step: string) => void,
 ) {
   const referenceDate = await resolveAnalysisReferenceDate();
   const timeQuery = args.time_query ?? args.date_range ?? userPrompt ?? "";
@@ -337,14 +349,18 @@ export async function executeGetSalesData(
           args.grain,
         )
       : resolveTimeWindowFromPrompt(timeQuery, referenceDate);
+  onProgress?.(`Resolved time window: ${window.label} (${window.dayCount} days, ${window.grain} grain)`);
   const orderFetchLimit = window.dayCount > 180 ? 2400 : window.dayCount > 90 ? 1200 : 400;
 
+  onProgress?.(`Fetching orders from ${window.startDate} to ${window.endDate}`);
   const ordersResult = await get_recent_orders_with_fallback({
     startDate: window.startDate,
     endDate: window.endDate,
     limit: orderFetchLimit,
   });
+  onProgress?.(`Loaded ${ordersResult.orders.length} orders (source: ${ordersResult.source})`);
 
+  onProgress?.("Fetching product catalog from Shopify");
   const productsResponse = await get_shopify_products();
   let products = productsResponse.products;
 
@@ -372,6 +388,7 @@ export async function executeGetSalesData(
       ? filterOrdersBySkus(ordersResult.orders, allowedSkus)
       : ordersResult.orders;
 
+  onProgress?.(`Ranking top sellers from ${filteredOrders.length} orders across ${products.length} products`);
   const topSellers = calculate_top_sellers(
     filteredOrders,
     products,
@@ -403,7 +420,9 @@ export async function executeGetSalesData(
       productCount: data.products,
     }))
     .sort((a, b) => b.unitsSold - a.unitsSold);
+  onProgress?.(`Built category breakdown: ${categoryBreakdown.length} categories`);
   const timeSeries = buildSalesTimeSeries(filteredOrders, window);
+  onProgress?.(`Built time series: ${timeSeries.length} data points (${window.grain})`);
 
   return {
     window: window.label,
@@ -432,15 +451,17 @@ interface CheckReorderRiskArgs {
   sku?: string;
 }
 
-async function executeCheckReorderRisk(args: CheckReorderRiskArgs) {
+async function executeCheckReorderRisk(args: CheckReorderRiskArgs, onProgress?: (step: string) => void) {
   const referenceDate = await resolveAnalysisReferenceDate();
   const window = resolveTimeWindowFromPrompt("past 30 days", referenceDate);
 
+  onProgress?.("Fetching product catalog from Shopify");
   const productsResponse = await get_shopify_products();
   let products = productsResponse.products;
 
   if (args.category) {
     products = products.filter((p) => looseMatch(p.category, args.category!));
+    onProgress?.(`Filtered to ${products.length} products in "${args.category}"`);
   }
   if (args.sku) {
     products = products.filter((p) =>
@@ -448,14 +469,19 @@ async function executeCheckReorderRisk(args: CheckReorderRiskArgs) {
     );
   }
 
+  onProgress?.("Fetching current inventory levels");
   const inventoryResponse = await getShopifyClient().getInventory();
+  onProgress?.(`Pulling 30-day order history for sales velocity`);
   const ordersResult = await get_recent_orders_with_fallback({
     startDate: window.startDate,
     endDate: window.endDate,
   });
+  onProgress?.(`Loaded ${ordersResult.orders.length} orders for velocity calculation`);
 
   const skus = products.map((p) => p.variants[0]?.sku).filter(Boolean);
+  onProgress?.(`Querying distributor availability for ${skus.length} SKUs`);
   const distributorAvailability = await get_mock_distributor_availability(skus);
+  onProgress?.("Calculating sales velocity and forecasting stockout risk");
   const velocity = calculate_sales_velocity(ordersResult.orders, products);
   const risks = forecast_stockout_risk(
     products,
@@ -464,10 +490,13 @@ async function executeCheckReorderRisk(args: CheckReorderRiskArgs) {
     velocity,
   );
 
+  const needsReorder = risks.filter((r) => r.reorderNeeded).length;
+  onProgress?.(`Analyzed ${products.length} products — ${needsReorder} need reorder`);
+
   return {
     window: window.label,
     productsAnalyzed: products.length,
-    risksFound: risks.filter((r) => r.reorderNeeded).length,
+    risksFound: needsReorder,
     risks: risks.map((r) => ({
       product: r.product,
       sku: r.sku,
@@ -493,9 +522,12 @@ interface GetWarehouseHealthArgs {
   severity?: "high" | "medium" | "all";
 }
 
-async function executeGetWarehouseHealth(args: GetWarehouseHealthArgs) {
+async function executeGetWarehouseHealth(args: GetWarehouseHealthArgs, onProgress?: (step: string) => void) {
+  onProgress?.("Fetching fulfillment center registry");
   let centers = await get_mock_fulfillment_centers();
+  onProgress?.("Pulling warehouse inventory snapshots");
   let snapshots = await get_mock_warehouse_inventory();
+  onProgress?.("Checking open fulfillment issues");
   let issues = await get_mock_fulfillment_issues();
 
   if (args.region) {
@@ -503,6 +535,7 @@ async function executeGetWarehouseHealth(args: GetWarehouseHealthArgs) {
     const centerIds = new Set(centers.map((c) => c.id));
     snapshots = snapshots.filter((s) => centerIds.has(s.centerId));
     issues = issues.filter((i) => centerIds.has(i.centerId));
+    onProgress?.(`Filtered to ${centers.length} centers in ${args.region}`);
   }
 
   if (args.severity && args.severity !== "all") {
@@ -518,6 +551,8 @@ async function executeGetWarehouseHealth(args: GetWarehouseHealthArgs) {
         (snapshots.reduce((s, snap) => s + snap.averageFulfillmentHours, 0) / snapshots.length).toFixed(1),
       )
     : 0;
+
+  onProgress?.(`${centers.length} centers — ${totalDelayed} delayed, ${totalStuck} stuck, ${totalDamaged} damaged units, ${issues.length} open issues`);
 
   return {
     centersCount: centers.length,
@@ -554,12 +589,14 @@ interface GetDistributorAvailabilityArgs {
   sku?: string;
 }
 
-async function executeGetDistributorAvailability(args: GetDistributorAvailabilityArgs) {
+async function executeGetDistributorAvailability(args: GetDistributorAvailabilityArgs, onProgress?: (step: string) => void) {
+  onProgress?.("Fetching product catalog from Shopify");
   const productsResponse = await get_shopify_products();
   let products = productsResponse.products;
 
   if (args.category) {
     products = products.filter((p) => looseMatch(p.category, args.category!));
+    onProgress?.(`Filtered to ${products.length} products in "${args.category}"`);
   }
   if (args.sku) {
     products = products.filter((p) =>
@@ -568,7 +605,9 @@ async function executeGetDistributorAvailability(args: GetDistributorAvailabilit
   }
 
   const skus = products.map((p) => p.variants[0]?.sku).filter(Boolean);
+  onProgress?.(`Querying distributor availability for ${skus.length} SKUs`);
   const availability = await get_mock_distributor_availability(skus);
+  onProgress?.(`Found ${availability.length} supplier records`);
 
   return {
     count: availability.length,
@@ -589,30 +628,26 @@ async function executeGetDistributorAvailability(args: GetDistributorAvailabilit
 export async function executeTool(
   name: string,
   args: Record<string, unknown>,
-  context?: { userPrompt?: string },
+  context?: { userPrompt?: string; onProgress?: (step: string, data?: Record<string, unknown>) => void },
 ): Promise<unknown> {
+  const p = context?.onProgress;
   switch (name) {
     case "search_products":
-      return executeSearchProducts(args as SearchProductsArgs);
+      return executeSearchProducts(args as SearchProductsArgs, p);
     case "get_inventory":
-      return executeGetInventory(args as GetInventoryArgs);
+      return executeGetInventory(args as GetInventoryArgs, p);
     case "get_sales_data":
-      return executeGetSalesData(args as GetSalesDataArgs, context?.userPrompt);
+      return executeGetSalesData(args as GetSalesDataArgs, context?.userPrompt, p);
     case "check_reorder_risk":
-      return executeCheckReorderRisk(args as CheckReorderRiskArgs);
+      return executeCheckReorderRisk(args as CheckReorderRiskArgs, p);
     case "get_warehouse_health":
-      return executeGetWarehouseHealth(args as GetWarehouseHealthArgs);
+      return executeGetWarehouseHealth(args as GetWarehouseHealthArgs, p);
     case "get_distributor_availability":
       return executeGetDistributorAvailability(
-        args as GetDistributorAvailabilityArgs,
+        args as GetDistributorAvailabilityArgs, p,
       );
-    case "list_documents": {
-      const docs = await listAvailableDocuments();
-      return {
-        count: docs.length,
-        documents: docs,
-      };
-    }
+    case "scan_documents":
+      return scanDocuments(p);
     case "parse_document":
       return parseDocument(args.filename as string);
     default:
