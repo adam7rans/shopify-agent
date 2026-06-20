@@ -36,7 +36,6 @@ export async function POST(request: Request) {
       continue;
     }
 
-    const key = `reset-${entry.sku}-${Date.now()}`;
     try {
       const result = await shopifyAdminGraphql<{
         inventoryAdjustQuantities: {
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
         };
       }>(
         `mutation inventoryAdjustQuantities($input: InventoryAdjustQuantitiesInput!) {
-          inventoryAdjustQuantities(input: $input) @idempotent(key: "${key}") {
+          inventoryAdjustQuantities(input: $input) {
             userErrors { field message }
           }
         }`,

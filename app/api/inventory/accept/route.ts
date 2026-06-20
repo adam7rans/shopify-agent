@@ -57,8 +57,6 @@ export async function POST(request: Request) {
 
         if (!variant?.inventoryItemId || !level) continue;
 
-          const idempotencyKey = `kandwii-${invoiceNumber}-${variant.sku}-${Date.now()}`;
-
           const result = await shopifyAdminGraphql<{
             inventoryAdjustQuantities: {
               userErrors: Array<{ field: string[]; message: string }>;
@@ -66,7 +64,7 @@ export async function POST(request: Request) {
             };
           }>(
             `mutation inventoryAdjustQuantities($input: InventoryAdjustQuantitiesInput!) {
-              inventoryAdjustQuantities(input: $input) @idempotent(key: "${idempotencyKey}") {
+              inventoryAdjustQuantities(input: $input) {
                 userErrors { field message }
                 inventoryAdjustmentGroup { reason }
               }
