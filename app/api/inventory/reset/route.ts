@@ -55,7 +55,6 @@ export async function POST(request: Request) {
               inventoryItemId: variant.inventoryItemId,
               locationId: level.locationId,
               delta,
-              changeFromQuantity: level.available,
             }],
           },
         },
