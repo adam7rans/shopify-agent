@@ -53,6 +53,20 @@ export const addMessage = mutation({
   },
 });
 
+export const remove = mutation({
+  args: { id: v.id("conversations") },
+  handler: async (ctx, args) => {
+    const messages = await ctx.db
+      .query("messages")
+      .withIndex("by_conversation", (q) => q.eq("conversationId", args.id))
+      .collect();
+    for (const msg of messages) {
+      await ctx.db.delete(msg._id);
+    }
+    await ctx.db.delete(args.id);
+  },
+});
+
 export const getMessages = query({
   args: { conversationId: v.id("conversations") },
   handler: async (ctx, args) => {
