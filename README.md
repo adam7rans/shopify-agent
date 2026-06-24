@@ -2,10 +2,6 @@
 
 An AI-powered operations agent for a Shopify store, built as a take-home for Growth Capital. The agent queries live Shopify data through a real tool-calling loop — not scripted workflows — and returns structured UI responses including tables, charts, comparisons, and actionable cards.
 
-**Video walkthrough** — click to watch on YouTube:
-
-[![Watch the video walkthrough on YouTube](https://markdown-videos-api.jorgenkh.no/youtube/r_VoB7CMhxU)](https://www.youtube.com/watch?v=r_VoB7CMhxU)
-
 ## What it does
 
 Ask a question in plain English. The agent decides which tools to call, pulls the right store data from Shopify's Admin API, and returns a structured answer.
