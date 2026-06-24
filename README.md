@@ -4,6 +4,10 @@ An AI-powered operations agent for a Shopify store, built as a take-home for Gro
 
 **Live demo:** [shopify-agent-tau.vercel.app](https://shopify-agent-tau.vercel.app)
 
+**Video walkthrough:**
+
+[![Video walkthrough](https://img.youtube.com/vi/r_VoB7CMhxU/maxresdefault.jpg)](https://www.youtube.com/watch?v=r_VoB7CMhxU)
+
 ## What it does
 
 Ask a question in plain English. The agent decides which tools to call, pulls the right store data from Shopify's Admin API, and returns a structured answer.
