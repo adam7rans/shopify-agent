@@ -2,8 +2,6 @@
 
 An AI-powered operations agent for a Shopify store, built as a take-home for Growth Capital. The agent queries live Shopify data through a real tool-calling loop — not scripted workflows — and returns structured UI responses including tables, charts, comparisons, and actionable cards.
 
-**Live demo:** [shopify-agent-tau.vercel.app](https://shopify-agent-tau.vercel.app)
-
 **Video walkthrough:**
 
 [![Video walkthrough](https://img.youtube.com/vi/r_VoB7CMhxU/maxresdefault.jpg)](https://www.youtube.com/watch?v=r_VoB7CMhxU)
