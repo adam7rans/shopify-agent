@@ -70,6 +70,8 @@ const FULL_STEPS: Step[] = [
       "mock-ops",
       "arrow-tools-shopify",
       "arrow-tools-mock",
+      "arrow-shopify-tools",
+      "arrow-mock-tools",
     ],
   },
   {
@@ -387,7 +389,7 @@ export function ArchitectureDiagram() {
           <g style={s("tool-executors")}>
             <rect x="230" y="444" width="170" height="56" rx="10" fill="#fff" stroke="#bfdbfe" strokeWidth="1" />
             <text x="315" y="468" textAnchor="middle" fontSize="12" fill="#1a1a2e" fontFamily="system-ui" fontWeight="600">Tool Executors</text>
-            <text x="315" y="484" textAnchor="middle" fontSize="10" fill="#64748b" fontFamily="system-ui">7 tools, structured output</text>
+            <text x="315" y="484" textAnchor="middle" fontSize="10" fill="#64748b" fontFamily="system-ui">8 tools, structured output</text>
           </g>
           <g style={s("system-prompt")}>
             <rect x="420" y="370" width="180" height="56" rx="10" fill="#fff" stroke="#bfdbfe" strokeWidth="1" />
@@ -440,12 +442,20 @@ export function ArchitectureDiagram() {
             <text x="770" y="526" textAnchor="middle" fontSize="10" fill="#7c3aed" fontFamily="system-ui">Conversations + messages</text>
           </g>
 
-          {/* ── ARROWS TO EXTERNAL SERVICES ── */}
+          {/* ── ARROWS TO EXTERNAL SERVICES (outbound) ── */}
           <g style={s("arrow-tools-shopify")}>
             <path d="M400,466 L410,466 L410,510 L628,510 L628,394 L657,394" fill="none" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
           </g>
           <g style={s("arrow-tools-mock")}>
             <path d="M400,478 L410,478 L410,520 L636,520 L636,454 L657,454" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ah)" />
+          </g>
+
+          {/* ── ARROWS FROM EXTERNAL SERVICES (return data — enter Tool Executors from bottom) ── */}
+          <g style={s("arrow-shopify-tools")}>
+            <path d="M660,400 L622,400 L622,530 L300,530 L300,500" fill="none" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#ah)" />
+          </g>
+          <g style={s("arrow-mock-tools")}>
+            <path d="M660,460 L630,460 L630,538 L340,538 L340,500" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ah)" />
           </g>
 
           {/* ── CONVEX PERSISTENCE LINE ── */}

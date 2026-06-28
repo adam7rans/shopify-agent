@@ -1,5 +1,6 @@
 import { SidebarDock } from "@/components/layout/sidebar-dock";
 import { ArchitectureDiagram } from "@/components/layout/architecture-diagram";
+import { AgentLoopExamples } from "@/components/layout/agent-loop-examples";
 import { getHybridOpsBadge, getShopifyModeBadge } from "@/lib/shopify";
 
 export const dynamic = "force-dynamic";
@@ -102,6 +103,23 @@ export default function InfoPage() {
               </p>
               <div className="mt-6">
                 <ArchitectureDiagram />
+              </div>
+            </div>
+
+            {/* ── AGENT LOOP EXAMPLES ── */}
+            <div className="rounded-[32px] border border-white/70 bg-white/84 p-8 shadow-panel backdrop-blur md:p-10">
+              <p className="text-sm uppercase tracking-[0.22em] text-plum/75">Agent loop in action</p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink">
+                Multi-step reasoning with real data
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+                Each tab shows a different merchant question and exactly how the agent loop
+                processes it — from cache check through tool calls to validated response.
+                Simple queries resolve in one iteration; compound questions chain multiple
+                tools across iterations.
+              </p>
+              <div className="mt-6">
+                <AgentLoopExamples />
               </div>
             </div>
 
