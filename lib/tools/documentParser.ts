@@ -125,69 +125,73 @@ export async function scanDocuments(
     })),
   });
 
-  const results: ProcessedDocument[] = [];
+  onProgress?.(`Parsing ${files.length} documents in parallel with AI vision`, {
+    event: "parse_start_all",
+    totalFiles: files.length,
+  });
 
-  for (let i = 0; i < files.length; i++) {
-    const filename = files[i];
-    const fileType = filename.endsWith(".png") ? "image" : "pdf";
+  const results = await Promise.all(
+    files.map(async (filename, i) => {
+      const fileType = filename.endsWith(".png") ? "image" : "pdf";
 
-    onProgress?.(`Parsing ${filename} with AI vision`, {
-      event: "parse_start",
-      index: i,
-      filename,
-      fileType,
-    });
+      onProgress?.(`Parsing ${filename} with AI vision`, {
+        event: "parse_start",
+        index: i,
+        filename,
+        fileType,
+      });
 
-    const { parsed, inventoryCrossReference } = await parseDocument(filename);
+      const { parsed, inventoryCrossReference } = await parseDocument(filename);
 
-    const { hasBackorder, hasDamage } = detectFlags(parsed);
-    const isFlagged = hasBackorder || hasDamage;
+      const { hasBackorder, hasDamage } = detectFlags(parsed);
+      const isFlagged = hasBackorder || hasDamage;
 
-    const impact = inventoryCrossReference
-      .filter((ref) => ref.status === "matched" || ref.status === "partial_match")
-      .map((ref) => ({
-        item: ref.matchedProduct ?? ref.invoiceItem,
-        sku: ref.matchedSku ?? undefined,
-        currentStock: ref.currentStock ?? 0,
-        incoming: ref.incomingQuantity,
-        projectedStock: ref.projectedStock ?? ref.incomingQuantity,
-      }));
+      const impact = inventoryCrossReference
+        .filter((ref) => ref.status === "matched" || ref.status === "partial_match")
+        .map((ref) => ({
+          item: ref.matchedProduct ?? ref.invoiceItem,
+          sku: ref.matchedSku ?? undefined,
+          currentStock: ref.currentStock ?? 0,
+          incoming: ref.incomingQuantity,
+          projectedStock: ref.projectedStock ?? ref.incomingQuantity,
+        }));
 
-    const doc: ProcessedDocument = {
-      supplier: parsed.supplier,
-      invoiceNumber: parsed.invoiceNumber,
-      total: parsed.totalDue,
-      status: isFlagged ? "flagged" : "pending_review",
-      lineItems: parsed.lineItems.map((li) => ({
-        description: li.description,
-        quantity: li.quantity,
-        quantityShipped: li.quantityShipped,
-        unitPrice: li.unitPrice,
-        lineTotal: li.lineTotal,
-        condition: li.condition,
-        backordered: li.backordered,
-      })),
-      inventoryImpact: impact,
-    };
+      const doc: ProcessedDocument = {
+        supplier: parsed.supplier,
+        invoiceNumber: parsed.invoiceNumber,
+        total: parsed.totalDue,
+        status: isFlagged ? "flagged" : "pending_review",
+        lineItems: parsed.lineItems.map((li) => ({
+          description: li.description,
+          quantity: li.quantity,
+          quantityShipped: li.quantityShipped,
+          unitPrice: li.unitPrice,
+          lineTotal: li.lineTotal,
+          condition: li.condition,
+          backordered: li.backordered,
+        })),
+        inventoryImpact: impact,
+      };
 
-    if (hasBackorder) {
-      doc.flagReason = "Partial shipment — backordered items detected";
-      doc.draftEmail = generateDraftEmail(parsed, "backorder");
-    } else if (hasDamage) {
-      doc.flagReason = "Damaged items detected in shipment";
-      doc.draftEmail = generateDraftEmail(parsed, "damage");
-    }
+      if (hasBackorder) {
+        doc.flagReason = "Partial shipment — backordered items detected";
+        doc.draftEmail = generateDraftEmail(parsed, "backorder");
+      } else if (hasDamage) {
+        doc.flagReason = "Damaged items detected in shipment";
+        doc.draftEmail = generateDraftEmail(parsed, "damage");
+      }
 
-    results.push(doc);
+      onProgress?.(`Parsed ${parsed.supplier} — ${parsed.invoiceNumber}`, {
+        event: "parse_complete",
+        index: i,
+        filename,
+        fileType,
+        document: doc as unknown as Record<string, unknown>,
+      });
 
-    onProgress?.(`Parsed ${parsed.supplier} — ${parsed.invoiceNumber}`, {
-      event: "parse_complete",
-      index: i,
-      filename,
-      fileType,
-      document: doc as unknown as Record<string, unknown>,
-    });
-  }
+      return doc;
+    }),
+  );
 
   return { documents: results };
 }

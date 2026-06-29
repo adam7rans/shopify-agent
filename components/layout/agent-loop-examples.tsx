@@ -17,7 +17,7 @@ type NodeId =
   | "convex";
 
 interface LoopStep {
-  actor: "user" | "openai" | "tool" | "cache" | "validator" | "vision";
+  actor: "user" | "openai" | "tool" | "cache" | "validator" | "vision" | "parallel";
   label: string;
   detail: string;
   data?: string;
@@ -190,49 +190,35 @@ const useCases: UseCase[] = [
         flow: ["tool-executors", "mock-ops"],
       },
       {
-        actor: "vision",
-        label: "scan_documents → Vision: Invoice #SD-2024-0847",
+        actor: "parallel",
+        label: "scan_documents → Promise.all (3 documents)",
         detail:
-          "Calls OpenAI Vision API (gpt-4.1-mini) with the Sweet Distribution Co. invoice image. Extracts: 4 line items, total $692.50. All quantities match — no flags.",
+          "All 3 documents are parsed in parallel using Promise.all. Each document independently: (1) calls OpenAI Vision to extract line items, (2) cross-references against Shopify inventory, (3) detects flags and generates draft emails if needed. Results are collected when all 3 resolve.",
+        flow: ["tool-executors", "openai", "shopify"],
+      },
+      {
+        actor: "vision",
+        label: "  ├ Invoice #SD-2024-0847 (Sweet Distribution Co.)",
+        detail:
+          "Vision extracts 4 line items, total $692.50. Cross-references inventory — all items matched. No flags.",
         data: '{ supplier: "Sweet Distribution Co.", invoiceNumber: "SD-2024-0847", lineItems: [{ description: "Hi-Chew Strawberry", qty: 100, unitPrice: 1.25, lineTotal: 125.00 }, { description: "Kasugai Peach Gummy", qty: 80, unitPrice: 2.75, lineTotal: 220.00 }, ...2 more], total: 692.50 }',
-        flow: ["tool-executors", "openai"],
-      },
-      {
-        actor: "tool",
-        label: "scan_documents → cross-reference inventory",
-        detail:
-          'Fuzzy-matches "Hi-Chew Strawberry" → JP-HICHEW-STRAW-002 (exact match). Current stock: 180, incoming: 100, projected: 280. All 4 items matched.',
-        flow: ["tool-executors", "shopify"],
+        flow: ["tool-executors", "openai", "shopify"],
       },
       {
         actor: "vision",
-        label: "scan_documents → Vision: Invoice #KSW-4420",
+        label: "  ├ Invoice #KSW-4420 (K-Snacks Wholesale)",
         detail:
-          "Calls OpenAI Vision with K-Snacks Wholesale invoice. Extracts: 3 line items, total $582.00. FLAG: Korean Sour Peach Belts — ordered 120, shipped 80 (40 short, backordered).",
+          "Vision extracts 3 line items, total $582.00. FLAG: Korean Sour Peach Belts — ordered 120, shipped 80 (40 short). Auto-generates backorder follow-up email to support@ksnacks-wholesale.com.",
         data: '{ supplier: "K-Snacks Wholesale", invoiceNumber: "KSW-4420", lineItems: [{ description: "Korean Sour Peach Belts", qty: 120, qtyShipped: 80, backordered: true }, ...2 more], status: "flagged" }',
-        flow: ["tool-executors", "openai"],
-      },
-      {
-        actor: "tool",
-        label: "scan_documents → generate draft email",
-        detail:
-          'Partial shipment detected. Generates backorder follow-up email to support@ksnacks-wholesale.com: "Korean Sour Peach Belts — ordered 120, received 80 (40 short)."',
-        flow: ["tool-executors"],
+        flow: ["tool-executors", "openai", "shopify"],
       },
       {
         actor: "vision",
-        label: "scan_documents → Vision: Delivery #TTD-R-0091",
+        label: "  └ Delivery #TTD-R-0091 (Tokyo Treats Direct)",
         detail:
-          'Calls OpenAI Vision with Tokyo Treats Direct receipt. Extracts: 2 items. FLAG: Matcha Kit Kat — condition: "crushed packaging, 12 units damaged".',
+          'Vision extracts 2 items. FLAG: Matcha Kit Kat — "crushed packaging, 12 units damaged". Auto-generates damage claim email to claims@tokyotreatsdirect.jp.',
         data: '{ supplier: "Tokyo Treats Direct", invoiceNumber: "TTD-R-0091", lineItems: [{ description: "Matcha Kit Kat", qty: 60, condition: "crushed packaging" }], status: "flagged" }',
-        flow: ["tool-executors", "openai"],
-      },
-      {
-        actor: "tool",
-        label: "scan_documents → generate damage claim email",
-        detail:
-          'Damage detected. Generates claim email to claims@tokyotreatsdirect.jp: "Matcha Kit Kat — 60 units, crushed packaging."',
-        flow: ["tool-executors"],
+        flow: ["tool-executors", "openai", "shopify"],
       },
       {
         actor: "openai",
@@ -277,6 +263,7 @@ const actorStyles: Record<
   cache: { bg: "bg-yellow-50", border: "border-yellow-200", icon: "⚡", label: "Cache" },
   validator: { bg: "bg-emerald-50", border: "border-emerald-200", icon: "✅", label: "Validator" },
   vision: { bg: "bg-purple-50", border: "border-purple-200", icon: "👁", label: "Vision" },
+  parallel: { bg: "bg-indigo-50", border: "border-indigo-200", icon: "⚡", label: "Parallel" },
 };
 
 function FlowNodes({ nodes }: { nodes: NodeId[] }) {
